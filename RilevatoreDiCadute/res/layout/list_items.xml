@@ -21,6 +21,7 @@
    	    android:layout_toRightOf="@+id/picture"
    	    android:layout_marginRight="10dp"
    	    android:layout_marginBottom="10dp"
+   	    android:textSize="20sp"
         />
     
     <TextView 
@@ -29,6 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
+        android:textSize="20sp"
         />
  
    <TextView 
@@ -37,6 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/nomeSessione"
         android:layout_alignParentRight="true"
+        android:textSize="20sp"
         />
    
    <TextView 
@@ -46,6 +49,7 @@
        android:layout_toLeftOf="@+id/durataSessione"
        android:layout_below="@+id/nomeSessione"
        android:layout_marginRight="10dp"
+       android:textSize="20sp"
        android:text="@string/textDurata"/>
    
 </RelativeLayout>
