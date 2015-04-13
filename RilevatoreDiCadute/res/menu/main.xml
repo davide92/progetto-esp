@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="it.unipd.dei.rilevatoredicadute.MainActivity" >
+
+    <item android:id="@+id/start"
+       	android:title="@string/start"
+        android:onClick="methodName"/>
+    
+    <item android:id="@+id/delete"
+        android:title="@string/delete"
+        android:onClick="methodName"/>
+    
+    <item android:id="@+id/rinomina"
+        android:title="@string/rename"
+        android:onClick="methodName"/>
+    
+    <item android:id="@+id/preferenze"
+        android:title="@string/preference"
+        android:onClick="methodName"/>
+</menu>

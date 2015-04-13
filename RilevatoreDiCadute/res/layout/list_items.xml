@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/list_items"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    
+    <ImageView
+        android:id="@+id/picture"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="20dp"
+         ></ImageView>
+
+	<TextView
+   	    android:id="@+id/nomeSessione"
+   	    android:layout_width="wrap_content"
+   	    android:layout_height="wrap_content"
+   	    android:layout_alignParentTop="true"
+   	    android:layout_toRightOf="@+id/picture"
+   	    android:layout_marginRight="10dp"
+   	    android:layout_marginBottom="10dp"
+        />
+    
+    <TextView 
+        android:id="@+id/dataEora"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        />
+ 
+   <TextView 
+       	android:id="@+id/durataSessione"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/nomeSessione"
+        android:layout_alignParentRight="true"
+        />
+   
+   <TextView 
+       android:id="@+id/textDurata"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_toLeftOf="@+id/durataSessione"
+       android:layout_below="@+id/nomeSessione"
+       android:layout_marginRight="10dp"
+       android:text="@string/textDurata"/>
+   
+</RelativeLayout>
