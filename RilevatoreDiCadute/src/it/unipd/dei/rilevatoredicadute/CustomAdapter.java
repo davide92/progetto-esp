@@ -20,11 +20,13 @@ public class CustomAdapter extends ArrayAdapter<Dati>{
 		TextView nomeSessione = (TextView)convertView.findViewById(R.id.nomeSessione);
 		TextView dataEora = (TextView)convertView.findViewById(R.id.dataEora);
 		TextView durataSessione = (TextView)convertView.findViewById(R.id.durataSessione);
+		TextView numeroCadute = (TextView)convertView.findViewById(R.id.numeroCadute);
 		Dati d = getItem(position);
-		//picture.setImage();
+		//picture.setImageDrawable(drawable);
 		nomeSessione.setText(d.getNomeSessione());
 		dataEora.setText(d.getData() + " " + d.getHour());
 		durataSessione.setText(d.getDurataSessione());
+		numeroCadute.setText(d.getNumeroCadute());
 		return convertView;
 	}
 }

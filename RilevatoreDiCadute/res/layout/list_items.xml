@@ -1,55 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/list_items"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
-    
-    <ImageView
-        android:id="@+id/picture"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentLeft="true"
-        android:layout_marginRight="20dp"
-         ></ImageView>
 
-	<TextView
-   	    android:id="@+id/nomeSessione"
-   	    android:layout_width="wrap_content"
-   	    android:layout_height="wrap_content"
-   	    android:layout_alignParentTop="true"
-   	    android:layout_toRightOf="@+id/picture"
-   	    android:layout_marginRight="10dp"
-   	    android:layout_marginBottom="10dp"
-   	    android:textSize="20sp"
+ <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:id="@+id/list_items"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     >
+     
+     <ImageView
+         android:id="@+id/picture"
+         android:layout_width="60dp"
+         android:layout_height="60dp"
+         android:layout_alignParentLeft="true"
+         android:layout_marginRight="7dp"
+         android:src="@drawable/immagine2"
+          ></ImageView>
+ 
+ 	<TextView
+    	 android:id="@+id/nomeSessione"
+    	 android:layout_width="wrap_content"
+    	 android:layout_height="wrap_content"
+    	 android:layout_alignParentTop="true"
+    	 android:layout_toRightOf="@+id/picture"
+    	 android:layout_marginRight="5dp"
+    	 android:layout_marginBottom="5dp"
+  	     android:textSize="20sp"
+  	     android:textStyle="bold"
+       	 />
+     
+     <TextView 
+         android:id="@+id/dataEora"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_below="@+id/nomeSessione"
+         android:layout_toRightOf="@+id/picture"
+         android:textSize="20sp"
+         />
+  
+    <TextView 
+         android:id="@+id/durataSessione"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_below="@+id/nomeSessione"
+         android:layout_alignParentRight="true"
+         android:textSize="20sp"
+         />
+    
+    <TextView 
+        android:id="@+id/textDurata"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/durataSessione"
+        android:layout_below="@+id/nomeSessione"
+        android:layout_marginRight="5dp"
+        android:textSize="20sp"
+        android:text="@string/textDurata"
         />
     
     <TextView 
-        android:id="@+id/dataEora"
+        android:id="@+id/textCadute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/numeroCadute"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="5dp"
+        android:textSize="20sp"
+        android:text="@string/textCadute"
+        />
+    
+    <TextView 
+        android:id="@+id/numeroCadute"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:textSize="20sp"
-        />
- 
-   <TextView 
-       	android:id="@+id/durataSessione"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/nomeSessione"
-        android:layout_alignParentRight="true"
-        android:textSize="20sp"
-        />
-   
-   <TextView 
-       android:id="@+id/textDurata"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_toLeftOf="@+id/durataSessione"
-       android:layout_below="@+id/nomeSessione"
-       android:layout_marginRight="10dp"
-       android:textSize="20sp"
-       android:text="@string/textDurata"/>
-   
+        />   
 </RelativeLayout>

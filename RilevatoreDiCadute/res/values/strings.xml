@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="app_name">Rilevatore di cadute</string>
-    <string name="action_settings">Settings</string>
-    <string name="start">Start</string>
-    <string name="delete">Cancella</string>
-    <string name="rename">Rinomina</string>
-    <string name="preference">Preferenze</string>
-    <string name="textDurata">Durata:</string>
-    <string name="title_activity_second">Second</string>
-    <string name="hello_world">Hello world!</string>
-
+	<string name="app_name">Rilevatore di cadute</string>
+	<string name="action_settings">Settings</string>
+	<string name="start">Start</string>
+	<string name="delete">Cancella</string>
+	<string name="rename">Rinomina</string>
+	<string name="preference">Preferenze</string>
+	<string name="textDurata">Durata:</string>
+	<string name="textCadute">Cadute:</string>
+	<string name="title_activity_second">Second</string>
+	<string name="inizio">Inizio Sessione:</string>
+	<string name="txLista">Lista cadute</string>
+	<string name="caduta">Caduta</string>
+	<string name="avvenuta">Avvenuta:</string>
+	<string name="notificaOk">Successo notifica</string>
 </resources>

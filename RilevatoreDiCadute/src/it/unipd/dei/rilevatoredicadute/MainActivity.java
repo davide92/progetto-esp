@@ -2,11 +2,15 @@ package it.unipd.dei.rilevatoredicadute;
 
 import java.util.LinkedList;
 import java.util.List;
+
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.AdapterView.OnItemClickListener;
 
 
 
@@ -22,10 +26,14 @@ public class MainActivity extends ActionBarActivity {
         list.add(new Dati());
         CustomAdapter adapter = new CustomAdapter(this, R.layout.list_items, list);
         listView.setAdapter(adapter);
-                    
+        listView.setOnItemClickListener(new OnItemClickListener(){
+        	public void onItemClick(AdapterView<?> adapter, View v, int position, long id){
+        		Dati value = (Dati)adapter.getItemAtPosition(position);
+        	
+        	}
+        });
+        
 	}
-     
-	
 	
     public boolean onCreateOptionsMenu(Menu menu){
     	super.onCreateOptionsMenu(menu);

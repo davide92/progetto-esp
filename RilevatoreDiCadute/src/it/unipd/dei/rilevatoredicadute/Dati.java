@@ -10,8 +10,9 @@ public class Dati {
 	private int second;
 	private String nomeSessione;
 	private String durataSessione;
+	private int numeroCadute;
 	
-	public Dati(String nS, int d, int m, int y, int h, int min, int sec){
+	public Dati(String nS, int d, int m, int y, int h, int min, int sec, int nC){
 		nomeSessione = nS;
 		day = d;
 		month = m;
@@ -19,10 +20,11 @@ public class Dati {
 		hour = h;
 		minute = min;
 		second = sec;
+		numeroCadute = nC;
 	}
 	
 	public Dati(){
-		this("nessuna sessione", 0, 0, 0, 0, 0, 0);
+		this("Nessuna sessione", 0, 0, 0, 0, 0, 0, 0);
 		durataSessione = 0 + ":" + 0 + ":" + 0; 
 	}
 
@@ -42,6 +44,10 @@ public class Dati {
 		second = sec;
 	}
 	
+	public void setNumeroCadute(int nC){
+		numeroCadute = nC;
+	}
+	
 	public String getNomeSessione(){
 		return nomeSessione;
 	}
@@ -56,5 +62,9 @@ public class Dati {
 	
 	public String getDurataSessione(){
 		return durataSessione;
+	}
+	
+	public String getNumeroCadute(){
+		return Integer.toString(numeroCadute);
 	}
 }

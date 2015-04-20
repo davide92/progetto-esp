@@ -1,10 +1,13 @@
 package it.unipd.dei.rilevatoredicadute;
 
+import java.util.LinkedList;
+import java.util.List;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ListView;
 
 public class Second extends ActionBarActivity {
 
@@ -12,16 +15,15 @@ public class Second extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_second);
+		ListView listView = (ListView) findViewById(R.id.listViewCadute);
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		super.onCreateOptionsMenu(menu);
-    	MenuInflater inflater = getMenuInflater();
-    	inflater.inflate(R.menu.main, menu);
-    	return true;
-	}
+	public boolean onCreateOptionsMenu(Menu menu){
+    	super.onCreateOptionsMenu(menu);
+    	MenuItem meIt3 = menu.add(0, R.id.rinomina, 1, "Rinomina");
+       	return true;
+    } 
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
