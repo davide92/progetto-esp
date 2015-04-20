@@ -2,8 +2,8 @@ package it.unipd.dei.rilevatoredicadute;
 
 import java.util.LinkedList;
 import java.util.List;
-
 import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
@@ -28,8 +28,9 @@ public class MainActivity extends ActionBarActivity {
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new OnItemClickListener(){
         	public void onItemClick(AdapterView<?> adapter, View v, int position, long id){
-        		Dati value = (Dati)adapter.getItemAtPosition(position);
-        	
+        		//Dati value = (Dati)adapter.getItemAtPosition(position);
+        		Intent UI2 = new Intent(getApplicationContext(), Second.class);
+        		startActivity(UI2);
         	}
         });
         
