@@ -1,105 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-   	android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin">   
-		
-	<ImageView
-        android:id="@+id/picture"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-       	android:layout_alignParentLeft="true"
-        android:layout_marginRight="7dp"
-		android:src="@drawable/immagine2"
-    ></ImageView>
-		
-    <TextView
-    	 android:id="@+id/nomeSessione"
-    	 android:layout_width="wrap_content"
-    	 android:layout_height="wrap_content"
-    	 android:layout_alignParentTop="true"
-    	 android:layout_toRightOf="@+id/picture"
-    	 android:layout_marginRight="5dp"
-    	 android:layout_marginBottom="5dp"
-  	     android:textSize="30sp"
-  	     android:textStyle="bold"
-       	/>
-    	
-    <TextView 
-         android:id="@+id/inizio"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_below="@+id/picture"
-         android:layout_alignParentLeft="true"
-         android:textSize="20sp"
-         android:text="@string/inizio"
-         />
-    	
-    <TextView 
-        android:id="@+id/dataEora"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/picutre"
+     android:layout_width="match_parent"
+      android:layout_height="match_parent"
+       android:paddingBottom="@dimen/activity_vertical_margin" 
+       android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin" 
+        android:paddingTop="@dimen/activity_vertical_margin">
+        
+<ImageView android:id="@+id/picture" 
+    android:layout_width="50dp" 
+    android:layout_height="50dp" 
+    android:layout_alignParentLeft="true" 
+    android:layout_marginRight="7dp" 
+    android:src="@drawable/immagine2"/>
+
+<TextView android:id="@+id/nomeSessione"
+     android:layout_width="wrap_content" 
+     android:layout_height="wrap_content" 
+     android:layout_alignParentTop="true"
+      android:layout_toRightOf="@+id/picture"
+       android:layout_marginRight="5dp" 
+       android:layout_marginBottom="5dp"
+        android:textSize="30sp" 
+        android:textStyle="bold"/>
+
+<TextView android:id="@+id/inizio" 
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+     android:layout_below="@+id/picture"
+      android:layout_alignParentLeft="true"
+       android:textSize="20sp" 
+       android:text="@string/inizio"/>
+
+<TextView android:id="@+id/dataEora"
+     android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+       android:layout_below="@+id/picutre"
         android:layout_toRightOf="@+id/inizio"
-        android:textSize="20sp"
-         />
-    	
-    <TextView 
-        android:id="@+id/textDurata"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/inizio"
-        android:layout_marginRight="5dp"
-        android:textSize="20sp"
-        android:text="@string/textDurata"
-        />
-    	
-    <TextView 
-         android:id="@+id/durataSessione"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_below="@+id/nomeSessione"
-         android:layout_alignParentRight="true"
-         android:textSize="20sp"
-         />
-    
-    <TextView 
-        android:id="@+id/txLista"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textDurata"
-        android:layout_centerInParent="true"
-        android:text="@string/txLista"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        />
-	
-	<LinearLayout 
-    	android:id="@+id/linearLayout1"
-    	android:orientation="horizontal"
-    	android:layout_width="match_parent"
-   		android:layout_height="match_parent"
-   		android:layout_alignTop="@+id/txLista"
-    	tools:context="it.unipd.dei.rilevatoredicadute.Second" >    
-    
-    	<ListView 
-       		android:id="@+id/listViewCadute"
-        	android:layout_width="fill_parent"
-        	android:layout_height="wrap_content"
-        	android:layout_marginTop="10dp"
-        	android:layout_marginLeft="5dp"
-        	android:layout_marginRight="5dp"
-        	android:layout_marginBottom="5dp"
-        	android:divider="#ff888888"
-			android:dividerHeight="1dp"
-			>
-    	</ListView>  
+         android:textSize="20sp"/>
 
-	</LinearLayout>
+<TextView android:id="@+id/textDurata"
+     android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+       android:layout_alignParentLeft="true"
+        android:layout_below="@+id/inizio" 
+        android:layout_marginRight="5dp" 
+        android:textSize="20sp" 
+        android:text="@string/textDurata"/>
 
+<TextView android:id="@+id/durataSessione"
+     android:layout_width="wrap_content"
+      android:layout_height="wrap_content" 
+      android:layout_below="@+id/nomeSessione" 
+      android:layout_alignParentRight="true"
+       android:textSize="20sp"/>
+
+<TextView android:id="@+id/txLista" 
+    android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+      android:layout_below="@+id/textDurata"
+       android:layout_centerInParent="true" 
+       android:text="@string/txLista" 
+       android:textSize="20sp" 
+       android:textStyle="bold"/>
+
+<LinearLayout android:id="@+id/linearLayout1" 
+    android:orientation="horizontal"
+     android:layout_width="match_parent" 
+     android:layout_height="match_parent"
+      android:layout_alignTop="@+id/txLista" 
+      tools:context="it.unipd.dei.rilevatoredicadute.Second">
+<ListView android:id="@+id/listViewCadute"
+     android:layout_width="fill_parent" 
+     android:layout_height="wrap_content"
+      android:layout_marginTop="10dp" 
+      android:layout_marginLeft="5dp"
+       android:layout_marginRight="5dp" 
+       android:layout_marginBottom="5dp" 
+       android:divider="#ff888888"
+        android:dividerHeight="1dp">    
+</ListView>
+</LinearLayout>
 </RelativeLayout>
