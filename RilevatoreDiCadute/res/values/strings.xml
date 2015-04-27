@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
 
     <string name="app_name">Rilevatore di cadute</string>
@@ -8,7 +9,15 @@
     <string name="rename">Rinomina</string>
     <string name="preference">Preferenze</string>
     <string name="textDurata">Durata:</string>
-    <string name="title_activity_second">Second</string>
+    <string name="textCadute">Cadute:</string>
+    <string name="title_activity_second">Dettagli</string>
+    <string name="inizio">Inizio Sessione:</string>
+    <string name="txLista">Lista cadute</string>
+    <string name="caduta">Caduta</string>
+    <string name="avvenuta">Avvenuta:</string>
+    <string name="notificaOk">Successo notifica</string>
+    <string name="title_activity_third">Sessione in corso</string>
+    <string name="textSessione">Nome sessione:</string>
     <string name="hello_world">Hello world!</string>
 
 </resources>

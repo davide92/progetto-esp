@@ -30,4 +30,26 @@
 		<nature>com.android.ide.eclipse.adt.AndroidNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>res/drawable-hdpi/immagine2.jpg</name>
+			<type>1</type>
+			<location>/home/davide/ESP1415/immagine2.jpg</location>
+		</link>
+		<link>
+			<name>res/drawable-mdpi/immagine2.jpg</name>
+			<type>1</type>
+			<location>/home/davide/ESP1415/immagine2.jpg</location>
+		</link>
+		<link>
+			<name>res/drawable-xhdpi/immagine2.jpg</name>
+			<type>1</type>
+			<location>/home/davide/ESP1415/immagine2.jpg</location>
+		</link>
+		<link>
+			<name>res/drawable-xxhdpi/immagine2.jpg</name>
+			<type>1</type>
+			<location>/home/davide/ESP1415/immagine2.jpg</location>
+		</link>
+	</linkedResources>
 </projectDescription>
