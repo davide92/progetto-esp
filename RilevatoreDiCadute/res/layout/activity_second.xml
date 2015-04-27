@@ -14,7 +14,7 @@
         android:layout_height="50dp"
        	android:layout_alignParentLeft="true"
         android:layout_marginRight="7dp"
-        android:src="@drawable/immagine2"
+        
     ></ImageView>
 		
     <TextView
