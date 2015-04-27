@@ -30,4 +30,11 @@
 		<nature>com.android.ide.eclipse.adt.AndroidNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>res/drawable-xxhdpi/immagine2.jpg</name>
+			<type>1</type>
+			<location>/home/davide/git/progetto-esp/RilevatoreDiCadute/res/drawable-xxhdpi/immagine2.jpg</location>
+		</link>
+	</linkedResources>
 </projectDescription>

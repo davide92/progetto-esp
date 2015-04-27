@@ -10,7 +10,7 @@
       android:layout_height="60dp"
        android:layout_alignParentLeft="true"
         android:layout_marginRight="7dp"
-         android:src="@drawable/immagine2"/>
+        android:src="@drawable/immagine2"/>
 
 <TextView android:id="@+id/nomeSessione"
      android:layout_width="wrap_content"
