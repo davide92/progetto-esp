@@ -27,10 +27,10 @@ public class MainActivity extends ActionBarActivity {
         CustomAdapter adapter = new CustomAdapter(this, R.layout.list_items, list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new OnItemClickListener(){
-        	public void onItemClick(AdapterView<?> adapter, View v, int position, long id){
-        		//Dati value = (Dati)adapter.getItemAtPosition(position);
-        		Intent UI2 = new Intent(getApplicationContext(), Second.class);
-        		startActivity(UI2);
+        public void onItemClick(AdapterView<?> adapter, View v, int position, long id){
+        	//Dati value = (Dati)adapter.getItemAtPosition(position);
+        	Intent UI2 = new Intent(getApplicationContext(), Second.class);
+        	startActivity(UI2);
         	}
         });
         
@@ -42,6 +42,8 @@ public class MainActivity extends ActionBarActivity {
     	MenuItem meIt2 = menu.add(0, R.id.delete, 2, "Cancella");
     	MenuItem meIt3 = menu.add(0, R.id.rinomina, 3, "Rinomina");
     	MenuItem meIt4 = menu.add(0, R.id.preferenze, 4, "Preferenze");
+    	meIt1.setIntent(new Intent(this, Third.class));
+    	//meIt4.setIntent(new Intent(this, Fifth.class))
     	return true;
     } 
     

@@ -1,31 +1,24 @@
 package it.unipd.dei.rilevatoredicadute;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ListView;
 
-public class Second extends ActionBarActivity {
+public class Third extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_second);
-		ListView listView = (ListView) findViewById(R.id.listViewCadute);
+		setContentView(R.layout.activity_third);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu){
-    	super.onCreateOptionsMenu(menu);
-    	MenuItem meIt3 = menu.add(0, R.id.rinomina, 1, "Rinomina");
-    	MenuItem meIt2 = menu.add(0, R.id.delete, 2, "Cancella");
-       	return true;
-    } 
+	/*@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.third, menu);
+		return true;
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -37,6 +30,5 @@ public class Second extends ActionBarActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
+	}*/
 }
