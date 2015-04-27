@@ -28,14 +28,14 @@ public class MainActivity extends ActionBarActivity {
         CustomAdapter adapter = new CustomAdapter(this, R.layout.list_items, list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new OnItemClickListener(){
-            public void onItemClick(AdapterView<?> adapter, View v, int position, long id){
-            	//Dati value = (Dati)adapter.getItemAtPosition(position);
-            	Intent UI2 = new Intent(getApplicationContext(), Second.class);
-            	startActivity(UI2);
-            	}
-            });
+    	public void onItemClick(AdapterView<?> adapter, View v, int position, long id){
+        	//Dati value = (Dati)adapter.getItemAtPosition(position);
+        	Intent UI2 = new Intent(getApplicationContext(), Second.class);
+        	startActivity(UI2);
+        	}
+        });
             
-    	}
+	}
 
 	@Override
     public boolean onCreateOptionsMenu(Menu menu){
