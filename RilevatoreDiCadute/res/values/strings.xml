@@ -22,5 +22,9 @@
     <string name="longitude">Longitudine:</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_fifth">Preferenze</string>
+    <string name="simpleRateTx">Frequenza di campionamento</string>
+    <string name="maxDuratSessTx">Massima durata sessione</string>
+    <string name="emailListTx">Lista e-mail</string>
+    <string name="alarmTx">Allarme</string>
 
 </resources>
