@@ -21,5 +21,6 @@
     <string name="latitude">Latitudine:</string>
     <string name="longitude">Longitudine:</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_fifth">Preferenze</string>
 
 </resources>
