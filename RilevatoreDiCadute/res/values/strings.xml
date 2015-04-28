@@ -3,7 +3,7 @@
 
     <string name="app_name">Rilevatore di cadute</string>
     <string name="action_settings">Settings</string>
-    <string name="start">Start</string>
+    <string name="nuovaSessione">Nuova Sessione</string>
     <string name="delete">Cancella</string>
     <string name="rename">Rinomina</string>
     <string name="preference">Preferenze</string>

@@ -4,8 +4,8 @@
      xmlns:tools="http://schemas.android.com/tools" 
      tools:context="it.unipd.dei.rilevatoredicadute.MainActivity">
      
-<item android:id="@+id/start" 
-    android:title="@string/start"
+<item android:id="@+id/nuovaSessione" 
+    android:title="@string/nuovaSessione"
     android:onClick="methodName"/>
 
 <item android:id="@+id/delete"

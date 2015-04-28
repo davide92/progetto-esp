@@ -7,10 +7,40 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="it.unipd.dei.rilevatoredicadute.Third" >
-
+    
     <TextView
+        android:id="@+id/nomeSessioneTx"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_marginTop="10dp"
+        android:text="@string/textSessione" 
+        />
+    
+    <EditText
+        android:id="@+id/insTesto"
+        android:inputType="text"
+        android:layout_toRightOf="@+id/nomeSessioneTx"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:maxLength="20"
+        />
+
+    <Button
+        android:id="@+id/start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/insTesto"
+        android:layout_marginLeft="17dp"
+        android:layout_toRightOf="@+id/stop" 
+        />
+
+    <Button
+        android:id="@+id/stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/start"
+        android:layout_alignBottom="@+id/start"
+        android:layout_alignLeft="@+id/nomeSessioneTx"
+        android:layout_marginLeft="45dp" />
 
 </RelativeLayout>

@@ -40,8 +40,8 @@ public class MainActivity extends ActionBarActivity {
 	@Override
     public boolean onCreateOptionsMenu(Menu menu){
 		super.onCreateOptionsMenu(menu);
-    	MenuItem meIt1 = menu.add(0, R.id.start, 1, "Start");
-    	MenuItem meIt2 = menu.add(0, R.id.delete, 2, "Cancella");
+    	MenuItem meIt1 = menu.add(0, R.id.nuovaSessione, 1, "Nuova Sessione");
+    	MenuItem meIt2 = menu.add(0, R.id.delete, 2, "Elimina");
     	MenuItem meIt3 = menu.add(0, R.id.rinomina, 3, "Rinomina");
     	MenuItem meIt4 = menu.add(0, R.id.preferenze, 4, "Preferenze");
     	meIt1.setIntent(new Intent(this, Third.class));
