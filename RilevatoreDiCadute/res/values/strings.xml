@@ -17,14 +17,17 @@
     <string name="notificaOk">Successo notifica</string>
     <string name="title_activity_third">Sessione in corso</string>
     <string name="textSessione">Nome sessione:</string>
+    <string name="startTx">Start</string>
+    <string name="pauseTx">Pause</string>
+    <string name="stopTx">Stop</string>
     <string name="title_activity_fourth">Dettagli caduta</string>
     <string name="latitude">Latitudine:</string>
     <string name="longitude">Longitudine:</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_fifth">Preferenze</string>
-    <string name="simpleRateTx">Frequenza di campionamento</string>
-    <string name="maxDuratSessTx">Massima durata sessione</string>
+    <string name="simpleRateTx">Frequenza di campionamento:</string>
+    <string name="maxDuratSessTx">Massima durata sessione:</string>
     <string name="emailListTx">Lista e-mail</string>
     <string name="alarmTx">Allarme</string>
-
+    
 </resources>

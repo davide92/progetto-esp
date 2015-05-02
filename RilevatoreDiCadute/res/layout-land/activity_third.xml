@@ -27,20 +27,34 @@
         android:maxLength="20"
         />
 
-    <Button
+    <ImageButton
         android:id="@+id/start"
+        android:contentDescription="@string/startTx"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/insTesto"
 		android:layout_alignParentRight="true"
+		android:src="@drawable/playbutton"
+        />
+    
+    <ImageButton
+        android:id="@+id/pause"
+        android:contentDescription="@string/pauseTx"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/insTesto"
+		android:layout_alignParentRight="true"
+		android:src="@drawable/pausebutton"
         />
 
-    <Button
+    <ImageButton
         android:id="@+id/stop"
+        android:contentDescription="@string/stopTx"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/start"
         android:layout_alignParentRight="true"
+        android:src="@drawable/stopbutton"
          />
 
 </RelativeLayout>

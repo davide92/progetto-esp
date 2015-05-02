@@ -4,7 +4,6 @@ import java.util.List;
 import android.content.Context;
 import android.view.*;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 public class CustomAdapter extends ArrayAdapter<Dati>{
@@ -16,7 +15,6 @@ public class CustomAdapter extends ArrayAdapter<Dati>{
 	public View getView( int position, View convertView, ViewGroup parent){
 		LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		convertView = inflater.inflate(R.layout.list_items, null);
-		ImageView picture = (ImageView)convertView.findViewById(R.id.picture);
 		TextView nomeSessione = (TextView)convertView.findViewById(R.id.nomeSessione);
 		TextView dataEora = (TextView)convertView.findViewById(R.id.dataEora);
 		TextView durataSessione = (TextView)convertView.findViewById(R.id.durataSessione);

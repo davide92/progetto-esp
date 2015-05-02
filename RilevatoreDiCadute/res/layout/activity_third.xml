@@ -21,27 +21,46 @@
         android:id="@+id/insTesto"
         android:inputType="text"
         android:layout_toRightOf="@+id/nomeSessioneTx"
+        android:layout_toEndOf="@+id/nomeSessioneTx"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:maxLength="20"
         />
 
-    <Button
+    <ImageButton
         android:id="@+id/start"
+        android:contentDescription="@string/startTx"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/pause"
+        android:layout_alignStart="@+id/pause"
         android:layout_below="@+id/insTesto"
-        android:layout_marginLeft="17dp"
-        android:layout_toRightOf="@+id/stop" 
+        android:src="@drawable/playbutton" 
         />
 
-    <Button
+    <ImageButton
+        android:id="@+id/pause"
+        android:contentDescription="@string/pauseTx"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/nomeSessioneTx"
+        android:layout_alignEnd="@+id/nomeSessioneTx"
+        android:layout_alignTop="@+id/stop"
+        android:layout_marginRight="34dp"
+        android:layout_marginEnd="34dp"
+        android:src="@drawable/pausebutton" 
+        />
+
+    <ImageButton
         android:id="@+id/stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/start"
-        android:layout_alignBottom="@+id/start"
-        android:layout_alignLeft="@+id/nomeSessioneTx"
-        android:layout_marginLeft="45dp" />
+        android:layout_alignLeft="@+id/insTesto"
+        android:layout_alignStart="@+id/insTesto"
+        android:layout_alignTop="@+id/start"
+        android:layout_marginLeft="34dp"
+        android:layout_marginStart="34dp"
+        android:contentDescription="@string/stopTx"
+        android:src="@drawable/stopbutton" />
 
 </RelativeLayout>

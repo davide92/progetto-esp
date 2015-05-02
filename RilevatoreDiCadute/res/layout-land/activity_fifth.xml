@@ -4,32 +4,53 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-    <TextView
+   <TextView
 		android:layout_height="wrap_content"
 		android:layout_width="wrap_content"
 		android:text="@string/simpleRateTx"
 		android:textSize="20sp"
         />
-		
+	
+	<EditText
+	    android:inputType="number"
+	    android:layout_height="wrap_content"
+	    android:layout_width="wrap_content"
+	    android:maxLength="6"
+	    android:textSize="20sp"
+	    />
+	 
 	<TextView 
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
+	    android:layout_marginTop="20dp"
 	    android:text="@string/maxDuratSessTx"
 	    android:textSize="20sp"
 	    />
 	
-	<TextView 
-	    android:layout_width="wrap_content"
+	<EditText
+	    android:inputType="time"
 	    android:layout_height="wrap_content"
-	    android:text="@string/emailListTx"
+	    android:layout_width="wrap_content"
+	    android:maxLength="8"
 	    android:textSize="20sp"
 	    />
 	
 	<TextView 
-	    android:layout_width="wrap_content"
+	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
+	    android:layout_marginTop="20dp"
+	    android:text="@string/emailListTx"
+	    android:textSize="20sp"
+	    android:clickable="true"
+	    />
+	
+	<TextView 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginTop="20dp"
 	    android:text="@string/alarmTx"
 	    android:textSize="20sp"
+	    android:clickable="true"
 	    />
 
 </LinearLayout>
