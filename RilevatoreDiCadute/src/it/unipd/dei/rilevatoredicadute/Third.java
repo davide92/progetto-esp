@@ -4,7 +4,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 public class Third extends ActionBarActivity {
 
@@ -14,6 +17,16 @@ public class Third extends ActionBarActivity {
 		setContentView(R.layout.activity_third);
 		
 		EditText et = (EditText)findViewById(R.id.insTesto);
+		
+		final ImageButton playBtn = (ImageButton)findViewById(R.id.start);
+		playBtn.setOnClickListener(new OnClickListener() {
+					
+			@Override
+			public void onClick(View v) {
+				playBtn.setImageResource(R.id.pause);
+				
+			}
+		});
 	}
 
 	/*@Override

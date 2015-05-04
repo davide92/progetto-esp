@@ -22,6 +22,7 @@
         android:id="@+id/insTesto"
         android:inputType="text"
         android:layout_toRightOf="@+id/nomeSessioneTx"
+        android:layout_toEndOf="@+id/nomeSessioneTx"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:maxLength="20"
@@ -34,6 +35,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/insTesto"
 		android:layout_alignParentRight="true"
+		android:layout_alignParentEnd="true"
+		android:background="@android:color/transparent"
 		android:src="@drawable/playbutton"
         />
     
@@ -44,6 +47,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/insTesto"
 		android:layout_alignParentRight="true"
+		android:layout_alignParentEnd="true"
+		android:background="@android:color/transparent"
 		android:src="@drawable/pausebutton"
         />
 
@@ -54,6 +59,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/start"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="@android:color/transparent"
         android:src="@drawable/stopbutton"
          />
 

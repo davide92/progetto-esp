@@ -35,6 +35,7 @@
         android:layout_alignLeft="@+id/pause"
         android:layout_alignStart="@+id/pause"
         android:layout_below="@+id/insTesto"
+        android:background="@android:color/transparent"
         android:src="@drawable/playbutton" 
         />
 
@@ -48,6 +49,7 @@
         android:layout_alignTop="@+id/stop"
         android:layout_marginRight="34dp"
         android:layout_marginEnd="34dp"
+        android:background="@android:color/transparent"
         android:src="@drawable/pausebutton" 
         />
 
@@ -61,6 +63,7 @@
         android:layout_marginLeft="34dp"
         android:layout_marginStart="34dp"
         android:contentDescription="@string/stopTx"
+        android:background="@android:color/transparent"
         android:src="@drawable/stopbutton" />
 
 </RelativeLayout>
