@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="22" />
+        android:targetSdkVersion="20" />
 
     <application
         android:allowBackup="true"
@@ -38,6 +38,10 @@
         <activity
             android:name=".Fifth"
             android:label="@string/title_activity_fifth" >
+        </activity>
+        <activity
+            android:name=".Sixth"
+            android:label="@string/title_activity_sixth" >
         </activity>
     </application>
 

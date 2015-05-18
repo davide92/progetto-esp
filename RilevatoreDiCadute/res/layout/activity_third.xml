@@ -30,8 +30,8 @@
     <ImageButton
         android:id="@+id/start"
         android:contentDescription="@string/startTx"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignLeft="@+id/pause"
         android:layout_alignStart="@+id/pause"
         android:layout_below="@+id/insTesto"
@@ -42,8 +42,8 @@
     <ImageButton
         android:id="@+id/pause"
         android:contentDescription="@string/pauseTx"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignRight="@+id/nomeSessioneTx"
         android:layout_alignEnd="@+id/nomeSessioneTx"
         android:layout_alignTop="@+id/stop"
@@ -55,8 +55,8 @@
 
     <ImageButton
         android:id="@+id/stop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignLeft="@+id/insTesto"
         android:layout_alignStart="@+id/insTesto"
         android:layout_alignTop="@+id/start"

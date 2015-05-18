@@ -6,6 +6,7 @@ import android.view.*;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+
 public class CustomAdapter extends ArrayAdapter<Dati>{
 	
 	public CustomAdapter(Context context, int textViewResourceId, List <Dati> objects){
@@ -17,7 +18,7 @@ public class CustomAdapter extends ArrayAdapter<Dati>{
 		convertView = inflater.inflate(R.layout.list_items, null);
 		TextView nomeSessione = (TextView)convertView.findViewById(R.id.nomeSessione);
 		TextView dataEora = (TextView)convertView.findViewById(R.id.dataEora);
-		TextView durataSessione = (TextView)convertView.findViewById(R.id.durataSessione);
+		TextView durataSessione = (TextView)convertView.findViewById(R.id.durataSessione);		
 		Dati d = getItem(position);
 		//picture.setImage();
 		nomeSessione.setText(d.getNomeSessione());

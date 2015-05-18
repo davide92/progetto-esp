@@ -25,6 +25,7 @@ public class Second extends ActionBarActivity {
     	MenuItem meIt3 = menu.add(0, R.id.rinomina, 3, "Rinomina");
     	MenuItem meIt4 = menu.add(0, R.id.preferenze, 4, "Preferenze");
     	meIt1.setIntent(new Intent(this, Third.class));
+    	meIt3.setIntent(new Intent(this, Sixth.class));
     	meIt4.setIntent(new Intent(this, Fifth.class));
     	return true;
     } 

@@ -29,5 +29,6 @@
     <string name="maxDuratSessTx">Massima durata sessione:</string>
     <string name="emailListTx">Lista e-mail</string>
     <string name="alarmTx">Allarme</string>
+    <string name="title_activity_sixth">Rinomina Sessione</string>
     
 </resources>

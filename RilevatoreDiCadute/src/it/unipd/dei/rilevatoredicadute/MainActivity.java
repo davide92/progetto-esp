@@ -12,18 +12,22 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.database.Cursor;
 
 
 
-public class MainActivity extends ActionBarActivity {
-		
+
+public class MainActivity extends ActionBarActivity {		
+	
+	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        
+        setContentView(R.layout.activity_main);           
         ListView listView = (ListView) findViewById(R.id.listView1);
         List<Dati> list = new LinkedList<Dati>();
+       // MyDatabase db= new MyDatabase(this);
+        //Cursor crs=db.fetchSessioni();       
         list.add(new Dati());
         CustomAdapter adapter = new CustomAdapter(this, R.layout.list_items, list);
         listView.setAdapter(adapter);
@@ -46,6 +50,7 @@ public class MainActivity extends ActionBarActivity {
     	MenuItem meIt4 = menu.add(0, R.id.preferenze, 4, "Preferenze");
     	meIt1.setIntent(new Intent(this, Third.class));
     	meIt4.setIntent(new Intent(this, Fifth.class));
+    	meIt3.setIntent(new Intent(this, Sixth.class));
     	return true;
     } 
     
