@@ -41,6 +41,29 @@ public class Third extends ActionBarActivity {
 			
 			
 		});
+		
+		pauseBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				pauseBtn.setVisibility(View.INVISIBLE);
+				playBtn.setVisibility(View.VISIBLE);			
+
+			
+			}
+			
+			
+		});
+		
+		stopBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {			
+
+			}
+			
+			
+		});
 	}
 
 	/*@Override
