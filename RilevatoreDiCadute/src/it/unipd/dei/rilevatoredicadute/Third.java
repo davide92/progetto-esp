@@ -11,55 +11,67 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ContentValues;
+import android.util.Log;
+
+import java.util.GregorianCalendar;
 
 public class Third extends ActionBarActivity {
+	
+	//Dati da = new Dati();
+	GregorianCalendar cal;
+	boolean play=true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_third);
 		
-		EditText et = (EditText)findViewById(R.id.insTesto);		
+				
+		final EditText et = (EditText)findViewById(R.id.insTesto);		
 		
 		final ImageButton playBtn = (ImageButton)findViewById(R.id.start);
 		final ImageButton pauseBtn = (ImageButton)findViewById(R.id.pause);
 		final ImageButton stopBtn = (ImageButton)findViewById(R.id.stop);
 		pauseBtn.setVisibility(View.INVISIBLE);
-		playBtn.setOnClickListener(new View.OnClickListener() {
-					
+		
+		playBtn.setOnClickListener(new View.OnClickListener() {					
 			@Override
 			public void onClick(View v) {
+				cal= new GregorianCalendar();			
+				if(play){
 				playBtn.setVisibility(View.INVISIBLE);
-				pauseBtn.setVisibility(View.VISIBLE);			
-
-				 /*   MyDatabase mmdb=new MyDatabase(getBaseContext());            
-				    mmdb.open();
-				    mmdb.insertSessione("sessione prova", "25-04-2015", "17.02", "12.56", "0");				    
-				            mmdb.close();*/
+				pauseBtn.setVisibility(View.VISIBLE);	
+				
+				//da.setData(cal.get(GregorianCalendar.YEAR), cal.get(GregorianCalendar.MONTH)+1, cal.get(GregorianCalendar.DATE));
+				String data = ""+cal.get(GregorianCalendar.YEAR)+ "/" + (cal.get(GregorianCalendar.MONTH)+1)+ "/" +cal.get(GregorianCalendar.DATE);
+				
+				//da.setHour(cal.get(GregorianCalendar.HOUR_OF_DAY), cal.get(GregorianCalendar.MINUTE), cal.get(GregorianCalendar.SECOND));
+				String ora = ""+cal.get(GregorianCalendar.HOUR_OF_DAY)+ ":" + cal.get(GregorianCalendar.MINUTE)+ ":" +cal.get(GregorianCalendar.SECOND);
+				
+				MyDBManager db = new MyDBManager(getApplicationContext());
+				db.addSessione(et.getText().toString(), data, ora, "0:0:0", 0);
+				db.close();
+				 Intent UI2 = new Intent(getApplicationContext(), MainActivity.class);
+		         	startActivity(UI2);
+				play=false;
+				Log.v("List","ho premuti il tasto play");
+				}
+				else{
+					System.out.println("okokokokokokokokokokk");
+				}			 
 			}
 			
 			
 		});
 		
-		pauseBtn.setOnClickListener(new View.OnClickListener() {
+		pauseBtn.setOnClickListener(new View.OnClickListener(){
 			
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v){
+				playBtn.setVisibility(View.VISIBLE);
 				pauseBtn.setVisibility(View.INVISIBLE);
-				playBtn.setVisibility(View.VISIBLE);			
-
-			
-			}
-			
-			
-		});
-		
-		stopBtn.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {			
-
+				play=true;
+				Log.v("List","ho premuti il tasto pause");
 			}
 			
 			
