@@ -65,5 +65,13 @@
         android:contentDescription="@string/stopTx"
         android:background="@android:color/transparent"
         android:src="@drawable/stopbutton" />
+    
+        <Chronometer
+        android:id="@+id/chronometer"
+        android:format="%s"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="40sp"
+        android:layout_below="@+id/start"/>
 
 </RelativeLayout>

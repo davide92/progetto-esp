@@ -38,15 +38,12 @@
         <activity
             android:name=".Fifth"
             android:label="@string/title_activity_fifth" >
-        </activity>
-        <activity
-            android:name=".Sixth"
-            android:label="@string/title_activity_sixth" >
-        </activity>
+        </activity>       
         <activity
             android:name=".Delete"
             android:label="@string/title_activity_delete" >
         </activity>
+        
     </application>
 
 </manifest>

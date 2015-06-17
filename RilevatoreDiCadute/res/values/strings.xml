@@ -8,7 +8,7 @@
     <string name="rename">Rinomina</string>
     <string name="preference">Preferenze</string>
     <string name="textDurata">Durata:</string>
-    <string name="textCadute">Cadute:</string>
+    <string name="textCadute">Cadute:</string>    
     <string name="title_activity_second">Dettagli</string>
     <string name="inizio">Inizio Sessione:</string>
     <string name="txLista">Lista cadute</string>
@@ -28,8 +28,8 @@
     <string name="simpleRateTx">Frequenza di campionamento:</string>
     <string name="maxDuratSessTx">Massima durata sessione:</string>
     <string name="emailListTx">Lista e-mail</string>
-    <string name="alarmTx">Allarme</string>
-    <string name="title_activity_sixth">Rinomina Sessione</string>
-    <string name="title_activity_delete">Elimina Sessione</string>
+    <string name="alarmTx">Allarme</string>    
+    <string name="title_activity_delete">Elimina Sessione</string> 
+    <string name="mostra">Mostra Sessione</string>       
     
 </resources>

@@ -1,6 +1,6 @@
 package it.unipd.dei.rilevatoredicadute;
 
-public class Dati {
+public class DatiCadute {
 	
 	private int year;
 	private int month;
@@ -8,32 +8,24 @@ public class Dati {
 	private int hour;
 	private int minute;
 	private int second;
-	private int falls;
-	private String nomeSessione;
-	private String durataSessione;
+	private int latitudine;
+	private int longitudine;
 	
 	
-	public Dati(String nS, int d, int m, int y, int h, int min, int sec, String dS, int fal){
-		nomeSessione = nS;
+	public DatiCadute(int d, int m, int y, int h, int min, int sec, int lat, int lon){		
 		day = d;
 		month = m;
 		year = y;
 		hour = h;
 		minute = min;
 		second = sec;
-		durataSessione = dS;
-		falls=fal;
+		latitudine=lat;
+		longitudine=lon;
 	}
 	
-	public Dati(){
-		//durataSessione = 0 + ":" + 0 + ":" + 0;
-		this("nessuna sessione", 0, 0, 0, 0, 0, 0, 0 + ":" + 0 + ":" + 0, 0);
-		 
-	}
-
-	public void setNomeSessione( String nS){
-		nomeSessione = nS;
-	}
+	public DatiCadute(){
+		this( 0, 0, 0, 0, 0, 0, 0, 0);		 
+	}	
 	
 	public void setData(int d, int m, int y){
 		day = d;
@@ -45,12 +37,8 @@ public class Dati {
 		hour = h;
 		minute = min;
 		second = sec;
-	}
+	}	
 	
-		
-	public String getNomeSessione(){
-		return nomeSessione;
-	}
 
 	public String getData(){
 		return(Integer.toString(day)+ "/" + Integer.toString(month) + "/" + Integer.toString(year));
@@ -60,11 +48,22 @@ public class Dati {
 		return(Integer.toString(hour)+ ":" + Integer.toString(minute) + ":" + Integer.toString(second));
 	}
 	
-	public String getDurataSessione(){
-		return durataSessione;
+	public void setLatitudine(int lat){
+		latitudine=lat;
 	}
 	
-	public void setSessione(String ds){
-		durataSessione=ds;
+	public void setLongitudine(int lon){
+		longitudine=lon;
 	}
+	
+	public int getLongitudine(){
+		return longitudine;
+	}
+
+	public int getLatitudine(){
+		return latitudine;
+	}
+
+	
+	
 }

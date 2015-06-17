@@ -18,19 +18,24 @@ import android.database.Cursor;
 
 
 
-public class MainActivity extends ActionBarActivity {	
+public class MainActivity extends ActionBarActivity {			
 	
-	MyDBManager db= new MyDBManager(this);	
-	
+	MyDBManager db;
+	//Intent intent=getIntent();
+    String pkg="it.unipd.dei.rilevatoredicadute";    
+   // boolean p=intent.getBooleanExtra(pkg+".myPlay",true);	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        db = new MyDBManager(this);         
+        String durataSessione = 0 + ":" + 0 + ":" + 0;
         setContentView(R.layout.activity_main);           
         ListView listView = (ListView) findViewById(R.id.listView1);
         List<Dati> list = new LinkedList<Dati>();
         
         Cursor crs=db.selectSessione();         
         if(crs.moveToFirst()){
+        	do{
             String strData = crs.getString(crs.getColumnIndex("DataInizio"));
             String[] dataf=strData.split("/");
             int day=Integer.parseInt(dataf[0]);  
@@ -41,9 +46,10 @@ public class MainActivity extends ActionBarActivity {
             String[] oraf=strTime.split(":");
             int hour=Integer.parseInt(oraf[0]);  
             int minutes=Integer.parseInt(oraf[1]);  
-            int seconds=Integer.parseInt(oraf[2]); 
-            do{
-            	list.add(new Dati(crs.getString(1),day, month, year,hour, minutes, seconds));
+            int seconds=Integer.parseInt(oraf[2]);
+            int falls=Integer.parseInt(crs.getString(crs.getColumnIndex("NCadute")));
+            durataSessione = crs.getString(crs.getColumnIndex("Durata"));              
+            list.add(new Dati(crs.getString(1),day, month, year,hour, minutes, seconds, durataSessione, falls));
             }while(crs.moveToNext());//fine while
         }
         else{
@@ -52,18 +58,17 @@ public class MainActivity extends ActionBarActivity {
         crs.close();
         
         CustomAdapter adapter = new CustomAdapter(this, R.layout.list_items, list);
-        listView.setAdapter(adapter);
+        listView.setAdapter(adapter);        
         listView.setOnItemClickListener(new OnItemClickListener(){
-    	public void onItemClick(AdapterView<?> adapter, View v, int position, long id){
-
-    		//final String titoloriga = (String) adapter.getItemAtPosition(position);  
-            //Log.d("List", "Ho cliccato sull'elemento con titolo" + titoloriga);  
-        	//Dati value = (Dati)adapter.getItemAtPosition(position);
-        	Intent UI2 = new Intent(getApplicationContext(), Second.class);
-        	startActivity(UI2);
+    	public void onItemClick(AdapterView<?> adapter, View v, int position, long id){      		
+    		
+    		Intent UI2;    		
+    		UI2 = new Intent(getApplicationContext(), Second.class);    		
+    		UI2.putExtra(pkg+".nameSession", ((Dati)adapter.getItemAtPosition(position)).getNomeSessione());     		   	
+    		Log.v("grazie",((Dati)adapter.getItemAtPosition(position)).getNomeSessione());
+        	startActivity(UI2);        	
         	}
-        });        
-        //db.close();
+        });          
             
 	}
 	@Override
@@ -74,20 +79,19 @@ public class MainActivity extends ActionBarActivity {
 	    {
 	        db.close();
 	    }
-	}
-	
+	}	
 
 	@Override
     public boolean onCreateOptionsMenu(Menu menu){
-		super.onCreateOptionsMenu(menu);
+		super.onCreateOptionsMenu(menu);		
+			    
     	MenuItem meIt1 = menu.add(0, R.id.nuovaSessione, 1, "Nuova Sessione");
-    	MenuItem meIt2 = menu.add(0, R.id.delete, 2, "Elimina");
-    	MenuItem meIt3 = menu.add(0, R.id.rinomina, 3, "Rinomina");
+    	MenuItem meIt2 = menu.add(0, R.id.delete, 2, "Elimina");    	
     	MenuItem meIt4 = menu.add(0, R.id.preferenze, 4, "Preferenze");
-    	meIt1.setIntent(new Intent(this, Third.class));
+    	meIt1.setIntent(new Intent(this, Third.class));    	
     	meIt2.setIntent(new Intent(this, Delete.class));
     	meIt4.setIntent(new Intent(this, Fifth.class));
-    	meIt3.setIntent(new Intent(this, Sixth.class));
+    	
     	return true;
     } 
 	    

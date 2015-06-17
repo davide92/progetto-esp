@@ -33,7 +33,7 @@
 <TextView android:id="@+id/dataEora" 
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content"
-     android:layout_below="@+id/picutre" 
+     android:layout_below="@+id/picture" 
      android:layout_toRightOf="@+id/inizio"
       android:textSize="20sp"/>
 
@@ -60,6 +60,20 @@
     android:text="@string/txLista" 
     android:textSize="20sp" 
     android:textStyle="bold"/>
+
+<TextView android:id="@+id/textCadute" 
+    android:layout_width="wrap_content"
+     android:layout_height="wrap_content" 
+     android:layout_below="@+id/durataSessione" 
+     android:layout_alignParentRight="true"   
+     android:textSize="20sp"/>
+
+<TextView android:id="@+id/caduta" 
+    android:layout_width="wrap_content"
+     android:layout_height="wrap_content" 
+     android:layout_below="@+id/durataSessione" 
+     android:layout_toRightOf="@+id/textCadute"  
+     android:textSize="20sp"/>
 
 <LinearLayout android:id="@+id/linearLayout1" 
     android:orientation="vertical" 

@@ -51,24 +51,17 @@ public void addCaduta(String data, String ora, String lat, String lon, String se
 		db.insert(MyDBHelper.TABLE_CADUTA, null, cv);
 	}
 
-public void deleteSessione(int id){
+public void deleteSessione(String nome_sessione){
 	SQLiteDatabase db = dbhelper.getWritableDatabase();
-	String string =String.valueOf(id);
-	String delete = "DELETE FROM "+MyDBHelper.TABLE_SESSIONE+ " WHERE " +MyDBHelper.COL_IDS+ " =" +id;
-	db.execSQL(delete);
-	
+	String delete = "DELETE FROM "+MyDBHelper.TABLE_SESSIONE+ " WHERE " +MyDBHelper.COL_NOME+ " = '" +nome_sessione+"';";
+	db.execSQL(delete);	
 }
 
-public boolean renameSessione(String newName, int id)
-{
-   SQLiteDatabase db=dbhelper.getWritableDatabase();
-   String RENAME_SESSIONE = "UPDATE" + MyDBHelper.TABLE_SESSIONE + "SET" + MyDBHelper.COL_NOME + "=" 
-                            + newName + "WHERE"+ MyDBHelper.COL_IDS + "= ?" + id + "";
-   db.execSQL(RENAME_SESSIONE);
-   return true;
+public void updateDurataSessione(String newDurata, String nameSessione){
+	SQLiteDatabase db = dbhelper.getWritableDatabase();
+	String update = "UPDATE "+MyDBHelper.TABLE_SESSIONE+" SET "+MyDBHelper.COL_DURATA+" = '"+newDurata+"' WHERE "+MyDBHelper.COL_NOME+" = '"+nameSessione+"';";
+	db.execSQL(update);
 }
-
-
 
 public Cursor selectSessione(){
     Cursor crs=null;
@@ -83,9 +76,6 @@ public Cursor selectSessione(){
        }     
      return crs;
  }
-
-
-
 
  public Cursor selectCaduta()
  {
@@ -102,6 +92,13 @@ public Cursor selectSessione(){
      }     
      return crs;     
  }
+ 
+ /*public void numberCaduta(){
+	 SQLiteDatabase db=dbhelper.getReadableDatabase();
+	 String numeroCaduta="SELECT COUNT( " +MyDBHelper.COL_IDC+ " FROM " +MyDBHelper.TABLE_CADUTA+ " );";
+	 db.execSQL(numeroCaduta);
+	 //return Integer.parseInt(numeroCaduta);
+ }*/
 
 	
 	

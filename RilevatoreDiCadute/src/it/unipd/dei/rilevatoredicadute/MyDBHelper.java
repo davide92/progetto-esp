@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class MyDBHelper extends SQLiteOpenHelper {
 
-	private static final int DATABASE_VERSION = 6;
+	private static final int DATABASE_VERSION = 7;
 	private static final String DATABASE_NAME = "progettoDB.db";
 	public static final String TABLE_SESSIONE = "Sessione";
 	public static final String TABLE_CADUTA="Caduta";	
@@ -36,9 +36,9 @@ public class MyDBHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		String CREATE_SESSIONE_TABLE = "CREATE TABLE "
-	                + TABLE_SESSIONE + "("
-             		+ COL_IDS        +   " INTEGER PRIMARY KEY AUTOINCREMENT, "
-             		+ COL_NOME 	     +   " TEXT NOT NULL, "
+	                + TABLE_SESSIONE + "("	                
+             		+ COL_IDS        +   " INTEGER PRIMARY KEY AUTOINCREMENT, " 
+             		+ COL_NOME 	     +   " TEXT UNIQUE, "
              		+ COL_DATA       +   " TEXT NOT NULL, "
 	                + COL_ORA        +   " TEXT NOT NULL, " 
              		+ COL_DURATA     +   " TEXT NOT NULL, "  
@@ -48,13 +48,15 @@ public class MyDBHelper extends SQLiteOpenHelper {
       		db.execSQL(CREATE_SESSIONE_TABLE);
 
 		
-		/*String CREATE_CADUTA_TABLE = "CREATE TABLE " +
+		String CREATE_CADUTA_TABLE = "CREATE TABLE " +
              		TABLE_CADUTA + "("
-             		+ COL_IDC + " INTEGER PRIMARY KEY," + COL_DATAC 
-             		+ " TEXT NOT NULL," + COL_ORAC + " TEXT NOT NULL,"
-	                        + COL_LAT + "TEXT NOT NULL," + COL_LON + "TEXT NOT NULL," 
-		+ COL_SESS + "TEXT NOT NULL" + ")";
-      		db.execSQL(CREATE_CADUTA_TABLE);*/
+             		+ COL_IDC 			+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
+             		+ COL_DATAC 		+ " TEXT NOT NULL, "
+             		+ COL_ORAC 			+ " TEXT NOT NULL, "
+	                + COL_LAT 			+ " TEXT NOT NULL, " 
+             		+ COL_LON 			+ " TEXT NOT NULL, " 
+             		+ COL_SESS 			+ " TEXT NOT NULL " + ");";
+      		db.execSQL(CREATE_CADUTA_TABLE);
 	}
 
 
