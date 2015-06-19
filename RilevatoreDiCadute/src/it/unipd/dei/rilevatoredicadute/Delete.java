@@ -29,27 +29,29 @@ public class Delete extends ActionBarActivity {
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);           
+        setContentView(R.layout.activity_main); 
+        String durataSessione = 0 + ":" + 0 + ":" + 0;
         final ListView listView = (ListView) findViewById(R.id.listView1);
         List<Dati> list = new LinkedList<Dati>();
         
-        crs=db.selectSessione();         
+        crs=db.selectAllSessions();         
         if(crs.moveToFirst()){
         	do{
-            String strData = crs.getString(crs.getColumnIndex("DataInizio"));
-            String[] dataf=strData.split("/");
-            int day=Integer.parseInt(dataf[0]);  
-            int month=Integer.parseInt(dataf[1]);  
-            int year=Integer.parseInt(dataf[2]);
+        		String strData = crs.getString(crs.getColumnIndex("DataInizio"));
+        		String[] dataf=strData.split("/");
+        		int day=Integer.parseInt(dataf[0]);  
+        		int month=Integer.parseInt(dataf[1]);  
+        		int year=Integer.parseInt(dataf[2]);
 
-            String strTime = crs.getString(crs.getColumnIndex("OraInizio"));
-            String[] oraf=strTime.split(":");
-            int hour=Integer.parseInt(oraf[0]);  
-            int minutes=Integer.parseInt(oraf[1]);  
-            int seconds=Integer.parseInt(oraf[2]); 
-            int falls=Integer.parseInt(crs.getString(crs.getColumnIndex("NCadute")));
-            String durataSessione = 0 + ":" + 0 + ":" + 0;            
-            list.add(new Dati(crs.getString(1),day, month, year,hour, minutes, seconds, durataSessione, falls));
+        		String strTime = crs.getString(crs.getColumnIndex("OraInizio"));
+        		String[] oraf=strTime.split(":");
+        		int hour=Integer.parseInt(oraf[0]);  
+        		int minutes=Integer.parseInt(oraf[1]);  
+        		int seconds=Integer.parseInt(oraf[2]); 
+        		int falls=Integer.parseInt(crs.getString(crs.getColumnIndex("NCadute")));
+        		
+        		durataSessione = crs.getString(crs.getColumnIndex("Durata")); 
+            	list.add(new Dati(crs.getString(1),day, month, year,hour, minutes, seconds, durataSessione, falls));
             }while(crs.moveToNext());//fine while
         }
         else{

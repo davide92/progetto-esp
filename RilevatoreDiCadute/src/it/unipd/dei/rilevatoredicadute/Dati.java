@@ -67,4 +67,8 @@ public class Dati {
 	public void setSessione(String ds){
 		durataSessione=ds;
 	}
+	
+	public int getFalls(){
+		return falls;
+	}
 }

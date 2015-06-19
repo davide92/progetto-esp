@@ -16,12 +16,11 @@ import java.util.GregorianCalendar;
 import android.widget.Chronometer;
 
 
-public class Third extends ActionBarActivity {
+public class SessioneCorrente extends ActionBarActivity {
 	
 	private Chronometer chronometer;
 	GregorianCalendar cal;
 	MyDBManager db;
-	private long stopTime=0;
 	private boolean playable;
 	//String pkg=getPackageName();
 	
@@ -34,36 +33,32 @@ public class Third extends ActionBarActivity {
 	@Override
 	protected void onStart(){
 		super.onStart();
-		//Intent intent=getIntent();
-		//String pkg="it.unipd.dei.rilevatoredicadute";    
-		//final String nS=intent.getStringExtra(pkg+".nameSession");
-		db = new MyDBManager(this);
-			
+		
+		db = new MyDBManager(/*getApplicationContext()*/this);			
 		final EditText et = (EditText)findViewById(R.id.insTesto);			
 		final ImageButton playBtn = (ImageButton)findViewById(R.id.start);
 		final ImageButton pauseBtn = (ImageButton)findViewById(R.id.pause);
 		final ImageButton stopBtn = (ImageButton)findViewById(R.id.stop);
+		
 		chronometer = (Chronometer) findViewById(R.id.chronometer);
-		pauseBtn.setVisibility(View.INVISIBLE);
-		//final String nomeSessione=et.getText().toString();
+		Intent intent=getIntent();
+		final Long[] tempoStop={0L};
+		tempoStop[0] =intent.getLongExtra(MainActivity.PACKAGE_NAME+".stopTime",0);
+		Log.v("TEMPO CRONOMETRATOSSSS", ""+tempoStop[0]+"");		
+		pauseBtn.setVisibility(View.INVISIBLE);		
 		
 		playBtn.setOnClickListener(new View.OnClickListener() {					
 			@Override
 			public void onClick(View v) {
 				
 				playable=false;
-				cal= new GregorianCalendar();
-								
+				cal= new GregorianCalendar();								
 				playBtn.setVisibility(View.INVISIBLE);
-				pauseBtn.setVisibility(View.VISIBLE);	
-				
+				pauseBtn.setVisibility(View.VISIBLE);					
 				//da.setData(cal.get(GregorianCalendar.YEAR), cal.get(GregorianCalendar.MONTH)+1, cal.get(GregorianCalendar.DATE));
-				String data = ""+cal.get(GregorianCalendar.YEAR)+ "/" + (cal.get(GregorianCalendar.MONTH)+1)+ "/" +cal.get(GregorianCalendar.DATE);
-				
+				String data = ""+cal.get(GregorianCalendar.YEAR)+ "/" + (cal.get(GregorianCalendar.MONTH)+1)+ "/" +cal.get(GregorianCalendar.DATE);				
 				//da.setHour(cal.get(GregorianCalendar.HOUR_OF_DAY), cal.get(GregorianCalendar.MINUTE), cal.get(GregorianCalendar.SECOND));
 				//String ora = ""+cal.get(GregorianCalendar.HOUR_OF_DAY)+ ":" + cal.get(GregorianCalendar.MINUTE)+ ":" +cal.get(GregorianCalendar.SECOND);
-				
-				
 				long milliseconds=System.currentTimeMillis();
 				int seconds = (int) (milliseconds / 1000) % 60 ;
 				int minutes = (int) ((milliseconds / (1000*60)) % 60);
@@ -72,19 +67,17 @@ public class Third extends ActionBarActivity {
 				db.addSessione(et.getText().toString(), data, ora, "XX:XX:XX", 0);
 				Log.v("ora1",""+cal.get(GregorianCalendar.HOUR_OF_DAY)+ ":" + cal.get(GregorianCalendar.MINUTE)+ ":" +cal.get(GregorianCalendar.SECOND));
 				Log.v("ora2",""+hours+""+minutes+""+seconds+"");
-				db.close();  
-				
+				db.close(); 				
 				//GESTIONE PLAY/RESUME CRONOMETRO
-				if ( stopTime == 0 )
+				if ( tempoStop[0] == 0 )
 			        chronometer.setBase( SystemClock.elapsedRealtime() );
 			    // on resume after pause
 			    else
 			    {
-			        long intervalloPausa = (SystemClock.elapsedRealtime() - stopTime);
-			        chronometer.setBase( chronometer.getBase() + intervalloPausa );
+			        long intervalloPausa = (SystemClock.elapsedRealtime() - tempoStop[0]);
+			        chronometer.setBase( /*chronometer.getBase()*/tempoStop[0] + intervalloPausa );
 			    }
 			    chronometer.start();
-				
 			    //FINE GESTIONE			    
 				
 				//String pkg=getPackageName();				
@@ -105,7 +98,7 @@ public class Third extends ActionBarActivity {
 				pauseBtn.setVisibility(View.INVISIBLE);
 				Log.v("List","ho premuti il tasto pause");
 				chronometer.stop();
-			    stopTime = SystemClock.elapsedRealtime();
+			    tempoStop[0] = SystemClock.elapsedRealtime();
 			}			
 			
 		});
@@ -129,18 +122,18 @@ public class Third extends ActionBarActivity {
 				playable=true;
 			}			
 			
-		});		
+		});
+		//Intent UIM;    		
+		//UIM = new Intent(getApplicationContext(), MainActivity.class);    		
+		//UIM.putExtra(MainActivity.PACKAGE_NAME+".playable", playable);
 	}
 	
 	@Override
 	protected void onPause(){
 		super.onPause();
-		Log.v("pausaNuovaSessione","!!!!111!!1!!!!!!!!!!1111");
-		Intent UISEC;    		
-		UISEC = new Intent(getApplicationContext(), SessioneCorrente.class);    		
-		UISEC.putExtra(MainActivity.PACKAGE_NAME+".stopTime", chronometer.getBase());
-		Log.v("TEMPO CRONOMETRATO", ""+chronometer.getBase()+"");
-	}	
+		Log.v("pausa6666","<--------->");
+		
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

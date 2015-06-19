@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 //import java.util.Date;
 import android.util.Log;
@@ -25,19 +26,33 @@ public class Second extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Intent intent=getIntent();
-		String pkg="it.unipd.dei.rilevatoredicadute";    
-		String nS=intent.getStringExtra(pkg+".nameSession");	
-		setContentView(R.layout.activity_second);
+		Intent intent=getIntent();		    
+		String nS=intent.getStringExtra(MainActivity.PACKAGE_NAME+".nameSession");	
+		 setContentView(R.layout.activity_second);
 		//ListView listView = (ListView) findViewById(R.id.listViewCadute);		
         //List<DatiCadute> listFalls = new LinkedList<DatiCadute>();	
         db=new MyDBManager(this);
+        Cursor crs=db.selectSession(nS);
         Cursor c=db.selectCaduta();
         int result = c.getCount();
+        TextView nomeSessione = (TextView)findViewById(R.id.nomeSessione);
+		TextView data = (TextView)findViewById(R.id.data);
+		TextView ora = (TextView)findViewById(R.id.ora);
+		TextView durataSessione = (TextView)findViewById(R.id.durataSessione);
+		TextView NCadute = (TextView)findViewById(R.id.numeroCadute);
+		//Dati d = getItem(position);
+		//picture.setImage();
+		if (crs.moveToFirst()){
+		nomeSessione.setText(crs.getString(0));
+		data.setText(crs.getString(1));
+		ora.setText(crs.getString(2));
+		durataSessione.setText(crs.getString(3));
+		//NCadute.setText((crs.getString(3)));
+		}
         Log.v("numero di cadute","" +result+ "");
-        Log.v("nome sessione",nS);
+        Log.v("nome sessione---->",nS);
         c.close();
-        
+        crs.close();
 		
 		/* CustomAdapterFalls Fallsadapter = new CustomAdapterFalls(this, R.layout.fall_item, listFalls);
 	        listView.setAdapter(Fallsadapter);

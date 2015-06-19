@@ -7,15 +7,18 @@
     <string name="delete">Cancella</string>
     <string name="rename">Rinomina</string>
     <string name="preference">Preferenze</string>
-    <string name="textDurata">Durata:</string>
+    <string name="textDurata">Durata--></string>
     <string name="textCadute">Cadute:</string>    
     <string name="title_activity_second">Dettagli</string>
-    <string name="inizio">Inizio Sessione:</string>
+    <string name="inizio">Inizio Sessione</string>
+    <string name="txDataInizio">Data Inizio-></string>
+    <string name="txOraInizio">Ora Inizio-></string>
     <string name="txLista">Lista cadute</string>
     <string name="caduta">Caduta</string>
     <string name="avvenuta">Avvenuta:</string>
     <string name="notificaOk">Successo notifica</string>
-    <string name="title_activity_third">Sessione in corso</string>
+    <string name="title_activity_third">Nuova Sessione</string>
+    <string name="sessioneInCorso">Sessione in corso</string>
     <string name="textSessione">Nome sessione:</string>
     <string name="startTx">Start</string>
     <string name="pauseTx">Pause</string>
@@ -29,7 +32,8 @@
     <string name="maxDuratSessTx">Massima durata sessione:</string>
     <string name="emailListTx">Lista e-mail</string>
     <string name="alarmTx">Allarme</string>    
-    <string name="title_activity_delete">Elimina Sessione</string> 
+    <string name="title_activity_delete">Elimina Sessione</string>
+    <string name="title_activity_sixth">Sessione In Corso</string> 
     <string name="mostra">Mostra Sessione</string>       
     
 </resources>

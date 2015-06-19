@@ -43,6 +43,10 @@
             android:name=".Delete"
             android:label="@string/title_activity_delete" >
         </activity>
+        <activity
+            android:name=".SessioneCorrente"
+            android:label="@string/title_activity_sixth" >
+        </activity>
         
     </application>
 

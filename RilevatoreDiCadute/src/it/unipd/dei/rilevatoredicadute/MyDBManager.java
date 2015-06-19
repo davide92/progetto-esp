@@ -63,7 +63,9 @@ public void updateDurataSessione(String newDurata, String nameSessione){
 	db.execSQL(update);
 }
 
-public Cursor selectSessione(){
+
+//ESEGUE IL SELECT SU TUTTE LE SESSIONI
+public Cursor selectAllSessions(){
     Cursor crs=null;
      try
      {
@@ -76,6 +78,26 @@ public Cursor selectSessione(){
        }     
      return crs;
  }
+
+//ESEGUE IL SELECT SULLA SESSIONE PASSATA PER PARAMETRO
+public Cursor selectSession(String nameSession){
+  Cursor crs=null;
+  String selectColumns[] = new String[]{""+MyDBHelper.COL_NOME+"",""+MyDBHelper.COL_DATA+"",""+MyDBHelper.COL_ORA+"",""+MyDBHelper.COL_DURATA+"", ""+MyDBHelper.COL_NCADUTE+""};
+  String whereClause = ""+MyDBHelper.COL_NOME+"= ?" ;
+  String whereArgs[] = new String[]{""+nameSession+""};
+  
+  try
+   {
+      SQLiteDatabase db=dbhelper.getReadableDatabase();
+      crs=db.query(MyDBHelper.TABLE_SESSIONE, selectColumns, whereClause, whereArgs, null, null, null, null);        
+   }
+   catch(SQLiteException sqle)
+   {
+     return null;
+     }     
+   return crs;
+}
+
 
  public Cursor selectCaduta()
  {

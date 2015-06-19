@@ -12,7 +12,7 @@
      android:title="@string/delete"
       android:onClick="methodName"/>
 
-<item android:id="@+id/rinomina"
+<item android:id="@+id/sessioneInCorso"
      android:title="@string/rename" 
      android:onClick="methodName"/>
 

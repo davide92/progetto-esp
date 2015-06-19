@@ -18,22 +18,30 @@ import android.database.Cursor;
 
 
 
-public class MainActivity extends ActionBarActivity {			
+public class MainActivity extends ActionBarActivity {	
+	
+	public static String PACKAGE_NAME; 
 	
 	MyDBManager db;
-	//Intent intent=getIntent();
-    String pkg="it.unipd.dei.rilevatoredicadute";    
+	//Intent intent=getIntent();        
    // boolean p=intent.getBooleanExtra(pkg+".myPlay",true);	
+    byte i=0;
+    
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        db = new MyDBManager(this);         
-        String durataSessione = 0 + ":" + 0 + ":" + 0;
-        setContentView(R.layout.activity_main);           
+        super.onCreate(savedInstanceState);        
+        db = new MyDBManager(this);
+        setContentView(R.layout.activity_main);
+	}
+	
+	@Override
+	protected void onStart(){
+		super.onStart();
+        String durataSessione = 0 + ":" + 0 + ":" + 0;         
+        PACKAGE_NAME = getApplicationContext().getPackageName();	
         ListView listView = (ListView) findViewById(R.id.listView1);
-        List<Dati> list = new LinkedList<Dati>();
-        
-        Cursor crs=db.selectSessione();         
+        List<Dati> list = new LinkedList<Dati>();	
+        Cursor crs=db.selectAllSessions();         
         if(crs.moveToFirst()){
         	do{
             String strData = crs.getString(crs.getColumnIndex("DataInizio"));
@@ -54,7 +62,7 @@ public class MainActivity extends ActionBarActivity {
         }
         else{
         	list.add(new Dati());
-        }
+        }//fine IF
         crs.close();
         
         CustomAdapter adapter = new CustomAdapter(this, R.layout.list_items, list);
@@ -64,13 +72,27 @@ public class MainActivity extends ActionBarActivity {
     		
     		Intent UI2;    		
     		UI2 = new Intent(getApplicationContext(), Second.class);    		
-    		UI2.putExtra(pkg+".nameSession", ((Dati)adapter.getItemAtPosition(position)).getNomeSessione());     		   	
-    		Log.v("grazie",((Dati)adapter.getItemAtPosition(position)).getNomeSessione());
+    		UI2.putExtra(PACKAGE_NAME+".nameSession", ((Dati)adapter.getItemAtPosition(position)).getNomeSessione());     		   	
+    		Log.v("Nome Sessione MA-->",((Dati)adapter.getItemAtPosition(position)).getNomeSessione());
         	startActivity(UI2);        	
         	}
         });          
             
 	}
+	
+	@Override
+	protected void onStop() {
+	    Log.w("TAG", "App stopped");
+	    super.onStop();
+	}
+	
+	@Override
+	protected void onPause() {
+	    Log.w("TAG", "App paused");
+	    super.onPause();
+	}
+	
+	
 	@Override
 	protected void onDestroy() 
 	{
@@ -85,14 +107,56 @@ public class MainActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu){
 		super.onCreateOptionsMenu(menu);		
 			    
-    	MenuItem meIt1 = menu.add(0, R.id.nuovaSessione, 1, "Nuova Sessione");
-    	MenuItem meIt2 = menu.add(0, R.id.delete, 2, "Elimina");    	
-    	MenuItem meIt4 = menu.add(0, R.id.preferenze, 4, "Preferenze");
-    	meIt1.setIntent(new Intent(this, Third.class));    	
+    	/*MenuItem meIt1 = */menu.add(0, R.id.nuovaSessione, 1, "Nuova Sessione");
+    	/*MenuItem meIt2 = */menu.add(0, R.id.delete, 2, "Elimina");
+    	/*MenuItem meIt3 = */menu.add(0, R.id.sessioneInCorso, 3, "Sessione In Corso" );
+    	/*MenuItem meIt4 = */menu.add(0, R.id.preferenze, 4, "Preferenze");
+    	/*if(i==0){
+    		Intent intent=getIntent();
+    		boolean play=intent.getBooleanExtra(PACKAGE_NAME+".playable",true);
+    		if(play==true)
+    		meIt1.setIntent(new Intent(this, Third.class));
+    	}
+    	else{
+    		Log.v("controllo sessione","Sessione in corso, non puoi crearne una");
+    	}
     	meIt2.setIntent(new Intent(this, Delete.class));
-    	meIt4.setIntent(new Intent(this, Fifth.class));
-    	
-    	return true;
+    	meIt3.setIntent(new Intent(this, Third.class));
+    	meIt4.setIntent(new Intent(this, Fifth.class));    	
+    	*/		
+		return true;
+		
     } 
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		//int id = item.getItemId();
+		//if (id == R.id.action_settings) {
+		//	return true;
+		//}
+		switch (item.getItemId()) {
+		case R.id.nuovaSessione:
+			startActivity(new Intent(this, Third.class));
+			break;
+ 
+		case R.id.delete:
+			startActivity(new Intent(this, Delete.class));
+			break;
+ 
+		case R.id.sessioneInCorso:
+			startActivity(new Intent(this, SessioneCorrente.class));
+			break;
+		
+		case R.id.preferenze:
+			Log.v("okokokok","sqsqsqsqsq");
+			break;
+		}	
+		return true;
+		
+		//return super.onOptionsItemSelected(item);
+	}
 	    
 }
