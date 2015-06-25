@@ -34,6 +34,9 @@
     <string name="alarmTx">Allarme</string>    
     <string name="title_activity_delete">Elimina Sessione</string>
     <string name="title_activity_sixth">Sessione In Corso</string> 
-    <string name="mostra">Mostra Sessione</string>       
+    <string name="mostra">Mostra Sessione</string> 
+    <string name="xTx">Asse x: </string>
+    <string name="yTx">Asse y: </string>
+    <string name="zTx">Asse z: </string>      
     
 </resources>

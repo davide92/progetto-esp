@@ -8,15 +8,31 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.util.Log;
 
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import android.widget.Chronometer;
 
 
-public class Third extends ActionBarActivity {
+public class Third extends ActionBarActivity implements SensorEventListener{
 	
 	private Chronometer chronometer;
 	GregorianCalendar cal;
@@ -24,6 +40,21 @@ public class Third extends ActionBarActivity {
 	private long stopTime=0;
 	private boolean playable;
 	//String pkg=getPackageName();
+	private SensorManager mysm = null;
+	private Sensor accel = null;;
+	private ArrayList<AccelData> acData = new ArrayList<AccelData>(1000);
+	private long it;
+	private int i = 0;
+	private int j = 0;
+	TextView xAccViewS = null;
+	TextView yAccViewS = null;
+	TextView zAccViewS = null;
+	DataOutputStream f = null;
+	FileOutputStream fo = null;
+	File file;
+	String lastFileName = "null";
+	String date;
+	Lock lock = new ReentrantLock();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -93,9 +124,9 @@ public class Third extends ActionBarActivity {
 				//startActivity(UI2);					
 				Log.v("List","ho premuti il tasto play");	
 				Log.v("tastoPlaySessione------->",et.getText().toString());
-			}
-			
-			
+				onBackPressed();
+				start();
+			}						
 		});
 		
 		pauseBtn.setOnClickListener(new View.OnClickListener(){			
@@ -106,6 +137,8 @@ public class Third extends ActionBarActivity {
 				Log.v("List","ho premuti il tasto pause");
 				chronometer.stop();
 			    stopTime = SystemClock.elapsedRealtime();
+			    onBackPressed();
+			    pause();
 			}			
 			
 		});
@@ -127,6 +160,8 @@ public class Third extends ActionBarActivity {
 				db.updateDurataSessione(ora,et.getText().toString());
 				Log.v("stopSessione------->",et.getText().toString());
 				playable=true;
+				onBackPressed();
+				stop();
 			}			
 			
 		});		
@@ -167,4 +202,170 @@ public class Third extends ActionBarActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}*/
+	
+	@Override
+	public void onBackPressed(){//non testato
+		if(playable){
+			super.onBackPressed();//back button funziona 
+		}else{
+			//back button bloccato
+		}
+	}
+	
+	private void start(){
+		
+		mysm = (SensorManager) getSystemService(SENSOR_SERVICE);
+		accel = mysm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		mysm.registerListener((SensorEventListener) this, accel, SensorManager.SENSOR_DELAY_NORMAL);
+		if(mysm.registerListener((SensorEventListener) this, accel, SensorManager.SENSOR_DELAY_NORMAL)){
+			int year = cal.get(GregorianCalendar.YEAR);
+			int month = cal.get(GregorianCalendar.MONTH)+1;
+			int day = cal.get(GregorianCalendar.DAY_OF_MONTH);
+			//int hour = c.get(GregorianCalendar.HOUR_OF_DAY);
+			//int min = c.get(GregorianCalendar.MINUTE);
+			//int sec= c.get(GregorianCalendar.SECOND);
+			date = "" + year + month + day /*+ hour + min + sec */;
+									
+		}
+				
+	}
+	
+	private void pause(){
+		if(mysm != null){
+			mysm.unregisterListener(this);			
+		}
+		xAccViewS.setText("0");
+		yAccViewS.setText("0");
+		zAccViewS.setText("0");
+		
+		if(!(lastFileName.equals(date))){
+			lastFileName = date;
+			try {
+				fo = openFileOutput(date, Context.MODE_PRIVATE);
+				fo.close();
+			} catch (FileNotFoundException e) {
+				Log.e("Impossibile trovare il file ", date, e);
+				Toast.makeText(	this, "Errore openFileOutput", Toast.LENGTH_LONG).show();
+			}catch (IOException e) {
+				Log.e("Impossibile chiudere il file", date, e); 
+				Toast.makeText(	this, "Errore chiusura", Toast.LENGTH_LONG).show();
+			}
+			
+		}
+		
+		if(i < acData.size()){
+			try {
+				fo = openFileOutput(date, Context.MODE_APPEND);
+				while(i < acData.size()){
+					fo.write(("" + acData.get(i).getT() + " " + acData.get(i).getX() + " " + acData.get(i).getY() + " " + acData.get(i).getZ() + '\n').getBytes());
+					i++;
+				}
+			} catch (FileNotFoundException e) {
+				Log.e("Impossibile trovare il file ", date, e);
+				Toast.makeText(	this, "Errore openFileOutput", Toast.LENGTH_LONG).show();
+			}catch (IOException e) {
+				Log.e("Impossibile scrivere sul file", date, e); 
+				Toast.makeText(	this, "Errore scrittura", Toast.LENGTH_LONG).show();
+			}
+			try {
+				fo.close();
+			} catch (IOException e) {
+				Log.e("Impossibile chiudere il file", date, e); 
+				Toast.makeText(	this, "Errore chiusura", Toast.LENGTH_LONG).show(); 
+			}
+		}
+	}
+	
+	private void stop(){
+		if(mysm != null){
+			mysm.unregisterListener(this);
+		}
+		
+		if(!(lastFileName.equals(date))){
+			lastFileName = date;			
+			try {
+				fo = openFileOutput(date, Context.MODE_PRIVATE);
+				fo.close();
+			} catch (FileNotFoundException e) {
+				Log.e("Impossibile trovare il file ", date, e);
+				Toast.makeText(	this, "Errore openFileOutput", Toast.LENGTH_LONG).show();
+			}catch (IOException e) {
+				Log.e("Impossibile chiudere il file", date, e); 
+				Toast.makeText(	this, "Errore chiusura", Toast.LENGTH_LONG).show();
+			}
+			
+		}
+		
+		if(i < acData.size()){
+			try {
+				fo = openFileOutput(date, Context.MODE_APPEND);
+				while(i < acData.size()){
+					fo.write(("" + acData.get(i).getT() + " " + acData.get(i).getX() + " " + acData.get(i).getY() + " " + acData.get(i).getZ() + '\n').getBytes());
+					i++;
+				}
+			} catch (FileNotFoundException e) {
+				Log.e("Impossibile trovare il file ", date, e);
+				Toast.makeText(	this, "Errore openFileOutput", Toast.LENGTH_LONG).show();
+			}catch (IOException e) {
+				Log.e("Impossibile scrivere sul file", date, e); 
+				Toast.makeText(	this, "Errore scrittura", Toast.LENGTH_LONG).show();
+			}
+			try {
+				fo.close();
+			} catch (IOException e) {
+				Log.e("Impossibile chiudere il file", date, e); 
+				Toast.makeText(	this, "Errore chiusura", Toast.LENGTH_LONG).show(); 
+			}
+		}
+		
+	
+
+		acData.clear();
+		i = j = 0;
+		
+		xAccViewS.setText("0");
+		yAccViewS.setText("0");
+		zAccViewS.setText("0");
+		accel = null;
+		
+	}
+	
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+		synchronized (this) {
+			if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
+				
+				/*xAccView.setText("" + event.values[0]);
+				yAccView.setText("" + event.values[1]);
+				zAccView.setText("" + event.values[2]);*/
+				try {
+					if(lock.tryLock(10000, TimeUnit.MILLISECONDS)){
+						float x = event.values[0];
+						float y = event.values[1];
+						float z = event.values[2];
+						//leastTime += System.currentTimeMillis();
+						AccelData d = new AccelData(System.currentTimeMillis()-it, x, y, z);
+						acData.add(d);
+					}
+					if(lock.tryLock(31000, TimeUnit.MILLISECONDS) &&(!acData.isEmpty()) && j < acData.size()){
+						xAccViewS.setText("" + acData.get(j).getX());
+						yAccViewS.setText("" + acData.get(j).getY());
+						zAccViewS.setText("" + acData.get(j).getZ());
+						j+=3;
+					}
+					lock.unlock();
+				} catch (InterruptedException e) {
+					Log.e("Problemi acelerometro", date, e); 
+					Toast.makeText(	this, "Errore lock", Toast.LENGTH_LONG).show(); 
+				}
+				
+			}
+		}
+	}
+
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		Log.d("Accelerometro", "onAccurancyChanged: " + sensor + ", accuracy: " + accuracy);
+		
+	}
 }
