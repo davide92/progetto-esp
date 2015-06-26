@@ -19,8 +19,7 @@ public class Fourth extends ActionBarActivity {
 		super.onCreateOptionsMenu(menu);
     	MenuItem meIt1 = menu.add(0, R.id.nuovaSessione, 1, "Nuova Sessione");
     	MenuItem meIt2 = menu.add(0, R.id.delete, 2, "Elimina");
-    	MenuItem meIt3 = menu.add(0, R.id.rinomina, 3, "Rinomina");
-    	MenuItem meIt4 = menu.add(0, R.id.preferenze, 4, "Preferenze");
+    	MenuItem meIt4 = menu.add(0, R.id.preferenze, 3, "Preferenze");
     	meIt1.setIntent(new Intent(this, Third.class));
     	meIt4.setIntent(new Intent(this, Fifth.class));
     	return true;

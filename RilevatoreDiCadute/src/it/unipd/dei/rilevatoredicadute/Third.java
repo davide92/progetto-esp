@@ -2,6 +2,7 @@ package it.unipd.dei.rilevatoredicadute;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.SystemClock;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,9 +26,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import android.widget.Chronometer;
 
@@ -44,8 +42,8 @@ public class Third extends ActionBarActivity implements SensorEventListener{
 	private Sensor accel = null;;
 	private ArrayList<AccelData> acData = new ArrayList<AccelData>(1000);
 	private long it;
-	private int i = 0;
-	private int j = 0;
+	private int i, j = 0;
+	private boolean rec, vis = true;
 	TextView xAccViewS = null;
 	TextView yAccViewS = null;
 	TextView zAccViewS = null;
@@ -54,7 +52,8 @@ public class Third extends ActionBarActivity implements SensorEventListener{
 	File file;
 	String lastFileName = "null";
 	String date;
-	Lock lock = new ReentrantLock();
+	CountDownTimer cdSave = null;
+	CountDownTimer cdView = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +124,36 @@ public class Third extends ActionBarActivity implements SensorEventListener{
 				Log.v("List","ho premuti il tasto play");	
 				Log.v("tastoPlaySessione------->",et.getText().toString());
 				onBackPressed();
+				
+				cdSave = new CountDownTimer(5000L, 1000L) {
+					
+					@Override
+					public void onTick(long millisUntilFinished) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+					@Override
+					public void onFinish() {
+						rec = true;
+						
+					}
+				}.start();
+				
+				cdView = new CountDownTimer(21000L, 1000L) {
+					
+					@Override
+					public void onTick(long millisUntilFinished) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+					@Override
+					public void onFinish() {
+						vis = true;
+						
+					}
+				}.start();
 				start();
 			}						
 		});
@@ -138,6 +167,8 @@ public class Third extends ActionBarActivity implements SensorEventListener{
 				chronometer.stop();
 			    stopTime = SystemClock.elapsedRealtime();
 			    onBackPressed();
+			    
+			    cdView.cancel();
 			    pause();
 			}			
 			
@@ -161,6 +192,9 @@ public class Third extends ActionBarActivity implements SensorEventListener{
 				Log.v("stopSessione------->",et.getText().toString());
 				playable=true;
 				onBackPressed();
+				
+				cdSave.cancel();
+				cdView.cancel();
 				stop();
 			}			
 			
@@ -335,30 +369,24 @@ public class Third extends ActionBarActivity implements SensorEventListener{
 		synchronized (this) {
 			if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
 				
-				/*xAccView.setText("" + event.values[0]);
-				yAccView.setText("" + event.values[1]);
-				zAccView.setText("" + event.values[2]);*/
-				try {
-					if(lock.tryLock(10000, TimeUnit.MILLISECONDS)){
-						float x = event.values[0];
-						float y = event.values[1];
-						float z = event.values[2];
-						//leastTime += System.currentTimeMillis();
-						AccelData d = new AccelData(System.currentTimeMillis()-it, x, y, z);
-						acData.add(d);
-					}
-					if(lock.tryLock(31000, TimeUnit.MILLISECONDS) &&(!acData.isEmpty()) && j < acData.size()){
-						xAccViewS.setText("" + acData.get(j).getX());
-						yAccViewS.setText("" + acData.get(j).getY());
-						zAccViewS.setText("" + acData.get(j).getZ());
-						j+=3;
-					}
-					lock.unlock();
-				} catch (InterruptedException e) {
-					Log.e("Problemi acelerometro", date, e); 
-					Toast.makeText(	this, "Errore lock", Toast.LENGTH_LONG).show(); 
+				if(rec){
+					float x = event.values[0];
+					float y = event.values[1];
+					float z = event.values[2];
+					AccelData d = new AccelData(System.currentTimeMillis()-it, x, y, z);
+					acData.add(d);
+					rec = false;
+					cdSave.start();
 				}
 				
+				if(vis && !acData.isEmpty()){
+					xAccViewS.setText("" + acData.get(j).getX());
+					yAccViewS.setText("" + acData.get(j).getY());
+					zAccViewS.setText("" + acData.get(j).getZ());
+					j+=4;
+					vis = false;
+					cdView.start();
+				}
 			}
 		}
 	}
