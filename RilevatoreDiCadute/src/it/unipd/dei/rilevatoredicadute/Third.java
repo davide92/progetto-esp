@@ -35,14 +35,16 @@ public class Third extends ActionBarActivity implements SensorEventListener{
 	private Chronometer chronometer;
 	GregorianCalendar cal;
 	MyDBManager db;
-	private long stopTime=0;
-	private boolean playable;
-	//String pkg=getPackageName();
+	private long stopTime=0;	
 	private SensorManager mysm = null;
 	private Sensor accel = null;;
 	private ArrayList<AccelData> acData = new ArrayList<AccelData>(1000);
 	private long it;
 	private int i, j = 0;
+        Intent MA;
+	private EditText et;
+	int s;
+	long pauseTime=0;		
 	private boolean rec, vis = true;
 	TextView xAccViewS = null;
 	TextView yAccViewS = null;
@@ -64,24 +66,20 @@ public class Third extends ActionBarActivity implements SensorEventListener{
 	@Override
 	protected void onStart(){
 		super.onStart();
-		//Intent intent=getIntent();
-		//String pkg="it.unipd.dei.rilevatoredicadute";    
-		//final String nS=intent.getStringExtra(pkg+".nameSession");
+		Log.v("TAG", "----INIZIO-THIRD----");
 		db = new MyDBManager(this);
-			
-		final EditText et = (EditText)findViewById(R.id.insTesto);			
+		et = (EditText)findViewById(R.id.insTesto);			
 		final ImageButton playBtn = (ImageButton)findViewById(R.id.start);
 		final ImageButton pauseBtn = (ImageButton)findViewById(R.id.pause);
 		final ImageButton stopBtn = (ImageButton)findViewById(R.id.stop);
 		chronometer = (Chronometer) findViewById(R.id.chronometer);
-		pauseBtn.setVisibility(View.INVISIBLE);
-		//final String nomeSessione=et.getText().toString();
+		pauseBtn.setVisibility(View.INVISIBLE);				
 		
 		playBtn.setOnClickListener(new View.OnClickListener() {					
 			@Override
 			public void onClick(View v) {
 				
-				playable=false;
+				s=1;
 				cal= new GregorianCalendar();
 								
 				playBtn.setVisibility(View.INVISIBLE);
@@ -100,8 +98,7 @@ public class Third extends ActionBarActivity implements SensorEventListener{
 				int hours   = (int) ((milliseconds / (1000*60*60)) % 24);
 				String ora = ""+hours+ ":" + minutes+ ":" +seconds+"";				
 				db.addSessione(et.getText().toString(), data, ora, "XX:XX:XX", 0);
-				Log.v("ora1",""+cal.get(GregorianCalendar.HOUR_OF_DAY)+ ":" + cal.get(GregorianCalendar.MINUTE)+ ":" +cal.get(GregorianCalendar.SECOND));
-				Log.v("ora2",""+hours+""+minutes+""+seconds+"");
+				Log.v("ora1",""+cal.get(GregorianCalendar.HOUR_OF_DAY)+ ":" + cal.get(GregorianCalendar.MINUTE)+ ":" +cal.get(GregorianCalendar.SECOND));				
 				db.close();  
 				
 				//GESTIONE PLAY/RESUME CRONOMETRO
@@ -117,13 +114,14 @@ public class Third extends ActionBarActivity implements SensorEventListener{
 				
 			    //FINE GESTIONE			    
 				
-				//String pkg=getPackageName();				
-				//UI2 = new Intent(getApplicationContext(), MainActivity.class);
-				//UI2.putExtra(pkg+".myPlay", play); 	
-				//startActivity(UI2);					
-				Log.v("List","ho premuti il tasto play");	
-				Log.v("tastoPlaySessione------->",et.getText().toString());
-				onBackPressed();
+					Log.v("List-1","--HO PREMUTO IL TASTO PLAY---");				
+				Log.v("nomeSessioneThird--->",""+et.getText().toString()+"");
+				Intent UIMA;    		
+				UIMA = new Intent(getApplicationContext(), MainActivity.class);				
+				UIMA.putExtra(MainActivity.PACKAGE_NAME+".state", s);
+				Log.v("stato sessione third", ""+s+"");	
+				//pauseTime=SystemClock.elapsedRealtime()-chronometer.getBase();					
+				//Log.v("valore pauseTime","sec"+pauseTime/1000 % 60+"minuti"+((pauseTime / (1000*60)) % 60)+"ore"+((pauseTime / (1000*60*60)) % 24)+"");
 				
 				cdSave = new CountDownTimer(5000L, 1000L) {
 					
@@ -161,12 +159,24 @@ public class Third extends ActionBarActivity implements SensorEventListener{
 		pauseBtn.setOnClickListener(new View.OnClickListener(){			
 			@Override
 			public void onClick(View v){
+				s=2;
 				playBtn.setVisibility(View.VISIBLE);
 				pauseBtn.setVisibility(View.INVISIBLE);
-				Log.v("List","ho premuti il tasto pause");
+				Log.v("List-2","--HO PREMUTO IL TASTO PAUSE--");				
+			    stopTime = SystemClock.elapsedRealtime();			    
+			    Intent UIMA;
+			    UIMA = new Intent(getApplicationContext(), MainActivity.class);
+			    UIMA.putExtra(MainActivity.PACKAGE_NAME+".state", i);	
+			    pauseTime=SystemClock.elapsedRealtime()-chronometer.getBase();
+			    Log.v("valore pauseTime","sec>"+(pauseTime/1000 % 60)+"<minuti>"+((pauseTime / (1000*60)) % 60)+"<ore"+((pauseTime / (1000*60*60)) % 24)+"");
+				UIMA.putExtra(MainActivity.PACKAGE_NAME+".StopTime", (chronometer.getBase()-(chronometer.getBase()-pauseTime)));
 				chronometer.stop();
-			    stopTime = SystemClock.elapsedRealtime();
-			    onBackPressed();
+				//Log.v("tempo in pausa",""+chronometer.getBase()+"");
+				//Log.v("valore pauseTime",""+pauseTime+"");
+				Log.v("stato sessione third", ""+i+"");
+				//long ddd=SystemClock.elapsedRealtime() - chronometer.getBase();
+				//Log.v("valore durata di prova", "secondi--"+ddd/1000 % 60+"minuti--"+((ddd / (1000*60)) % 60)+"ore--"+((ddd / (1000*60*60)) % 24)+"");
+				Log.v("CRONOMETRO-GETSTRING",""+chronometer.getText().toString()+"");
 			    
 			    cdView.cancel();
 			    pause();
@@ -177,25 +187,35 @@ public class Third extends ActionBarActivity implements SensorEventListener{
 		stopBtn.setOnClickListener(new View.OnClickListener(){			
 			@Override
 			public void onClick(View v){
-				//update della durata della sessione
-				
-				Intent back = new Intent(getApplicationContext(), MainActivity.class);
-				startActivity(back);
-				Long saveTime = SystemClock.elapsedRealtime() - chronometer.getBase();
+				//update della durata della sessione	
+				if(s==1)
+					pauseTime=SystemClock.elapsedRealtime()-chronometer.getBase();
+				s=0;
+				Log.v("List-3","--HO PREMUTO IL TASTO STOP--");
+				Long saveTime = pauseTime;//SystemClock.elapsedRealtime() - (chronometer.getBase());//-(chronometer.getBase()-pauseTime));
 		        int seconds = (int)(saveTime/1000 % 60);
 		        int minutes = (int) ((saveTime / (1000*60)) % 60);
 				int hours   = (int) ((saveTime / (1000*60*60)) % 24);
 		        
 				String ora=""+hours+":"+minutes+":"+seconds+"";
 				Log.v("durataSessione",ora);
+				Log.v("valore pauseTime","sec>"+(pauseTime/1000 % 60)+"<minuti>"+((pauseTime / (1000*60)) % 60)+"<ore"+((pauseTime / (1000*60*60)) % 24)+"");
 				db.updateDurataSessione(ora,et.getText().toString());
-				Log.v("stopSessione------->",et.getText().toString());
-				playable=true;
-				onBackPressed();
+				Log.v("stopSessione------->",et.getText().toString());				
+				chronometer.stop();
+				Intent UIMA;
+			    UIMA = new Intent(getApplicationContext(), MainActivity.class);					
+			    UIMA.putExtra(MainActivity.PACKAGE_NAME+".state", s);
+			    UIMA.putExtra(MainActivity.PACKAGE_NAME+".StopTime", pauseTime);
+			    Log.v("stato sessione third", ""+s+"");
+			    //long ddd=pauseTime;
+				//Log.v("valore durata di prova", "secondi--"+ddd/1000 % 60+"minuti--"+((ddd / (1000*60)) % 60)+"ore--"+((ddd / (1000*60*60)) % 24)+"");
+				Log.v("CRONOMETRO-GETSTRING",""+chronometer.getText().toString()+"");			
 				
 				cdSave.cancel();
 				cdView.cancel();
 				stop();
+                                startActivity(UIMA);
 			}			
 			
 		});		
@@ -204,46 +224,52 @@ public class Third extends ActionBarActivity implements SensorEventListener{
 	@Override
 	protected void onPause(){
 		super.onPause();
-		Log.v("pausaNuovaSessione","!!!!111!!1!!!!!!!!!!1111");
-		Intent UISEC;    		
-		UISEC = new Intent(getApplicationContext(), SessioneCorrente.class);    		
-		UISEC.putExtra(MainActivity.PACKAGE_NAME+".stopTime", chronometer.getBase());
-		Log.v("TEMPO CRONOMETRATO", ""+chronometer.getBase()+"");
+		Log.v("ACT-THIRD","PAUSED");
 	}	
 
 	@Override
+	protected void onStop(){
+		super.onStop();
+		db.close();		
+		Log.v("ACT-THIRD","STOPPED");		
+	}
+	
+	
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		//getMenuInflater().inflate(R.menu.third, menu);
-		//return true;
+		// Inflate the menu; this adds items to the action bar if it is present.		
 		super .onCreateOptionsMenu(menu);
-		MenuItem meIt1 = menu.add(0, R.id.mostra, 1, "Mostra Sessioni");
-		//Intent UIM;    		
-		//UIM = new Intent(getApplicationContext(), MainActivity.class);    		
-		//UIM.putExtra(MainActivity.PACKAGE_NAME+".playable", playable);
-		meIt1.setIntent(new Intent(this, MainActivity.class));
+		//MenuItem meIt1 = 
+		menu.add(0, R.id.mostra, 1, "Mostra Sessioni");		
 		return true;
 	}
 
-	/*@Override
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
+		switch(item.getItemId()){
+			case(R.id.mostra):{				  
+				if(i==1)
+					pauseTime=SystemClock.elapsedRealtime()-chronometer.getBase();
+				Intent UIMA;
+				UIMA = new Intent(getApplicationContext(), MainActivity.class);
+				UIMA.putExtra(MainActivity.PACKAGE_NAME+".StopTime", pauseTime);//(chronometer.getBase()-(chronometer.getBase()-pauseTime)));
+				Log.v("---","---");
+				Log.v("valore pauseTime","sec>"+(pauseTime/1000 % 60)+"<minuti>"+((pauseTime / (1000*60)) % 60)+"<ore"+((pauseTime / (1000*60*60)) % 24)+"");
+				UIMA.putExtra(MainActivity.PACKAGE_NAME+".nameSession", et.getText().toString());
+				UIMA.putExtra(MainActivity.PACKAGE_NAME+".state", i);					
+				chronometer.stop();
+				startActivity(UIMA);
+			break;
+			}
 		}
 		return super.onOptionsItemSelected(item);
-	}*/
+	}
 	
 	@Override
-	public void onBackPressed(){//non testato
-		if(playable){
-			super.onBackPressed();//back button funziona 
-		}else{
-			//back button bloccato
-		}
+	public void onBackPressed() {
 	}
 	
 	private void start(){
