@@ -72,6 +72,9 @@ public class Third extends ActionBarActivity implements SensorEventListener{
 		final ImageButton playBtn = (ImageButton)findViewById(R.id.start);
 		final ImageButton pauseBtn = (ImageButton)findViewById(R.id.pause);
 		final ImageButton stopBtn = (ImageButton)findViewById(R.id.stop);
+		xAccViewS= (TextView) findViewById(R.id.xDataS);
+		yAccViewS= (TextView) findViewById(R.id.yDataS);
+		zAccViewS= (TextView) findViewById(R.id.zDataS);
 		chronometer = (Chronometer) findViewById(R.id.chronometer);
 		pauseBtn.setVisibility(View.INVISIBLE);				
 		
