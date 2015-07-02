@@ -1,6 +1,9 @@
 package it.unipd.dei.rilevatoredicadute;
 
 import android.support.v7.app.ActionBarActivity;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
@@ -30,17 +33,19 @@ import java.util.GregorianCalendar;
 import android.widget.Chronometer;
 
 
-public class Third extends ActionBarActivity implements SensorEventListener{
+public class Third extends ActionBarActivity implements SensorEventListener, LocationListener{
 	
 	private Chronometer chronometer;
 	GregorianCalendar cal;
 	MyDBManager db;
 	private long stopTime=0;	
 	private SensorManager mysm = null;
+	private LocationManager locMg = null;
 	private Sensor accel = null;;
 	private ArrayList<AccelData> acData = new ArrayList<AccelData>(1000);
 	private long it;
 	private int i, j = 0;
+	private int k = 1;
         Intent MA;
 	private EditText et;
 	int s;
@@ -54,6 +59,7 @@ public class Third extends ActionBarActivity implements SensorEventListener{
 	File file;
 	String lastFileName = "null";
 	String date;
+	Intent mService = null;
 	CountDownTimer cdSave = null;
 	CountDownTimer cdView = null;
 	
@@ -277,6 +283,7 @@ public class Third extends ActionBarActivity implements SensorEventListener{
 	
 	private void start(){
 		
+		locMg = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 		mysm = (SensorManager) getSystemService(SENSOR_SERVICE);
 		accel = mysm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		mysm.registerListener((SensorEventListener) this, accel, SensorManager.SENSOR_DELAY_NORMAL);
@@ -405,6 +412,23 @@ public class Third extends ActionBarActivity implements SensorEventListener{
 					AccelData d = new AccelData(System.currentTimeMillis()-it, x, y, z);
 					acData.add(d);
 					rec = false;
+					if(acData.size() > 2){
+						mService = new Intent(getApplicationContext(), FindFall.class);
+						if(locMg.getLastKnownLocation(LocationManager.GPS_PROVIDER) != null){
+							double longitude = locMg.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude();
+							double latitude = locMg.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude();
+							mService.putExtra("long", longitude);
+							mService.putExtra("lat", latitude);
+						}
+						mService.putExtra("xVal", acData.get(k).getX());
+						mService.putExtra("yVal", acData.get(k).getY());
+						mService.putExtra("zVal", acData.get(k).getZ());
+						mService.putExtra("xValLast", acData.get(k-1).getX());
+						mService.putExtra("yValLast", acData.get(k-1).getY());
+						mService.putExtra("zValLast", acData.get(k-1).getZ());
+						startService(mService);
+						k++;								
+					}
 					cdSave.start();
 				}
 				
@@ -423,6 +447,30 @@ public class Third extends ActionBarActivity implements SensorEventListener{
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 		Log.d("Accelerometro", "onAccurancyChanged: " + sensor + ", accuracy: " + accuracy);
+		
+	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onProviderEnabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onProviderDisabled(String provider) {
+		// TODO Auto-generated method stub
 		
 	}
 }

@@ -7,6 +7,9 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="20" />
+    
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
         android:allowBackup="true"
@@ -47,6 +50,11 @@
             android:name=".SessioneCorrente"
             android:label="@string/title_activity_sixth" >
         </activity>
+         <service
+            android:name=".FindFall"
+            android:exported="false" />
+        <receiver android:name=".MyReceiver">            
+        </receiver>
         
     </application>
 
