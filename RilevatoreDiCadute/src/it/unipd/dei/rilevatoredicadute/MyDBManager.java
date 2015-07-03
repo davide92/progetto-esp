@@ -16,14 +16,11 @@ public class MyDBManager{
 		//SQLiteDatabase db = dbhelper.getWritableDatabase();
 	}
 	
-public void close(){
-	
+public void close(){	
 	dbhelper.close();	
-	
-	}
-	
+	}	
 
-	public void addSessione(String nome, String data, String ora, String durata ,int ncadute){
+public void addSessione(String nome, String data, String ora, String durata ,int ncadute){
 		
 		SQLiteDatabase db = dbhelper.getWritableDatabase();
 		
@@ -99,13 +96,17 @@ public Cursor selectSession(String nameSession){
 }
 
 
- public Cursor selectCaduta()
+ public Cursor selectCaduta(String nameSession)
  {
      Cursor crs=null;
+     String selectColumns[] = new String[]{""+MyDBHelper.COL_DATAC+"",""+MyDBHelper.COL_ORAC+"",""+MyDBHelper.COL_LAT+"",""+MyDBHelper.COL_LON+""};
+     String whereClause = ""+MyDBHelper.COL_SESS+"= ?" ;
+     String whereArgs[] = new String[]{""+nameSession+""};
+     
      try
      {
          SQLiteDatabase db=dbhelper.getReadableDatabase();
-         crs=db.query(MyDBHelper.TABLE_CADUTA, null, null, null, null, null, null, null);
+         crs=db.query(MyDBHelper.TABLE_CADUTA, selectColumns, whereClause, whereArgs, null, null, null, null);
          
      }
      catch(SQLiteException sqle)
@@ -113,6 +114,16 @@ public Cursor selectSession(String nameSession){
          return null;
      }     
      return crs;     
+ }
+ 
+ public int CountCaduta(String nameSession){	 
+	
+	 SQLiteDatabase db = dbhelper.getReadableDatabase();
+	 Cursor mCount= db.rawQuery("select count(*) from "+MyDBHelper.TABLE_CADUTA+ " where " +MyDBHelper.COL_SESS+ " = '" +nameSession+"';", null);
+	 mCount.moveToFirst();
+	 int count= mCount.getInt(0);
+	 mCount.close();
+	 return count;
  }
  
  /*public void numberCaduta(){

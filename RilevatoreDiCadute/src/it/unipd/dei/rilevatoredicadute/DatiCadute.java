@@ -8,11 +8,11 @@ public class DatiCadute {
 	private int hour;
 	private int minute;
 	private int second;
-	private int latitudine;
-	private int longitudine;
+	private double latitudine;
+	private double longitudine;
 	
 	
-	public DatiCadute(int d, int m, int y, int h, int min, int sec, int lat, int lon){		
+	public DatiCadute(int d, int m, int y, int h, int min, int sec, double lat, double lon){		
 		day = d;
 		month = m;
 		year = y;
@@ -48,22 +48,19 @@ public class DatiCadute {
 		return(Integer.toString(hour)+ ":" + Integer.toString(minute) + ":" + Integer.toString(second));
 	}
 	
-	public void setLatitudine(int lat){
+	public void setLatitudine(double lat){
 		latitudine=lat;
 	}
 	
-	public void setLongitudine(int lon){
+	public void setLongitudine(double lon){
 		longitudine=lon;
 	}
 	
-	public int getLongitudine(){
+	public double getLongitudine(){
 		return longitudine;
 	}
 
-	public int getLatitudine(){
+	public double getLatitudine(){
 		return latitudine;
 	}
-
-	
-	
 }

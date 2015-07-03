@@ -10,21 +10,18 @@ import android.os.Bundle;
 //import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Chronometer;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.content.Intent;
 import android.database.Cursor;
-
 //import android.util.Log;
-
-
-
-
 
 public class Delete extends ActionBarActivity {	
 	
 	MyDBManager db= new MyDBManager(this);	
 	Cursor crs=null;
+	Chronometer crono;
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +29,7 @@ public class Delete extends ActionBarActivity {
         setContentView(R.layout.activity_main); 
         String durataSessione = 0 + ":" + 0 + ":" + 0;
         final ListView listView = (ListView) findViewById(R.id.listView1);
-        List<Dati> list = new LinkedList<Dati>();
+        List<Dati> list = new LinkedList<Dati>();       
         
         crs=db.selectAllSessions();         
         if(crs.moveToFirst()){
@@ -48,7 +45,7 @@ public class Delete extends ActionBarActivity {
         		int hour=Integer.parseInt(oraf[0]);  
         		int minutes=Integer.parseInt(oraf[1]);  
         		int seconds=Integer.parseInt(oraf[2]); 
-        		int falls=Integer.parseInt(crs.getString(crs.getColumnIndex("NCadute")));
+        		int falls=db.CountCaduta(crs.getString(1));
         		
         		durataSessione = crs.getString(crs.getColumnIndex("Durata")); 
             	list.add(new Dati(crs.getString(1),day, month, year,hour, minutes, seconds, durataSessione, falls));
@@ -63,15 +60,10 @@ public class Delete extends ActionBarActivity {
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new OnItemClickListener(){
     	public void onItemClick(AdapterView<?> adapter, View v, int position, long id){    		       	
-    		//final String titoloriga = (String) adapter.getItemAtPosition(position);  
-            //Log.d("List", "Ho cliccato sull'elemento con titolo" + titoloriga);     		
-    		//adapter.remove(adapter.getItem(position)); 
-    		//db.deleteSessione();
-    		//TODO sistemare
+    		
     		db.deleteSessione(((Dati)adapter.getItemAtPosition(position)).getNomeSessione());
     		Intent UI2 = new Intent(getApplicationContext(), MainActivity.class);
-         	startActivity(UI2);       
-         	
+         	startActivity(UI2);            	
     	}
     	
         });        

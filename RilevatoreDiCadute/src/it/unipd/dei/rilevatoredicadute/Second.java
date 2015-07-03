@@ -23,50 +23,68 @@ import android.util.Log;
 public class Second extends ActionBarActivity {
 
 	MyDBManager db;
+	String nS;
+	int countFalls=0;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Intent intent=getIntent();		    
-		String nS=intent.getStringExtra(MainActivity.PACKAGE_NAME+".nameSession");	
-		 setContentView(R.layout.activity_second);
-		//ListView listView = (ListView) findViewById(R.id.listViewCadute);		
-        //List<DatiCadute> listFalls = new LinkedList<DatiCadute>();	
+		nS=intent.getStringExtra(MainActivity.PACKAGE_NAME+".nameSession");	
+	    setContentView(R.layout.activity_second);
+	    ListView FallLV = (ListView) findViewById(R.id.listViewCadute);
+	    List<DatiCadute> FallList = new LinkedList<DatiCadute>();
+	    CustomAdapterFalls FALLadapter = new CustomAdapterFalls(this, R.layout.fall_item, FallList);
+	    FallLV.setAdapter(FALLadapter);
         db=new MyDBManager(this);
         Cursor crs=db.selectSession(nS);
-        Cursor c=db.selectCaduta();
-        int result = c.getCount();
+        Cursor c=db.selectCaduta(nS);                      
+        if(c.moveToFirst()){
+        	do{
+            String strData = c.getString(c.getColumnIndex("DataCaduta"));
+            String[] dataf=strData.split("/");
+            int day=Integer.parseInt(dataf[0]);  
+            int month=Integer.parseInt(dataf[1]);  
+            int year=Integer.parseInt(dataf[2]);
+
+            String strTime = c.getString(c.getColumnIndex("OraCaduta"));
+            String[] oraf=strTime.split(":");
+            int hour=Integer.parseInt(oraf[0]);  
+            int minutes=Integer.parseInt(oraf[1]);  
+            int seconds=Integer.parseInt(oraf[2]);
+            
+            FallList.add(new DatiCadute(day, month, year,hour, minutes, seconds, Double.parseDouble(c.getString(2)), Double.parseDouble(c.getString(3))));           
+        	}while(c.moveToNext());//fine while
+        }
+        else{
+        	//list.add(new Dati());
+        }//fine IF
+        //crs.close();        
+        c.close();
         TextView nomeSessione = (TextView)findViewById(R.id.nomeSessione);
 		TextView data = (TextView)findViewById(R.id.data);
 		TextView ora = (TextView)findViewById(R.id.ora);
-		TextView durataSessione = (TextView)findViewById(R.id.durataSessione);
-		TextView NCadute = (TextView)findViewById(R.id.numeroCadute);
+		TextView durataSessione = (TextView)findViewById(R.id.durataSessione);		
 		//Dati d = getItem(position);
 		//picture.setImage();
 		if (crs.moveToFirst()){
-		nomeSessione.setText(crs.getString(0));
-		data.setText(crs.getString(1));
-		ora.setText(crs.getString(2));
-		durataSessione.setText(crs.getString(3));
-		//NCadute.setText((crs.getString(3)));
-		}
-        Log.v("numero di cadute","" +result+ "");
-        Log.v("nome sessione---->",nS);
+			nomeSessione.setText(crs.getString(0));
+			data.setText(crs.getString(1));
+			ora.setText(crs.getString(2));
+			durataSessione.setText(crs.getString(3));		   
+		}        
+        Log.v("nome sessione---->",""+nS+"");
         c.close();
-        crs.close();
-		
-		/* CustomAdapterFalls Fallsadapter = new CustomAdapterFalls(this, R.layout.fall_item, listFalls);
-	        listView.setAdapter(Fallsadapter);
-	        listView.setOnItemClickListener(new OnItemClickListener(){
-	    	public void onItemClick(AdapterView<?> adapter, View v, int position, long id){
+        crs.close();		
+		 
+	     FallLV.setOnItemClickListener(new OnItemClickListener(){
+	     public void onItemClick(AdapterView<?> FALLadapter, View v, int position, long id){
 
-	    		//final String titoloriga = (String) adapter.getItemAtPosition(position);  
-	            //Log.d("List", "Ho cliccato sull'elemento con titolo" + titoloriga);  
-	        	//Dati value = (Dati)adapter.getItemAtPosition(position);   		
-	        	Intent UI2 = new Intent(getApplicationContext(), Second.class);
-	        	startActivity(UI2);
-	        	//Log.v("List","ho premuto l'elemento" +id);
+	    	   	Intent UI4 = new Intent(getApplicationContext(), Fourth.class);
+	    	   	UI4.putExtra(MainActivity.PACKAGE_NAME+".nameSession", nS);
+	        	startActivity(UI4);
+	        	
 	        	}
-	        }); */     
+	        });     
 	}
 	@Override
 	protected void onDestroy() 
@@ -77,12 +95,21 @@ public class Second extends ActionBarActivity {
 	        db.close();
 	    }
 	}
+	
+	@Override
+	protected void onStop() {
+	    //Log.w("TAG", "App stopped");
+	    super.onStop();
+	    if (db != null) 
+	    {
+	        db.close();
+	    }
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu){
 		super.onCreateOptionsMenu(menu);
-    	MenuItem meIt1 = menu.add(0, R.id.nuovaSessione, 1, "Nuova Sessione");
-    	MenuItem meIt2 = menu.add(0, R.id.delete, 2, "Elimina");    	
+    	MenuItem meIt1 = menu.add(0, R.id.nuovaSessione, 1, "Nuova Sessione");    	
     	MenuItem meIt4 = menu.add(0, R.id.preferenze, 4, "Preferenze");
     	meIt1.setIntent(new Intent(this, Third.class));    	
     	meIt4.setIntent(new Intent(this, Fifth.class));

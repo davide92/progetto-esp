@@ -1,9 +1,6 @@
 package it.unipd.dei.rilevatoredicadute;
 
 import android.support.v7.app.ActionBarActivity;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
@@ -29,11 +26,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 
 import android.widget.Chronometer;
 
 
-public class Third extends ActionBarActivity implements SensorEventListener, LocationListener{
+public class Third extends ActionBarActivity implements SensorEventListener,LocationListener{
 	
 	private Chronometer chronometer;
 	GregorianCalendar cal;
@@ -41,32 +41,100 @@ public class Third extends ActionBarActivity implements SensorEventListener, Loc
 	private long stopTime=0;	
 	private SensorManager mysm = null;
 	private LocationManager locMg = null;
-	private Sensor accel = null;;
+	private Sensor accel = null;
 	private ArrayList<AccelData> acData = new ArrayList<AccelData>(1000);
 	private long it;
 	private int i, j = 0;
-	private int k = 1;
-        Intent MA;
+    Intent MA;
 	private EditText et;
 	int s;
 	long pauseTime=0;		
 	private boolean rec, vis = true;
+	private int k = 1;
 	TextView xAccViewS = null;
 	TextView yAccViewS = null;
 	TextView zAccViewS = null;
 	DataOutputStream f = null;
-	FileOutputStream fo = null;
+	FileOutputStream fo = null;	
 	File file;
 	String lastFileName = "null";
-	String date;
+	String date,data;
 	Intent mService = null;
 	CountDownTimer cdSave = null;
-	CountDownTimer cdView = null;
+	CountDownTimer cdView = null;	
+	int year;
+	int month;
+	int day;	
+	ImageButton playBtn;
+	ImageButton pauseBtn;
+	ImageButton stopBtn;
+	long remainingtimeS;
+	long remainingtimeW;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	protected void onCreate(Bundle savedInstance) {
+		
+		super.onCreate(savedInstance);
+		cdSave = new CountDownTimer(5000L, 1000L) {					
+			@Override
+			public void onTick(long millisUntilFinished) {
+				// TODO Auto-generated method stub
+				//remainingtimeS= millisUntilFinished /1000;
+				}					
+			@Override
+			public void onFinish() {
+				rec = true;	
+				Log.v("countdown","finito");
+			}
+		};
+		cdView = new CountDownTimer(21000L, 1000L) {					
+			@Override
+			public void onTick(long millisUntilFinished) {
+				// TODO Auto-generated method stub
+				//remainingtimeW= millisUntilFinished /1000;
+			}					
+			@Override
+			public void onFinish() {
+				vis = true;	
+				Log.v("countdownView","finito");
+			}
+		};
+		
 		setContentView(R.layout.activity_third);
+		cal= new GregorianCalendar();
+		chronometer = (Chronometer) findViewById(R.id.chronometer);
+		playBtn = (ImageButton)findViewById(R.id.start);
+		pauseBtn = (ImageButton)findViewById(R.id.pause);
+		
+		if((savedInstance !=null)){			
+			chronometer.setBase(savedInstance.getLong("time_seconds"));
+			s=savedInstance.getInt("statesession");
+			//remainingtimeS=savedInstance.getLong("re_ma_S");
+			//remainingtimeW=savedInstance.getLong("re_ma_W");
+			data=savedInstance.getString("data");
+			
+			if(s==1){
+				playBtn.setVisibility(View.INVISIBLE);
+				pauseBtn.setVisibility(View.VISIBLE);
+				chronometer.start();
+				start();
+				cdSave.start();
+				cdView.start();
+			}else{
+				playBtn.setVisibility(View.VISIBLE);
+				pauseBtn.setVisibility(View.INVISIBLE);
+			}
+		}	
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle savedInstance) {
+	    savedInstance.putLong("time_seconds", chronometer.getBase());
+	    savedInstance.putInt("statesession", s);
+	    //savedInstance.putLong("re_ma_S", remainingtimeS);
+	    //savedInstance.putLong("re_ma_W", remainingtimeW);
+	    savedInstance.putString("data", date);
+	    super.onSaveInstanceState(savedInstance);
 	}
 	
 	@Override
@@ -75,21 +143,28 @@ public class Third extends ActionBarActivity implements SensorEventListener, Loc
 		Log.v("TAG", "----INIZIO-THIRD----");
 		db = new MyDBManager(this);
 		et = (EditText)findViewById(R.id.insTesto);			
-		final ImageButton playBtn = (ImageButton)findViewById(R.id.start);
-		final ImageButton pauseBtn = (ImageButton)findViewById(R.id.pause);
-		final ImageButton stopBtn = (ImageButton)findViewById(R.id.stop);
+		//playBtn = (ImageButton)findViewById(R.id.start);
+		//pauseBtn = (ImageButton)findViewById(R.id.pause);
+		stopBtn = (ImageButton)findViewById(R.id.stop);
+		//chronometer = (Chronometer) findViewById(R.id.chronometer);
 		xAccViewS= (TextView) findViewById(R.id.xDataS);
 		yAccViewS= (TextView) findViewById(R.id.yDataS);
 		zAccViewS= (TextView) findViewById(R.id.zDataS);
-		chronometer = (Chronometer) findViewById(R.id.chronometer);
-		pauseBtn.setVisibility(View.INVISIBLE);				
+		//pauseBtn.setVisibility(View.INVISIBLE);				
+		if(s==1){
+			playBtn.setVisibility(View.INVISIBLE);
+			pauseBtn.setVisibility(View.VISIBLE);
+		}
+		else{
+			playBtn.setVisibility(View.VISIBLE);
+			pauseBtn.setVisibility(View.INVISIBLE);
+		}			
 		
 		playBtn.setOnClickListener(new View.OnClickListener() {					
 			@Override
 			public void onClick(View v) {
 				
-				s=1;
-				cal= new GregorianCalendar();
+				s=1;				
 								
 				playBtn.setVisibility(View.INVISIBLE);
 				pauseBtn.setVisibility(View.VISIBLE);	
@@ -99,15 +174,14 @@ public class Third extends ActionBarActivity implements SensorEventListener, Loc
 				
 				//da.setHour(cal.get(GregorianCalendar.HOUR_OF_DAY), cal.get(GregorianCalendar.MINUTE), cal.get(GregorianCalendar.SECOND));
 				//String ora = ""+cal.get(GregorianCalendar.HOUR_OF_DAY)+ ":" + cal.get(GregorianCalendar.MINUTE)+ ":" +cal.get(GregorianCalendar.SECOND);
-				
-				
+								
 				long milliseconds=System.currentTimeMillis();
 				int seconds = (int) (milliseconds / 1000) % 60 ;
 				int minutes = (int) ((milliseconds / (1000*60)) % 60);
 				int hours   = (int) ((milliseconds / (1000*60*60)) % 24);
 				String ora = ""+hours+ ":" + minutes+ ":" +seconds+"";				
 				db.addSessione(et.getText().toString(), data, ora, "XX:XX:XX", 0);
-				Log.v("ora1",""+cal.get(GregorianCalendar.HOUR_OF_DAY)+ ":" + cal.get(GregorianCalendar.MINUTE)+ ":" +cal.get(GregorianCalendar.SECOND));				
+				//Log.v("ora1",""+cal.get(GregorianCalendar.HOUR_OF_DAY)+ ":" + cal.get(GregorianCalendar.MINUTE)+ ":" +cal.get(GregorianCalendar.SECOND));				
 				db.close();  
 				
 				//GESTIONE PLAY/RESUME CRONOMETRO
@@ -119,48 +193,40 @@ public class Third extends ActionBarActivity implements SensorEventListener, Loc
 			        long intervalloPausa = (SystemClock.elapsedRealtime() - stopTime);
 			        chronometer.setBase( chronometer.getBase() + intervalloPausa );
 			    }
-			    chronometer.start();
-				
+			    chronometer.start();				
 			    //FINE GESTIONE			    
 				
-					Log.v("List-1","--HO PREMUTO IL TASTO PLAY---");				
+				Log.v("List-1","--HO PREMUTO IL TASTO PLAY---");				
 				Log.v("nomeSessioneThird--->",""+et.getText().toString()+"");
 				Intent UIMA;    		
 				UIMA = new Intent(getApplicationContext(), MainActivity.class);				
 				UIMA.putExtra(MainActivity.PACKAGE_NAME+".state", s);
-				Log.v("stato sessione third", ""+s+"");	
-				//pauseTime=SystemClock.elapsedRealtime()-chronometer.getBase();					
-				//Log.v("valore pauseTime","sec"+pauseTime/1000 % 60+"minuti"+((pauseTime / (1000*60)) % 60)+"ore"+((pauseTime / (1000*60*60)) % 24)+"");
+				Log.v("stato sessione third", ""+s+"");			
 				
-				cdSave = new CountDownTimer(5000L, 1000L) {
-					
+				cdSave.start();/* = new CountDownTimer(5000L, 1000L) {					
 					@Override
 					public void onTick(long millisUntilFinished) {
 						// TODO Auto-generated method stub
-						
-					}
-					
+						//remainingtimeS= millisUntilFinished /1000;
+						}					
 					@Override
 					public void onFinish() {
-						rec = true;
-						
+						rec = true;	
+						Log.v("countdown","finito");
 					}
-				}.start();
-				
-				cdView = new CountDownTimer(21000L, 1000L) {
-					
+				}.start();*/				
+				cdView.start();/* = new CountDownTimer(21000L, 1000L) {					
 					@Override
 					public void onTick(long millisUntilFinished) {
 						// TODO Auto-generated method stub
-						
-					}
-					
+						//remainingtimeW= millisUntilFinished /1000;
+					}					
 					@Override
 					public void onFinish() {
-						vis = true;
-						
+						vis = true;	
+						Log.v("countdownView","finito");
 					}
-				}.start();
+				}.start();*/
 				start();
 			}						
 		});
@@ -175,22 +241,15 @@ public class Third extends ActionBarActivity implements SensorEventListener, Loc
 			    stopTime = SystemClock.elapsedRealtime();			    
 			    Intent UIMA;
 			    UIMA = new Intent(getApplicationContext(), MainActivity.class);
-			    UIMA.putExtra(MainActivity.PACKAGE_NAME+".state", i);	
+			    UIMA.putExtra(MainActivity.PACKAGE_NAME+".state", s);	
 			    pauseTime=SystemClock.elapsedRealtime()-chronometer.getBase();
 			    Log.v("valore pauseTime","sec>"+(pauseTime/1000 % 60)+"<minuti>"+((pauseTime / (1000*60)) % 60)+"<ore"+((pauseTime / (1000*60*60)) % 24)+"");
 				UIMA.putExtra(MainActivity.PACKAGE_NAME+".StopTime", (chronometer.getBase()-(chronometer.getBase()-pauseTime)));
-				chronometer.stop();
-				//Log.v("tempo in pausa",""+chronometer.getBase()+"");
-				//Log.v("valore pauseTime",""+pauseTime+"");
-				Log.v("stato sessione third", ""+i+"");
-				//long ddd=SystemClock.elapsedRealtime() - chronometer.getBase();
-				//Log.v("valore durata di prova", "secondi--"+ddd/1000 % 60+"minuti--"+((ddd / (1000*60)) % 60)+"ore--"+((ddd / (1000*60*60)) % 24)+"");
-				Log.v("CRONOMETRO-GETSTRING",""+chronometer.getText().toString()+"");
-			    
+				chronometer.stop();				
+				Log.v("stato sessione third", ""+s+"");									    
 			    cdView.cancel();
 			    pause();
-			}			
-			
+			}				
 		});
 		
 		stopBtn.setOnClickListener(new View.OnClickListener(){			
@@ -216,15 +275,11 @@ public class Third extends ActionBarActivity implements SensorEventListener, Loc
 			    UIMA = new Intent(getApplicationContext(), MainActivity.class);					
 			    UIMA.putExtra(MainActivity.PACKAGE_NAME+".state", s);
 			    UIMA.putExtra(MainActivity.PACKAGE_NAME+".StopTime", pauseTime);
-			    Log.v("stato sessione third", ""+s+"");
-			    //long ddd=pauseTime;
-				//Log.v("valore durata di prova", "secondi--"+ddd/1000 % 60+"minuti--"+((ddd / (1000*60)) % 60)+"ore--"+((ddd / (1000*60*60)) % 24)+"");
-				Log.v("CRONOMETRO-GETSTRING",""+chronometer.getText().toString()+"");			
-				
+			    Log.v("stato sessione third", ""+s+"");									
 				cdSave.cancel();
 				cdView.cancel();
 				stop();
-                                startActivity(UIMA);
+                startActivity(UIMA);
 			}			
 			
 		});		
@@ -241,6 +296,21 @@ public class Third extends ActionBarActivity implements SensorEventListener, Loc
 		super.onStop();
 		db.close();		
 		Log.v("ACT-THIRD","STOPPED");		
+	}
+	
+	//DA FOREGROUND A BACKGROUND
+	@Override
+	protected void onRestart(){
+		super.onRestart();				
+		Log.v("ACT-THIRD","RESTART");
+		if(s==1){
+			playBtn.setVisibility(View.INVISIBLE);
+			pauseBtn.setVisibility(View.VISIBLE);
+		}
+		else{
+			playBtn.setVisibility(View.VISIBLE);
+			pauseBtn.setVisibility(View.INVISIBLE);
+		}			
 	}
 	
 	
@@ -260,7 +330,7 @@ public class Third extends ActionBarActivity implements SensorEventListener, Loc
 		// as you specify a parent activity in AndroidManifest.xml.
 		switch(item.getItemId()){
 			case(R.id.mostra):{				  
-				if(i==1)
+				if(s==1)
 					pauseTime=SystemClock.elapsedRealtime()-chronometer.getBase();
 				Intent UIMA;
 				UIMA = new Intent(getApplicationContext(), MainActivity.class);
@@ -268,7 +338,7 @@ public class Third extends ActionBarActivity implements SensorEventListener, Loc
 				Log.v("---","---");
 				Log.v("valore pauseTime","sec>"+(pauseTime/1000 % 60)+"<minuti>"+((pauseTime / (1000*60)) % 60)+"<ore"+((pauseTime / (1000*60*60)) % 24)+"");
 				UIMA.putExtra(MainActivity.PACKAGE_NAME+".nameSession", et.getText().toString());
-				UIMA.putExtra(MainActivity.PACKAGE_NAME+".state", i);					
+				UIMA.putExtra(MainActivity.PACKAGE_NAME+".state", s);					
 				chronometer.stop();
 				startActivity(UIMA);
 			break;
@@ -281,23 +351,22 @@ public class Third extends ActionBarActivity implements SensorEventListener, Loc
 	public void onBackPressed() {
 	}
 	
+	
 	private void start(){
 		
 		locMg = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-		mysm = (SensorManager) getSystemService(SENSOR_SERVICE);
-		accel = mysm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		mysm.registerListener((SensorEventListener) this, accel, SensorManager.SENSOR_DELAY_NORMAL);
-		if(mysm.registerListener((SensorEventListener) this, accel, SensorManager.SENSOR_DELAY_NORMAL)){
-			int year = cal.get(GregorianCalendar.YEAR);
-			int month = cal.get(GregorianCalendar.MONTH)+1;
-			int day = cal.get(GregorianCalendar.DAY_OF_MONTH);
+		mysm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		if(mysm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null){
+			accel = mysm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+			mysm.registerListener((SensorEventListener) this, accel, SensorManager.SENSOR_DELAY_NORMAL);			
+			year = cal.get(GregorianCalendar.YEAR);
+			month = cal.get(GregorianCalendar.MONTH)+1;
+			day = cal.get(GregorianCalendar.DAY_OF_MONTH);
 			//int hour = c.get(GregorianCalendar.HOUR_OF_DAY);
 			//int min = c.get(GregorianCalendar.MINUTE);
 			//int sec= c.get(GregorianCalendar.SECOND);
-			date = "" + year + month + day /*+ hour + min + sec */;
-									
-		}
-				
+			date = "" + year + month + day /*+ hour + min + sec */;			
+		}				
 	}
 	
 	private void pause(){
@@ -306,12 +375,17 @@ public class Third extends ActionBarActivity implements SensorEventListener, Loc
 		}
 		xAccViewS.setText("0");
 		yAccViewS.setText("0");
-		zAccViewS.setText("0");
+		zAccViewS.setText("0");		
 		
+		if(data==null){
 		if(!(lastFileName.equals(date))){
 			lastFileName = date;
+		}else{
+			if(!(lastFileName.equals(data))){
+				lastFileName = data;
+		}	
 			try {
-				fo = openFileOutput(date, Context.MODE_PRIVATE);
+				fo = openFileOutput(lastFileName, Context.MODE_PRIVATE);
 				fo.close();
 			} catch (FileNotFoundException e) {
 				Log.e("Impossibile trovare il file ", date, e);
@@ -321,6 +395,7 @@ public class Third extends ActionBarActivity implements SensorEventListener, Loc
 				Toast.makeText(	this, "Errore chiusura", Toast.LENGTH_LONG).show();
 			}
 			
+		}
 		}
 		
 		if(i < acData.size()){
@@ -351,10 +426,19 @@ public class Third extends ActionBarActivity implements SensorEventListener, Loc
 			mysm.unregisterListener(this);
 		}
 		
-		if(!(lastFileName.equals(date))){
-			lastFileName = date;			
+		//if(!(lastFileName.equals(date))){
+			//lastFileName = date;
+		if(data==null){
+			if(!(lastFileName.equals(date))){
+				lastFileName = date;
+			}else{
+				if(!(lastFileName.equals(data))){
+					lastFileName = data;
+				}
+			 }
+		}	
 			try {
-				fo = openFileOutput(date, Context.MODE_PRIVATE);
+				fo = openFileOutput(lastFileName, Context.MODE_PRIVATE);
 				fo.close();
 			} catch (FileNotFoundException e) {
 				Log.e("Impossibile trovare il file ", date, e);
@@ -362,9 +446,7 @@ public class Third extends ActionBarActivity implements SensorEventListener, Loc
 			}catch (IOException e) {
 				Log.e("Impossibile chiudere il file", date, e); 
 				Toast.makeText(	this, "Errore chiusura", Toast.LENGTH_LONG).show();
-			}
-			
-		}
+			}				
 		
 		if(i < acData.size()){
 			try {
@@ -387,9 +469,6 @@ public class Third extends ActionBarActivity implements SensorEventListener, Loc
 				Toast.makeText(	this, "Errore chiusura", Toast.LENGTH_LONG).show(); 
 			}
 		}
-		
-	
-
 		acData.clear();
 		i = j = 0;
 		
@@ -407,11 +486,11 @@ public class Third extends ActionBarActivity implements SensorEventListener, Loc
 				
 				if(rec){
 					float x = event.values[0];
-					float y = event.values[1];
-					float z = event.values[2];
-					AccelData d = new AccelData(System.currentTimeMillis()-it, x, y, z);
-					acData.add(d);
-					rec = false;
+ 					float y = event.values[1];
+ 					float z = event.values[2];
+ 					AccelData d = new AccelData(System.currentTimeMillis()-it, x, y, z);
+ 					acData.add(d);
+ 					rec = false;
 					if(acData.size() > 2){
 						mService = new Intent(getApplicationContext(), FindFall.class);
 						if(locMg.getLastKnownLocation(LocationManager.GPS_PROVIDER) != null){
@@ -426,19 +505,20 @@ public class Third extends ActionBarActivity implements SensorEventListener, Loc
 						mService.putExtra("xValLast", acData.get(k-1).getX());
 						mService.putExtra("yValLast", acData.get(k-1).getY());
 						mService.putExtra("zValLast", acData.get(k-1).getZ());
+						mService.putExtra("noSess", et.getText().toString());
 						startService(mService);
 						k++;								
 					}
 					cdSave.start();
 				}
 				
-				if(vis && !acData.isEmpty()){
+				if(vis && !acData.isEmpty() && j<acData.size()){
 					xAccViewS.setText("" + acData.get(j).getX());
 					yAccViewS.setText("" + acData.get(j).getY());
 					zAccViewS.setText("" + acData.get(j).getZ());
 					j+=4;
 					vis = false;
-					cdView.start();
+				    cdView.start();
 				}
 			}
 		}
@@ -446,31 +526,31 @@ public class Third extends ActionBarActivity implements SensorEventListener, Loc
 
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		Log.d("Accelerometro", "onAccurancyChanged: " + sensor + ", accuracy: " + accuracy);
-		
+		//Log.d("Accelerometro", "onAccurancyChanged: " + sensor + ", accuracy: " + accuracy);		
 	}
-
+	
+	
 	@Override
 	public void onLocationChanged(Location location) {
-		// TODO Auto-generated method stub
-		
+			// TODO Auto-generated method stub
+			
 	}
-
+	
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
-		// TODO Auto-generated method stub
-		
+			// TODO Auto-generated method stub
+			
 	}
-
+	
 	@Override
 	public void onProviderEnabled(String provider) {
-		// TODO Auto-generated method stub
-		
+			// TODO Auto-generated method stub
+			
 	}
-
+	
 	@Override
 	public void onProviderDisabled(String provider) {
-		// TODO Auto-generated method stub
-		
+			// TODO Auto-generated method stub
+			
 	}
 }

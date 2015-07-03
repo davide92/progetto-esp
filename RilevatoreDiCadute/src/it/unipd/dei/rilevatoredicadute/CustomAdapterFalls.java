@@ -16,24 +16,19 @@ public class CustomAdapterFalls extends ArrayAdapter<DatiCadute>{
 	public View getView( int position, View convertView, ViewGroup parent){
 		LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		convertView = inflater.inflate(R.layout.fall_item, null);
-		TextView latitudine = (TextView)convertView.findViewById(R.id.latitudeTx);
-		TextView dataEora = (TextView)convertView.findViewById(R.id.dataEora);
-		TextView longitudine = (TextView)convertView.findViewById(R.id.longitudeTx);
+		
+		TextView latVal = (TextView)convertView.findViewById(R.id.latitude);
+		TextView data = (TextView)convertView.findViewById(R.id.data);
+		TextView ora = (TextView)convertView.findViewById(R.id.ora);
+		
+		TextView longVal = (TextView)convertView.findViewById(R.id.longitude);
 		DatiCadute dc = getItem(position);
 		//picture.setImage();
-		latitudine.setText(dc.getLatitudine());
-		longitudine.setText(dc.getLongitudine());
-		dataEora.setText(dc.getData() + " " + dc.getHour());		
+		latVal.setText(Double.toString(dc.getLatitudine()));
+		longVal.setText(Double.toString(dc.getLongitudine()));
+		data.setText(dc.getData()+"  ");
+		ora.setText(" "+dc.getHour());
 		return convertView;
-	}
+	}	
 	
-	
-	
-	/*public class CursorAdapter extends ArrayAdapter<Dati>{
-	 * 		public CursorAdapter(Context context, int textViewResourceId, List <Dati> Objects){
-	 * 			super(context)
-	 * 		}
-	 * }
-	 * 
-	 */
 }

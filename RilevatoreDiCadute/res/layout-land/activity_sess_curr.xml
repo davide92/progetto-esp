@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="it.unipd.dei.rilevatoredicadute.Third" >
+    tools:context="it.unipd.dei.rilevatoredicadute.SessioneCorrente" >
     
     <TextView
         android:id="@+id/nomeSessioneTx"
@@ -17,14 +17,14 @@
         android:textSize="20sp"  
         />
     
-    <EditText
-        android:id="@+id/insTesto"
-        android:inputType="text"
+    <TextView
+        android:id="@+id/TestoSessCurr"
         android:layout_toRightOf="@+id/nomeSessioneTx"
         android:layout_toEndOf="@+id/nomeSessioneTx"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:maxLength="10"
+        android:textSize="20sp" 
+        android:textStyle="bold"        
         />
 
     <ImageButton
@@ -34,7 +34,7 @@
         android:layout_height="60dp"
         android:layout_alignLeft="@+id/pause"
         android:layout_alignStart="@+id/pause"
-        android:layout_below="@+id/insTesto"
+        android:layout_below="@+id/nomeSessioneTx"
         android:background="@android:color/transparent"
         android:src="@drawable/playbutton" 
         />
@@ -57,8 +57,8 @@
         android:id="@+id/stop"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_alignLeft="@+id/insTesto"
-        android:layout_alignStart="@+id/insTesto"
+        android:layout_alignLeft="@+id/TestoSessCurr"
+        android:layout_alignStart="@+id/TestoSessCurr"
         android:layout_alignTop="@+id/start"
         android:layout_marginLeft="34dp"
         android:layout_marginStart="34dp"
@@ -80,7 +80,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/stop"
-        android:layout_below="@+id/insTesto"
+        android:layout_below="@+id/TestoSessCurr"
         android:layout_marginRight="5dp"
         android:layout_marginEnd="5dp"
         android:text="@string/xTx"
@@ -94,7 +94,7 @@
 	       android:layout_height="wrap_content"	       
 	       android:layout_toRightOf="@+id/xTextS"
 	       android:layout_toEndOf="@+id/xTextS"
-	       android:layout_below="@+id/insTesto"
+	       android:layout_below="@+id/TestoSessCurr"
 	       android:layout_marginRight="5dp"
 	       android:layout_marginEnd="5dp"
 	       android:textSize="24sp"

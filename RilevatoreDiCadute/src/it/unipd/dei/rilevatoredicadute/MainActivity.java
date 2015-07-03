@@ -17,16 +17,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.database.Cursor;
-import android.widget.Chronometer;
 
 public class MainActivity extends ActionBarActivity {	
 	
 	//IL VALORE VAIRAIBILE i:
-	//i=0, una sessione si puo' iniziare
-	//i=1 una sessione e' in esecuzione
-	//i=2 una sessione e' in pausa	
-	//per la main activity, state prende il posto di i
-	
+	//state=0, una sessione si puo' iniziare
+	//state=1 una sessione e' in esecuzione
+	//state=2 una sessione e' in pausa	
+		
 	public static String PACKAGE_NAME; 	
 	MyDBManager db;	          
     Intent MA;
@@ -51,25 +49,25 @@ public class MainActivity extends ActionBarActivity {
         MA=getIntent();        
         PACKAGE_NAME = getApplicationContext().getPackageName();
         
-        	name=MA.getStringExtra(MainActivity.PACKAGE_NAME+".nameSession");
-        	Log.v("TAG__MA__NAME",""+name+"");
-        	tempo=MA.getLongExtra(MainActivity.PACKAGE_NAME+".StopTime", 0);        	
-        	Log.v("TAG__MA__TEMPO1","sec>"+(tempo/1000 % 60)+"<minuti>"+((tempo / (1000*60)) % 60)+"<ore"+((tempo / (1000*60*60)) % 24)+"");
-        	state=MA.getIntExtra(MainActivity.PACKAGE_NAME+".state", 0);
-        	Log.v("stato MA", ""+state+"");
+        name=MA.getStringExtra(MainActivity.PACKAGE_NAME+".nameSession");
+        Log.v("TAG__MA__NAME",""+name+"");
+        tempo=MA.getLongExtra(MainActivity.PACKAGE_NAME+".StopTime", 0);        	
+        Log.v("TAG__MA__TEMPO1","sec>"+(tempo/1000 % 60)+"<minuti>"+((tempo / (1000*60)) % 60)+"<ore"+((tempo / (1000*60*60)) % 24)+"");
+        state=MA.getIntExtra(MainActivity.PACKAGE_NAME+".state", 0);
+        Log.v("stato MA", ""+state+"");
               	
         ListView listView = (ListView) findViewById(R.id.listView1);
-        List<Dati> list = new LinkedList<Dati>();
+        List<Dati> list = new LinkedList<Dati>();        
         
         if(name!=null){
         	if(state!=0){        		
-        		if(state==1){ 
-        			Log.v("aaaaaaa","bbbbbbb");        			
+        		if(state==1){         			       			
         			pt=SystemClock.elapsedRealtime();
         		}        		
         	}
-        }        
-        Cursor crs=db.selectAllSessions(); 
+        }
+        
+        Cursor crs=db.selectAllSessions();        
         if(crs.moveToFirst()){
         	do{
             String strData = crs.getString(crs.getColumnIndex("DataInizio"));
@@ -83,17 +81,17 @@ public class MainActivity extends ActionBarActivity {
             int hour=Integer.parseInt(oraf[0]);  
             int minutes=Integer.parseInt(oraf[1]);  
             int seconds=Integer.parseInt(oraf[2]);
-            int falls=Integer.parseInt(crs.getString(crs.getColumnIndex("NCadute")));
+            int falls=db.CountCaduta(crs.getString(1));
             durataSessione = crs.getString(crs.getColumnIndex("Durata"));              
-            list.add(new Dati(crs.getString(1),day, month, year,hour, minutes, seconds, durataSessione, falls));
+            list.add(new Dati(crs.getString(1),day, month, year,hour, minutes, seconds, durataSessione, falls));           
         	}while(crs.moveToNext());//fine while
         }
         else{
         	list.add(new Dati());
         }//fine IF
-        crs.close();
+        crs.close();        
         
-        CustomAdapter adapter = new CustomAdapter(this, R.layout.list_items, list);
+        CustomAdapter adapter = new CustomAdapter(this, R.layout.list_items, list);       
         listView.setAdapter(adapter);        
         listView.setOnItemClickListener(new OnItemClickListener(){
     	public void onItemClick(AdapterView<?> adapter, View v, int position, long id){      		
@@ -120,17 +118,21 @@ public class MainActivity extends ActionBarActivity {
 	}*/
 
 	
-	/*@Override
+	@Override
 	protected void onStop() {
-	    Log.w("TAG", "App stopped");
+	    //Log.w("TAG", "App stopped");
 	    super.onStop();
+	    if (db != null) 
+	    {
+	        db.close();
+	    }
 	}
 	
 	@Override
 	protected void onPause() {
-	    Log.w("TAG", "App paused");
+	    //Log.w("TAG", "App paused");
 	    super.onPause();
-	}*/
+	}
 		
 	@Override
 	protected void onDestroy() 

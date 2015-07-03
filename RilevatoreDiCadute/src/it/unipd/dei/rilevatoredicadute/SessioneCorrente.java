@@ -2,6 +2,7 @@ package it.unipd.dei.rilevatoredicadute;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.SystemClock;
 import android.view.View;
 import android.widget.TextView;
@@ -12,11 +13,11 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 
 import java.util.GregorianCalendar;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,11 +29,9 @@ import android.content.Context;
 import android.widget.Toast;
 import android.widget.Chronometer;
 
-
-public class SessioneCorrente extends ActionBarActivity implements SensorEventListener{
+public class SessioneCorrente extends ActionBarActivity implements SensorEventListener, LocationListener{	
 	
-	
-	private Chronometer chronometer;
+	private Chronometer chrono;	
 	GregorianCalendar cal;
 	MyDBManager db;		
 	private Long[] tempoStop={0L};
@@ -44,11 +43,13 @@ public class SessioneCorrente extends ActionBarActivity implements SensorEventLi
 	long tempoPausa;
 	long p=0;
 	private SensorManager mysm;
+	private LocationManager locMg = null;
 	private Sensor accel;
 	private ArrayList<AccelData> acData = new ArrayList<AccelData>(1000);
 	private long it;
 	private int i = 0;
 	private int j = 0;
+	private int k = 1;
 	int year;
 	int month;
 	int day;
@@ -59,62 +60,150 @@ public class SessioneCorrente extends ActionBarActivity implements SensorEventLi
 	FileOutputStream fo = null;
 	File file;
 	String lastFileName = "null";
-	String date;
-	Lock lock = new ReentrantLock();
-	//float deltaX=0;
-	//float deltaY=0;
-	//float deltaZ=0;
-	float lastX, lastY, lastZ;
-	AlgoritmoCaduta AC;
+	String date,data;	
+	CountDownTimer cdSaveSC = null;
+	CountDownTimer cdViewSC = null;		
+	private boolean rec, vis = true;
+	float[] DaAcc = new float[3];
+	long TemAppStop=0;
+	boolean stoppata=false;
+	ImageButton playBtn;
+	ImageButton pauseBtn;
+	ImageButton stopBtn;
+	long sss;
+	long temp;
+	Intent mService = null;
+	
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {	    
+	    savedInstanceState.putLong("ti_sec", chrono.getBase());
+	    savedInstanceState.putInt("stasess", statoSessione);
+	    savedInstanceState.putString("data", date);
+	    Log.w("SC__PA__CGB",""+chrono.getBase()+"");
+	    super.onSaveInstanceState(savedInstanceState);
+	}
 	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);		
 		setContentView(R.layout.activity_sess_curr);
+		
+		cdSaveSC = new CountDownTimer(5000L, 1000L) {					
+			@Override
+			public void onTick(long millisUntilFinished) {
+				// TODO Auto-generated method stub
+				//remainingtimeS= millisUntilFinished /1000;
+				}					
+			@Override
+			public void onFinish() {
+				rec = true;	
+				Log.v("countdown","finito");
+			}
+		};
+		
+		cdViewSC = new CountDownTimer(21000L, 1000L) {					
+			@Override
+			public void onTick(long millisUntilFinished) {
+				// TODO Auto-generated method stub
+				//remainingtimeW= millisUntilFinished /1000;
+			}					
+			@Override
+			public void onFinish() {
+				vis = true;	
+				Log.v("countdownView","finito");
+			}
+		};
+		
+		cal=new GregorianCalendar();
+		chrono = (Chronometer) findViewById(R.id.chronometer);
+		playBtn = (ImageButton)findViewById(R.id.start);
+		pauseBtn = (ImageButton)findViewById(R.id.pause);
+		intent=getIntent();
+		if((savedInstanceState !=null)){
+			//chronometer.stop();
+			data=savedInstanceState.getString("data");
+			chrono.setBase(savedInstanceState.getLong("ti_sec"));
+			statoSessione=savedInstanceState.getInt("stasess");
+			Log.w("SC__ONCNN__CGB",""+savedInstanceState.getLong("ti_sec")+"");
+			if(statoSessione==1){
+				playBtn.setVisibility(View.INVISIBLE);
+				pauseBtn.setVisibility(View.VISIBLE);
+				chrono.start();
+				cdSaveSC.start();
+				cdViewSC.start();
+			}else{
+				playBtn.setVisibility(View.VISIBLE);
+				pauseBtn.setVisibility(View.INVISIBLE);
+			}
+		}else{
+			tempoStop[0] =intent.getLongExtra(MainActivity.PACKAGE_NAME+".TempoPausa",0);
+			statoSessione = intent.getIntExtra(MainActivity.PACKAGE_NAME+".statoSessione", 0);
+			Log.w("SC__ONCN__CGB",""+tempoStop[0]+"");
+		}
+		
 	}
+	
+	
 	
 	@Override
 	protected void onStart(){
 		super.onStart();
 		Log.v("TAG", "----INIZIO-SESSIONE-CORRENTE----");
 		db = new MyDBManager(this);						
-		final ImageButton playBtn = (ImageButton)findViewById(R.id.start);
-		final ImageButton pauseBtn = (ImageButton)findViewById(R.id.pause);
-		final ImageButton stopBtn = (ImageButton)findViewById(R.id.stop);
+		playBtn = (ImageButton)findViewById(R.id.start);
+		pauseBtn = (ImageButton)findViewById(R.id.pause);
+		stopBtn = (ImageButton)findViewById(R.id.stop);
 		xAccViewS= (TextView) findViewById(R.id.xDataS);
 		yAccViewS= (TextView) findViewById(R.id.yDataS);
 		zAccViewS= (TextView) findViewById(R.id.zDataS);
 		tx=(TextView)findViewById(R.id.TestoSessCurr);
-		chronometer = (Chronometer) findViewById(R.id.chronometer);
-		
-		intent=getIntent();		
-		tempoStop[0] =intent.getLongExtra(MainActivity.PACKAGE_NAME+".TempoPausa",0);
+		//chronometer = (Chronometer) findViewById(R.id.chronometer);		
+		//intent=getIntent();		
+		//tempoStop[0] =intent.getLongExtra(MainActivity.PACKAGE_NAME+".TempoPausa",0);
 		nomeSessione = intent.getStringExtra(MainActivity.PACKAGE_NAME+".nomeSessione");
-		statoSessione = intent.getIntExtra(MainActivity.PACKAGE_NAME+".statoSessione", 0);				
+		//statoSessione = intent.getIntExtra(MainActivity.PACKAGE_NAME+".statoSessione", 0);				
 		tx.setText(nomeSessione);		
 		
-		Log.v("SessioneCorrenteNome", ""+nomeSessione+"");
+		Log.v("TAG__SC__SessioneCorrenteNome", ""+nomeSessione+"");
 		Log.v("TAG__SC__tempoStop","sec>"+(tempoStop[0]/1000 % 60)+"<minuti>"+((tempoStop[0] / (1000*60)) % 60)+"<ore>"+((tempoStop[0] / (1000*60*60)) % 24)+"");
-		Log.v("stato sessione corrente", ""+statoSessione+"");
+		Log.v("TAG__SC__statoSessione", ""+statoSessione+"");
 		if(nomeSessione!=null){
-			if(statoSessione==1){
-				playBtn.setVisibility(View.INVISIBLE);
-				pauseBtn.setVisibility(View.VISIBLE);
-				chronometer.setBase(SystemClock.elapsedRealtime()-tempoStop[0] );
-				chronometer.start();
-				cal=new GregorianCalendar();
-				start();
-			}
-			else{
-				if(statoSessione==2){
-				playBtn.setVisibility(View.VISIBLE);
-				pauseBtn.setVisibility(View.INVISIBLE);
-				chronometer.setBase( tempoStop[0]);//SystemClock.elapsedRealtime()-tempoStop[0] );
-				tempoPausa=chronometer.getBase();
+			if(stoppata==false){				
+				if(statoSessione==1){
+					playBtn.setVisibility(View.INVISIBLE);
+					pauseBtn.setVisibility(View.VISIBLE);					
+					chrono.setBase(SystemClock.elapsedRealtime()-tempoStop[0]);					
+					chrono.start();					
+					cdSaveSC.start();
+					cdViewSC.start();
+					start();
 				}
-			}
+				else{
+					if(statoSessione==2){
+						playBtn.setVisibility(View.VISIBLE);
+						pauseBtn.setVisibility(View.INVISIBLE);
+						chrono.setBase( tempoStop[0]);
+						tempoPausa=chrono.getBase();
+					}
+				}
+			}else{				
+				sss=SystemClock.elapsedRealtime()-TemAppStop;
+				chrono.setBase(sss);				
+				chrono.start();
+				 int seconds = (int)(sss/1000 % 60);
+			      int minutes = (int) ((sss / (1000*60)) % 60);
+			      int hours   = (int) ((sss / (1000*60*60)) % 24);
+			      Log.v("SC__ORA__RITORNO__BACK",""+hours+"/"+minutes+"/"+seconds+"");
+			    long kkk=SystemClock.elapsedRealtime() - temp;
+			    int sec = (int)(kkk/1000 % 60);
+			      int min = (int) ((kkk / (1000*60)) % 60);
+			      int hou   = (int) ((kkk / (1000*60*60)) % 24);
+			      Log.v("SC__ORA__CONTROLLO__BACK",""+hou+"/"+min+"/"+sec+"");  
+			 }
 		}
+		
+		
 		playBtn.setOnClickListener(new View.OnClickListener() {					
 			@Override
 			public void onClick(View v) {
@@ -122,19 +211,43 @@ public class SessioneCorrente extends ActionBarActivity implements SensorEventLi
 				statoSessione=1;
 				cal= new GregorianCalendar();								
 				playBtn.setVisibility(View.INVISIBLE);
-				pauseBtn.setVisibility(View.VISIBLE);				
+				pauseBtn.setVisibility(View.VISIBLE);
+				//stoppata=true;
 								
 				//GESTIONE PLAY/RESUME CRONOMETRO
 				if ( p == 0 )
-			        chronometer.setBase( SystemClock.elapsedRealtime()-tempoStop[0]);
+			        chrono.setBase( SystemClock.elapsedRealtime()-tempoStop[0]);
 			    // on resume after pause
 			    else
 			    {
 			        long intervalloPausa = (SystemClock.elapsedRealtime() -p);// tempoStop[0]);
-			        chronometer.setBase( chronometer.getBase() + intervalloPausa );
+			        chrono.setBase( chrono.getBase() + intervalloPausa );
 			    }
-			    chronometer.start();
+			    chrono.start();
 			    //FINE GESTIONE	
+			    cdSaveSC.start();/* = new CountDownTimer(5000L, 1000L) {					
+					@Override
+					public void onTick(long millisUntilFinished) {
+						// TODO Auto-generated method stub						
+					}					
+					@Override
+					public void onFinish() {
+						rec = true;	
+						Log.v("countdown","finito");
+					}
+				}.start();*/
+				
+				cdViewSC.start();/* = new CountDownTimer(21000L, 1000L) {					
+					@Override
+					public void onTick(long millisUntilFinished) {
+						// TODO Auto-generated method stub						
+					}					
+					@Override
+					public void onFinish() {
+						vis = true;	
+						Log.v("countdownView","finito");
+					}
+				}.start();*/
 			    start();
 			}			
 		});
@@ -145,8 +258,8 @@ public class SessioneCorrente extends ActionBarActivity implements SensorEventLi
 				playBtn.setVisibility(View.VISIBLE);
 				pauseBtn.setVisibility(View.INVISIBLE);
 				Log.v("List","ho premuti il tasto pause");
-				tempoPausa=SystemClock.elapsedRealtime()- chronometer.getBase();
-				chronometer.stop();
+				tempoPausa=SystemClock.elapsedRealtime()- chrono.getBase();
+				chrono.stop();
 			    p = SystemClock.elapsedRealtime();
 			    statoSessione=2;
 			    pause();
@@ -158,8 +271,9 @@ public class SessioneCorrente extends ActionBarActivity implements SensorEventLi
 			@Override
 			public void onClick(View v){
 				//update della durata della sessione
-				if(statoSessione==1)
-					tempoPausa=SystemClock.elapsedRealtime()-chronometer.getBase();
+				if(statoSessione==1)					
+					tempoPausa=SystemClock.elapsedRealtime() - chrono.getBase();			
+					
 				Long saveTime = tempoPausa;// +tempoStop[0];
 		        int seconds = (int)(saveTime/1000 % 60);
 		        int minutes = (int) ((saveTime / (1000*60)) % 60);
@@ -167,15 +281,35 @@ public class SessioneCorrente extends ActionBarActivity implements SensorEventLi
 				String ora=""+hours+":"+minutes+":"+seconds+"";
 				Log.v("durataSessione",ora);
 				db.updateDurataSessione(ora,tx.getText().toString());
-				chronometer.stop();
+				chrono.stop();					
 				Log.v("stopSessione------->",tx.getText().toString());		
 				statoSessione=0;
 				stop();
+				stoppata=false;
 				Intent back = new Intent(getApplicationContext(), MainActivity.class);
 				startActivity(back);				
 			}						
 		});		
 	}	
+	
+	@Override
+	protected void onStop() 
+	{
+	    super.onStop();
+	    TemAppStop = chrono.getBase();	
+	    temp = SystemClock.elapsedRealtime();
+        int seconds = (int)(TemAppStop/1000 % 60);
+        int minutes = (int) ((TemAppStop / (1000*60)) % 60);
+		int hours   = (int) ((TemAppStop / (1000*60*60)) % 24);
+	    Log.v("VAL_TEMPappSTOP",""+hours+"/"+minutes+"/"+seconds+"");
+	    int sec = (int)(temp/1000 % 60);
+        int min = (int) ((temp / (1000*60)) % 60);
+		int hou  = (int) ((temp / (1000*60*60)) % 24);
+	    Log.v("VAL_temp",""+hou+"/"+min+"/"+sec+"");
+	    stoppata=true;
+	    Log.v("SESSIONE-CORRENTE","STOPPATA");
+	    
+	}
 	
 	@Override
 	protected void onDestroy() 
@@ -213,11 +347,11 @@ public class SessioneCorrente extends ActionBarActivity implements SensorEventLi
 //INIZIO GESTIONE SENSORE ACCELEROMETRO	
 private void start(){
 		
+		locMg = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 		mysm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		if(mysm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null){
 			accel = mysm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-			mysm.registerListener((SensorEventListener) this, accel, SensorManager.SENSOR_DELAY_NORMAL);
-			Log.v("valore mysm",""+mysm+"");
+			mysm.registerListener((SensorEventListener) this, accel, SensorManager.SENSOR_DELAY_NORMAL);			
 		//if(mysm.registerListener((SensorEventListener) this, accel, SensorManager.SENSOR_DELAY_NORMAL)){
 			year = cal.get(GregorianCalendar.YEAR);
 			month = cal.get(GregorianCalendar.MONTH)+1;
@@ -225,8 +359,7 @@ private void start(){
 			//int hour = c.get(GregorianCalendar.HOUR_OF_DAY);
 			//int min = c.get(GregorianCalendar.MINUTE);
 			//int sec= c.get(GregorianCalendar.SECOND);
-			date = "" + year + month + day /*+ hour + min + sec */;
-			//date="01022015";
+			date = "" + year + month + day /*+ hour + min + sec */;			
 		}				
 	}
 	
@@ -316,9 +449,7 @@ private void start(){
 				Log.e("Impossibile chiudere il file", date, e); 
 				Toast.makeText(	this, "Errore chiusura", Toast.LENGTH_LONG).show(); 
 			}
-		}
-		
-	
+		}	
 
 		acData.clear();
 		i = j = 0;
@@ -326,8 +457,7 @@ private void start(){
 		xAccViewS.setText("0");
 		yAccViewS.setText("0");
 		zAccViewS.setText("0");
-		accel = null;
-		
+		accel = null;		
 	}
 	
 	@Override
@@ -335,48 +465,34 @@ private void start(){
 		synchronized (this) {
 			if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
 				
-				/*xAccView.setText("" + event.values[0]);
-				yAccView.setText("" + event.values[1]);
-				zAccView.setText("" + event.values[2]);*/
-				try {
-					if(lock.tryLock(10000, TimeUnit.MILLISECONDS)){
-						float x = event.values[0];
-						float y = event.values[1];
-						float z = event.values[2];
-						
-						//x = Math.abs(lastX - event.values[0]);
-						//y = Math.abs(lastY - event.values[1]);
-						//z = Math.abs(lastZ - event.values[2]);
-
-						// if the change is below 2, it is just plain noise
-						//if (x < 2)
-							//x = 0;
-						//if (y < 2)
-							//y = 0;
-						//if (z < 2)
-							//z = 0;
-
-						// set the last know values of x,y,z
-						//lastX = event.values[0];
-						//lastY = event.values[1];
-						//lastZ = event.values[2];
-						//leastTime += System.currentTimeMillis();
-						
-						AccelData d = new AccelData(System.currentTimeMillis()-it, x, y, z);
-						acData.add(d);
-						AC=new AlgoritmoCaduta(x,y,z,this);
-						AC.Caduta(x,y,z,this);
+				if(rec){
+					if(acData.size() > 2){
+						mService = new Intent(getApplicationContext(), FindFall.class);
+						if(locMg.getLastKnownLocation(LocationManager.GPS_PROVIDER) != null){
+							double longitude = locMg.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude();
+							double latitude = locMg.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude();
+							mService.putExtra("long", longitude);
+							mService.putExtra("lat", latitude);
+						}
+						mService.putExtra("xVal", acData.get(k).getX());
+						mService.putExtra("yVal", acData.get(k).getY());
+						mService.putExtra("zVal", acData.get(k).getZ());
+						mService.putExtra("xValLast", acData.get(k-1).getX());
+						mService.putExtra("yValLast", acData.get(k-1).getY());
+						mService.putExtra("zValLast", acData.get(k-1).getZ());
+						startService(mService);
+						k++;								
 					}
-					if(lock.tryLock(31000, TimeUnit.MILLISECONDS) &&(!acData.isEmpty()) && j < acData.size()){
-						xAccViewS.setText("" + acData.get(j).getX());
-						yAccViewS.setText("" + acData.get(j).getY());
-						zAccViewS.setText("" + acData.get(j).getZ());
-						j+=3;						
-					}
-					lock.unlock();
-				} catch (InterruptedException e) {
-					Log.e("Problemi accelerometro", date, e); 
-					Toast.makeText(	this, "Errore lock", Toast.LENGTH_LONG).show(); 
+					cdSaveSC.start();
+				}
+				
+				if(vis && !acData.isEmpty() && j<acData.size()){
+					xAccViewS.setText("" + acData.get(j).getX());
+					yAccViewS.setText("" + acData.get(j).getY());
+					zAccViewS.setText("" + acData.get(j).getZ());
+					j+=4;
+					vis = false;
+					cdViewSC.start();
 				}
 				
 			}
@@ -387,5 +503,25 @@ private void start(){
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 	//	Log.d("Accelerometro", "onAccurancyChanged: " + sensor + ", accuracy: " + accuracy);
 		
+	}
+	
+	@Override
+	public void onLocationChanged(Location location) {
+			// TODO Auto-generated method stub			
+	}
+	
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+			// TODO Auto-generated method stub			
+	}
+	
+	@Override
+	public void onProviderEnabled(String provider) {
+			// TODO Auto-generated method stub			
+	}
+	
+	@Override
+	public void onProviderDisabled(String provider) {
+			// TODO Auto-generated method stub
 	}
 }

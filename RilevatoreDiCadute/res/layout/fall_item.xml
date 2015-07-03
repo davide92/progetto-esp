@@ -11,38 +11,58 @@
        android:layout_alignParentTop="true"
         android:layout_marginRight="5dp"
          android:text="@string/caduta" 
-         android:textSize="20sp"
+         android:textSize="12sp"
           android:textStyle="italic"/>
 
-<TextView android:id="@+id/avvenuta" 
-    android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-      android:layout_below="@+id/caduta" 
-      android:layout_alignParentLeft="true"
-       android:layout_marginRight="5dp"
-        android:text="@string/avvenuta"
-         android:textSize="20sp"/>
 
-<TextView android:id="@+id/dataEora"
+<TextView android:id="@+id/data"
      android:layout_width="wrap_content"
       android:layout_height="wrap_content" 
       android:layout_below="@+id/caduta"
-       android:layout_toRightOf="@+id/Avvenuta"
+       android:layout_toRightOf="@+id/caduta"
         android:textSize="20sp"/>
 
-<TextView android:id="@+id/notificaOk"
-     android:layout_width="wrap_content" 
-     android:layout_height="wrap_content"
-      android:layout_alignParentLeft="true"
-       android:layout_below="@+id/avvenuta"
-        android:layout_marginRight="5dp" 
-        android:text="@string/notificaOk" 
-        android:textSize="20sp"/>
+<TextView android:id="@+id/ora" 
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+     android:layout_below="@+id/caduta" 
+     android:layout_toRightOf="@+id/data"
+      android:textSize="20sp"/>
 
-<CheckBox android:id="@+id/cbNotifica" 
-    android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-      android:layout_toRightOf="@+id/notificaOk"
-       android:layout_below="@+id/avvenuta"
-        android:layout_centerVertical="true"/>
+<TextView 
+        android:id="@+id/latitudeTx"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/data"
+        android:text="@string/latitude"
+        android:textSize="15sp"
+        />
+    
+    <TextView 
+        android:id="@+id/latitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/latitudeTx"
+        android:layout_below="@+id/data"
+        android:textSize="15sp"
+        />
+    
+    <TextView 
+        android:id="@+id/longitudeTx"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/latitudeTx"
+        android:text="@string/longitude"
+        android:textSize="15sp"
+        />
+    
+    <TextView 
+        android:id="@+id/longitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/longitudeTx"
+        android:layout_below="@+id/latitudeTx"
+        android:textSize="15sp"
+        />
+
 </RelativeLayout>
