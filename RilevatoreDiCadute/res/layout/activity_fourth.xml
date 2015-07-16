@@ -10,18 +10,18 @@
     tools:context="it.unipd.dei.rilevatoredicadute.Fourth" >
 
     <ImageView 
-        android:id="@+id/picture" 
+        android:id="@+id/picture4" 
     	android:layout_width="50dp"
      	android:layout_height="50dp" 
       	android:layout_marginRight="7dp"
-       	android:src="@drawable/thumbnail"
+
        	/>
          
     <TextView android:id="@+id/nomeSessione"
      android:layout_width="wrap_content" 
      android:layout_height="wrap_content" 
      android:layout_alignParentTop="true" 
-     android:layout_toRightOf="@+id/picture" 
+     android:layout_toRightOf="@+id/picture4" 
      android:layout_marginRight="5dp" 
      android:layout_marginBottom="5dp"      
      android:textSize="20sp"
@@ -31,7 +31,7 @@
         android:id="@+id/avvenutaTx"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/picture"
+        android:layout_below="@+id/picture4"
         android:text="@string/avvenuta"
         android:textSize="20sp" 
         />

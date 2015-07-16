@@ -8,12 +8,14 @@ import java.util.List;
 import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -29,8 +31,12 @@ public class Second extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Intent intent=getIntent();		    
-		nS=intent.getStringExtra(MainActivity.PACKAGE_NAME+".nameSession");	
+		nS=intent.getStringExtra(MainActivity.PACKAGE_NAME+".nameSession");
+		Bundle extra = intent.getExtras();
+		final Bitmap bm = (Bitmap)extra.getParcelable("image");
 	    setContentView(R.layout.activity_second);
+	    ImageView image = (ImageView)findViewById(R.id.picture2);
+	    image.setImageBitmap(bm);
 	    ListView FallLV = (ListView) findViewById(R.id.listViewCadute);
 	    List<DatiCadute> FallList = new LinkedList<DatiCadute>();
 	    CustomAdapterFalls FALLadapter = new CustomAdapterFalls(this, R.layout.fall_item, FallList);
@@ -81,6 +87,9 @@ public class Second extends ActionBarActivity {
 
 	    	   	Intent UI4 = new Intent(getApplicationContext(), Fourth.class);
 	    	   	UI4.putExtra(MainActivity.PACKAGE_NAME+".nameSession", nS);
+	    	   	Bundle extra = new Bundle();
+	    	   	extra.putParcelable("image", bm);
+	    	   	UI4.putExtras(extra);
 	        	startActivity(UI4);
 	        	
 	        	}

@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 
 public class Fourth extends ActionBarActivity {
 	
@@ -22,6 +24,10 @@ public class Fourth extends ActionBarActivity {
 		setContentView(R.layout.activity_fourth);
 		db=new MyDBManager(this);
 		intent = getIntent();
+		Bundle extra = intent.getExtras();
+		final Bitmap bm = (Bitmap)extra.getParcelable("image");
+	    ImageView image = (ImageView)findViewById(R.id.picture4);
+	    image.setImageBitmap(bm);
 		TextView nomeSessione = (TextView) findViewById(R.id.nomeSessione);
 		TextView DataOra = (TextView) findViewById(R.id.dataEora);
 		TextView latitudine = (TextView) findViewById(R.id.latitude);

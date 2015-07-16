@@ -6,6 +6,7 @@ import java.util.List;
 import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
@@ -13,10 +14,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 
 public class MainActivity extends ActionBarActivity {	
 	
@@ -24,7 +28,7 @@ public class MainActivity extends ActionBarActivity {
 	//state=0, una sessione si puo' iniziare
 	//state=1 una sessione e' in esecuzione
 	//state=2 una sessione e' in pausa	
-		
+	private boolean doubleBackToExit;	
 	public static String PACKAGE_NAME; 	
 	MyDBManager db;	          
     Intent MA;
@@ -94,14 +98,22 @@ public class MainActivity extends ActionBarActivity {
         CustomAdapter adapter = new CustomAdapter(this, R.layout.list_items, list);       
         listView.setAdapter(adapter);        
         listView.setOnItemClickListener(new OnItemClickListener(){
-    	public void onItemClick(AdapterView<?> adapter, View v, int position, long id){      		
-    		
-    		Intent UI2;    		
-    		UI2 = new Intent(getApplicationContext(), Second.class);    		
-    		UI2.putExtra(PACKAGE_NAME+".nameSession", ((Dati)adapter.getItemAtPosition(position)).getNomeSessione());     		   	
-    		Log.v("Nome Sessione MA-->",((Dati)adapter.getItemAtPosition(position)).getNomeSessione());
-        	startActivity(UI2);        	
-        	}
+	    	public void onItemClick(AdapterView<?> adapter, View v, int position, long id){      		
+	    		
+	    		final ImageView im = (ImageView) v.findViewById(R.id.picture);
+	    		final BitmapDrawable bd = (BitmapDrawable) im.getDrawable();
+	    		final Bitmap b = bd.getBitmap();
+	    		Bundle extra = new Bundle();
+	    		extra.putParcelable("image", b);
+	    		
+	    		
+	    		Intent UI2;    		
+	    		UI2 = new Intent(getApplicationContext(), Second.class);    		
+	    		UI2.putExtra(PACKAGE_NAME+".nameSession", ((Dati)adapter.getItemAtPosition(position)).getNomeSessione()); 
+	    		UI2.putExtras(extra);
+	    		Log.v("Nome Sessione MA-->",((Dati)adapter.getItemAtPosition(position)).getNomeSessione());
+	        	startActivity(UI2);
+	    	}
         });            
 	}
 	
@@ -235,6 +247,21 @@ public class MainActivity extends ActionBarActivity {
 	
 	@Override
 	public void onBackPressed() {
+		if(doubleBackToExit){
+			super.onBackPressed();
+			return;
+		}
+		this.doubleBackToExit = true;
+		Toast.makeText(this, "Per favore, premere di nuovo per uscire", Toast.LENGTH_SHORT).show();
+		
+		new Handler().postDelayed(new Runnable() {
+			
+			@Override
+			public void run() {
+				doubleBackToExit = false;
+				
+			}
+		}, 2000);
 	}
 	    
 }
