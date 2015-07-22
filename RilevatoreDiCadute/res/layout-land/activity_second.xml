@@ -33,7 +33,7 @@
 <TextView android:id="@+id/dataEora"
      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-       android:layout_below="@+id/picutre"
+       android:layout_below="@+id/picture2"
         android:layout_toRightOf="@+id/inizio"
          android:textSize="20sp"/>
 
