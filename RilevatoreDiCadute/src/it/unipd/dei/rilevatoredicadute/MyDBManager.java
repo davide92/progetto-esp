@@ -20,7 +20,7 @@ public void close(){
 	dbhelper.close();	
 	}	
 
-public void addSessione(String nome, String data, String ora, String durata ,int ncadute){
+public void addSessione(String nome, String data, String ora, String durata ,int ncadute, int col){
 		
 		SQLiteDatabase db = dbhelper.getWritableDatabase();
 		
@@ -29,7 +29,8 @@ public void addSessione(String nome, String data, String ora, String durata ,int
 		cv.put(MyDBHelper.COL_DATA, data);
 		cv.put(MyDBHelper.COL_ORA, ora);
 		cv.put(MyDBHelper.COL_DURATA, durata);
-		cv.put(MyDBHelper.COL_NCADUTE, ncadute);						
+		cv.put(MyDBHelper.COL_NCADUTE, ncadute);
+		cv.put(MyDBHelper.COL_COLOR, col);
 		
 		db.insert(MyDBHelper.TABLE_SESSIONE, null, cv);
 	}
@@ -79,7 +80,7 @@ public Cursor selectAllSessions(){
 //ESEGUE IL SELECT SULLA SESSIONE PASSATA PER PARAMETRO
 public Cursor selectSession(String nameSession){
   Cursor crs=null;
-  String selectColumns[] = new String[]{""+MyDBHelper.COL_NOME+"",""+MyDBHelper.COL_DATA+"",""+MyDBHelper.COL_ORA+"",""+MyDBHelper.COL_DURATA+"", ""+MyDBHelper.COL_NCADUTE+""};
+  String selectColumns[] = new String[]{""+MyDBHelper.COL_NOME+"",""+MyDBHelper.COL_DATA+"",""+MyDBHelper.COL_ORA+"",""+MyDBHelper.COL_DURATA+"", ""+MyDBHelper.COL_NCADUTE+"",""+MyDBHelper.COL_COLOR+""};
   String whereClause = ""+MyDBHelper.COL_NOME+"= ?" ;
   String whereArgs[] = new String[]{""+nameSession+""};
   

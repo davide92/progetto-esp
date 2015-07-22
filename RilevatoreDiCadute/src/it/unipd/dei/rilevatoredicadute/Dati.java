@@ -9,11 +9,12 @@ public class Dati {
 	private int minute;
 	private int second;
 	private int falls;
+	private int cl;
 	private String nomeSessione;
 	private String durataSessione;
 	
 	
-	public Dati(String nS, int d, int m, int y, int h, int min, int sec, String dS, int fal){
+	public Dati(String nS, int d, int m, int y, int h, int min, int sec, String dS, int fal, int col){
 		nomeSessione = nS;
 		day = d;
 		month = m;
@@ -23,11 +24,12 @@ public class Dati {
 		second = sec;
 		durataSessione = dS;
 		falls=fal;
+		cl = col;
 	}
 	
 	public Dati(){
 		//durataSessione = 0 + ":" + 0 + ":" + 0;
-		this("nessuna sessione", 0, 0, 0, 0, 0, 0, 0 + ":" + 0 + ":" + 0, 0);
+		this("nessuna sessione", 0, 0, 0, 0, 0, 0, 0 + ":" + 0 + ":" + 0, 0, 0);
 		 
 	}
 
@@ -70,5 +72,8 @@ public class Dati {
 	
 	public int getFalls(){
 		return falls;
+	}
+	public int getColor(){
+		return cl;
 	}
 }

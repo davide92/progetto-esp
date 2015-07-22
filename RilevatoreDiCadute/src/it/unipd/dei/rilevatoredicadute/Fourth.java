@@ -11,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.LightingColorFilter;
 
 public class Fourth extends ActionBarActivity {
 	
@@ -28,6 +31,9 @@ public class Fourth extends ActionBarActivity {
 		final Bitmap bm = (Bitmap)extra.getParcelable("image");
 	    ImageView image = (ImageView)findViewById(R.id.picture4);
 	    image.setImageBitmap(bm);
+	    int cl = intent.getIntExtra("color", 0);
+	    ColorFilter filter = new LightingColorFilter(Color.WHITE, cl);
+	    image.setColorFilter(filter);
 		TextView nomeSessione = (TextView) findViewById(R.id.nomeSessione);
 		TextView DataOra = (TextView) findViewById(R.id.dataEora);
 		TextView latitudine = (TextView) findViewById(R.id.latitude);

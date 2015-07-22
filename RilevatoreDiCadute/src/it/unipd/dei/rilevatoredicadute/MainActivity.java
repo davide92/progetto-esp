@@ -86,8 +86,9 @@ public class MainActivity extends ActionBarActivity {
             int minutes=Integer.parseInt(oraf[1]);  
             int seconds=Integer.parseInt(oraf[2]);
             int falls=db.CountCaduta(crs.getString(1));
-            durataSessione = crs.getString(crs.getColumnIndex("Durata"));              
-            list.add(new Dati(crs.getString(1),day, month, year,hour, minutes, seconds, durataSessione, falls));           
+            durataSessione = crs.getString(crs.getColumnIndex("Durata"));
+            int cl = crs.getInt(crs.getColumnIndex("Colore"));
+            list.add(new Dati(crs.getString(1),day, month, year,hour, minutes, seconds, durataSessione, falls, cl));           
         	}while(crs.moveToNext());//fine while
         }
         else{
@@ -111,6 +112,7 @@ public class MainActivity extends ActionBarActivity {
 	    		UI2 = new Intent(getApplicationContext(), Second.class);    		
 	    		UI2.putExtra(PACKAGE_NAME+".nameSession", ((Dati)adapter.getItemAtPosition(position)).getNomeSessione()); 
 	    		UI2.putExtras(extra);
+	    		UI2.putExtra("color", ((Dati)adapter.getItemAtPosition(position)).getColor());
 	    		Log.v("Nome Sessione MA-->",((Dati)adapter.getItemAtPosition(position)).getNomeSessione());
 	        	startActivity(UI2);
 	    	}

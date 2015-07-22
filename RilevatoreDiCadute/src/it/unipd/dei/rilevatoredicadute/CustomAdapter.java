@@ -15,16 +15,17 @@ import android.widget.TextView;
 
 public class CustomAdapter extends ArrayAdapter<Dati>{
 	
+	private List<Dati> list;
 	public CustomAdapter(Context context, int textViewResourceId, List <Dati> objects){
 		super(context, textViewResourceId, objects);
+		list = objects;
 	}
 
 	public View getView( int position, View convertView, ViewGroup parent){
 		LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		convertView = inflater.inflate(R.layout.list_items, null);
 		ImageView thumbnail = (ImageView)convertView.findViewById(R.id.picture);
-		Random rm = new Random();
-		int cl = Color.argb(255, rm.nextInt(254), rm.nextInt(254), rm.nextInt(254));
+		int cl = list.get(position).getColor();
 		ColorFilter filter = new LightingColorFilter(Color.WHITE, cl);
 		thumbnail.setColorFilter(filter);
 		TextView nomeSessione = (TextView)convertView.findViewById(R.id.nomeSessione);

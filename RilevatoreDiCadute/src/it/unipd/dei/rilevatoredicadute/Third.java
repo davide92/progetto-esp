@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -26,10 +27,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.Random;
+
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-
 import android.widget.Chronometer;
 
 
@@ -179,8 +181,10 @@ public class Third extends ActionBarActivity implements SensorEventListener,Loca
 				int seconds = (int) (milliseconds / 1000) % 60 ;
 				int minutes = (int) ((milliseconds / (1000*60)) % 60);
 				int hours   = (int) ((milliseconds / (1000*60*60)) % 24);
-				String ora = ""+hours+ ":" + minutes+ ":" +seconds+"";				
-				db.addSessione(et.getText().toString(), data, ora, "XX:XX:XX", 0);
+				String ora = ""+hours+ ":" + minutes+ ":" +seconds+"";
+				Random rm = new Random();
+				int cl = Color.argb(255, rm.nextInt(254), rm.nextInt(254), rm.nextInt(254));
+				db.addSessione(et.getText().toString(), data, ora, "XX:XX:XX", 0, cl);
 				//Log.v("ora1",""+cal.get(GregorianCalendar.HOUR_OF_DAY)+ ":" + cal.get(GregorianCalendar.MINUTE)+ ":" +cal.get(GregorianCalendar.SECOND));				
 				db.close();  
 				
