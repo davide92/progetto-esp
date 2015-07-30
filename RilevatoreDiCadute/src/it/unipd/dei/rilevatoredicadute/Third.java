@@ -44,15 +44,15 @@ public class Third extends ActionBarActivity implements SensorEventListener,Loca
 	private SensorManager mysm = null;
 	private LocationManager locMg = null;
 	private Sensor accel = null;
-	private ArrayList<AccelData> acData = new ArrayList<AccelData>(1000);
-	private long it;
-	private int i, j = 0;
+	private ArrayList<AccelData> acData = new ArrayList<AccelData>(15000);
+	private int i, j, k= 0;
+	private double longitude, latitude;
+	private long it = 0;
     Intent MA;
 	private EditText et;
 	int s;
 	long pauseTime=0;		
 	private boolean rec, vis = true;
-	private int k = 1;
 	TextView xAccViewS = null;
 	TextView yAccViewS = null;
 	TextView zAccViewS = null;
@@ -107,6 +107,8 @@ public class Third extends ActionBarActivity implements SensorEventListener,Loca
 		chronometer = (Chronometer) findViewById(R.id.chronometer);
 		playBtn = (ImageButton)findViewById(R.id.start);
 		pauseBtn = (ImageButton)findViewById(R.id.pause);
+		locMg = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		mysm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		
 		if((savedInstance !=null)){			
 			chronometer.setBase(savedInstance.getLong("time_seconds"));
@@ -126,7 +128,11 @@ public class Third extends ActionBarActivity implements SensorEventListener,Loca
 				playBtn.setVisibility(View.VISIBLE);
 				pauseBtn.setVisibility(View.INVISIBLE);
 			}
-		}	
+		}
+		if(!locMg.isProviderEnabled(LocationManager.GPS_PROVIDER))
+		{	
+			Toast.makeText(getApplicationContext(), "Attivi il gps", Toast.LENGTH_LONG).show();
+		}
 	}
 	
 	@Override
@@ -144,7 +150,8 @@ public class Third extends ActionBarActivity implements SensorEventListener,Loca
 		super.onStart();
 		Log.v("TAG", "----INIZIO-THIRD----");
 		db = new MyDBManager(this);
-		et = (EditText)findViewById(R.id.insTesto);			
+		et = (EditText)findViewById(R.id.insTesto);
+		locMg.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);
 		//playBtn = (ImageButton)findViewById(R.id.start);
 		//pauseBtn = (ImageButton)findViewById(R.id.pause);
 		stopBtn = (ImageButton)findViewById(R.id.stop);
@@ -160,100 +167,106 @@ public class Third extends ActionBarActivity implements SensorEventListener,Loca
 		else{
 			playBtn.setVisibility(View.VISIBLE);
 			pauseBtn.setVisibility(View.INVISIBLE);
-		}			
+		}
 		
-		playBtn.setOnClickListener(new View.OnClickListener() {					
+		
+			playBtn.setOnClickListener(new View.OnClickListener() {					
 			@Override
 			public void onClick(View v) {
-				
-				s=1;				
-								
-				playBtn.setVisibility(View.INVISIBLE);
-				pauseBtn.setVisibility(View.VISIBLE);	
-				
-				//da.setData(cal.get(GregorianCalendar.YEAR), cal.get(GregorianCalendar.MONTH)+1, cal.get(GregorianCalendar.DATE));
-				String data = ""+cal.get(GregorianCalendar.YEAR)+ "/" + (cal.get(GregorianCalendar.MONTH)+1)+ "/" +cal.get(GregorianCalendar.DATE);
-				
-				//da.setHour(cal.get(GregorianCalendar.HOUR_OF_DAY), cal.get(GregorianCalendar.MINUTE), cal.get(GregorianCalendar.SECOND));
-				//String ora = ""+cal.get(GregorianCalendar.HOUR_OF_DAY)+ ":" + cal.get(GregorianCalendar.MINUTE)+ ":" +cal.get(GregorianCalendar.SECOND);
-								
-				long milliseconds=System.currentTimeMillis();
-				int seconds = (int) (milliseconds / 1000) % 60 ;
-				int minutes = (int) ((milliseconds / (1000*60)) % 60);
-				int hours   = (int) ((milliseconds / (1000*60*60)) % 24);
-				String ora = ""+hours+ ":" + minutes+ ":" +seconds+"";
-				Random rm = new Random();
-				int cl = Color.argb(255, rm.nextInt(254), rm.nextInt(254), rm.nextInt(254));
-				db.addSessione(et.getText().toString(), data, ora, "XX:XX:XX", 0, cl);
-				//Log.v("ora1",""+cal.get(GregorianCalendar.HOUR_OF_DAY)+ ":" + cal.get(GregorianCalendar.MINUTE)+ ":" +cal.get(GregorianCalendar.SECOND));				
-				db.close();  
-				
-				//GESTIONE PLAY/RESUME CRONOMETRO
-				if ( stopTime == 0 )
-			        chronometer.setBase( SystemClock.elapsedRealtime() );
-			    // on resume after pause
-			    else
-			    {
-			        long intervalloPausa = (SystemClock.elapsedRealtime() - stopTime);
-			        chronometer.setBase( chronometer.getBase() + intervalloPausa );
-			    }
-			    chronometer.start();				
-			    //FINE GESTIONE			    
-				
-				Log.v("List-1","--HO PREMUTO IL TASTO PLAY---");				
-				Log.v("nomeSessioneThird--->",""+et.getText().toString()+"");
-				Intent UIMA;    		
-				UIMA = new Intent(getApplicationContext(), MainActivity.class);				
-				UIMA.putExtra(MainActivity.PACKAGE_NAME+".state", s);
-				Log.v("stato sessione third", ""+s+"");			
-				
-				cdSave.start();/* = new CountDownTimer(5000L, 1000L) {					
-					@Override
-					public void onTick(long millisUntilFinished) {
-						// TODO Auto-generated method stub
-						//remainingtimeS= millisUntilFinished /1000;
+				if((et.getText().toString()).equals("")){
+					Toast.makeText(getApplicationContext(), "Inserire nome sessione", Toast.LENGTH_LONG).show();
+					return;
+				}else{
+					s=1;				
+									
+					playBtn.setVisibility(View.INVISIBLE);
+					pauseBtn.setVisibility(View.VISIBLE);	
+					
+					//da.setData(cal.get(GregorianCalendar.YEAR), cal.get(GregorianCalendar.MONTH)+1, cal.get(GregorianCalendar.DATE));
+					String data = ""+cal.get(GregorianCalendar.YEAR)+ "/" + (cal.get(GregorianCalendar.MONTH)+1)+ "/" +cal.get(GregorianCalendar.DATE);
+					
+					//da.setHour(cal.get(GregorianCalendar.HOUR_OF_DAY), cal.get(GregorianCalendar.MINUTE), cal.get(GregorianCalendar.SECOND));
+					//String ora = ""+cal.get(GregorianCalendar.HOUR_OF_DAY)+ ":" + cal.get(GregorianCalendar.MINUTE)+ ":" +cal.get(GregorianCalendar.SECOND);
+									
+					long milliseconds=System.currentTimeMillis();
+					int seconds = (int) (milliseconds / 1000) % 60 ;
+					int minutes = (int) ((milliseconds / (1000*60)) % 60);
+					int hours   = (int) ((milliseconds / (1000*60*60)) % 24);
+					String ora = ""+hours+ ":" + minutes+ ":" +seconds+"";
+					Random rm = new Random();
+					int cl = Color.argb(255, rm.nextInt(254), rm.nextInt(254), rm.nextInt(254));
+					db.addSessione(et.getText().toString(), data, ora, "XX:XX:XX", 0, cl);
+					//Log.v("ora1",""+cal.get(GregorianCalendar.HOUR_OF_DAY)+ ":" + cal.get(GregorianCalendar.MINUTE)+ ":" +cal.get(GregorianCalendar.SECOND));				
+					db.close();  
+					
+					//GESTIONE PLAY/RESUME CRONOMETRO
+					if ( stopTime == 0 )
+				        chronometer.setBase( SystemClock.elapsedRealtime() );
+				    // on resume after pause
+				    else
+				    {
+				        long intervalloPausa = (SystemClock.elapsedRealtime() - stopTime);
+				        chronometer.setBase( chronometer.getBase() + intervalloPausa );
+				    }
+				    chronometer.start();				
+				    //FINE GESTIONE			    
+					
+					Log.v("List-1","--HO PREMUTO IL TASTO PLAY---");				
+					Log.v("nomeSessioneThird--->",""+et.getText().toString()+"");
+					Intent UIMA;    		
+					UIMA = new Intent(getApplicationContext(), MainActivity.class);				
+					UIMA.putExtra(MainActivity.PACKAGE_NAME+".state", s);
+					Log.v("stato sessione third", ""+s+"");			
+					
+					cdSave.start();/* = new CountDownTimer(5000L, 1000L) {					
+						@Override
+						public void onTick(long millisUntilFinished) {
+							// TODO Auto-generated method stub
+							//remainingtimeS= millisUntilFinished /1000;
+							}					
+						@Override
+						public void onFinish() {
+							rec = true;	
+							Log.v("countdown","finito");
+						}
+					}.start();*/				
+					cdView.start();/* = new CountDownTimer(21000L, 1000L) {					
+						@Override
+						public void onTick(long millisUntilFinished) {
+							// TODO Auto-generated method stub
+							//remainingtimeW= millisUntilFinished /1000;
 						}					
-					@Override
-					public void onFinish() {
-						rec = true;	
-						Log.v("countdown","finito");
-					}
-				}.start();*/				
-				cdView.start();/* = new CountDownTimer(21000L, 1000L) {					
-					@Override
-					public void onTick(long millisUntilFinished) {
-						// TODO Auto-generated method stub
-						//remainingtimeW= millisUntilFinished /1000;
-					}					
-					@Override
-					public void onFinish() {
-						vis = true;	
-						Log.v("countdownView","finito");
-					}
-				}.start();*/
-				start();
-			}						
-		});
-		
-		pauseBtn.setOnClickListener(new View.OnClickListener(){			
-			@Override
-			public void onClick(View v){
-				s=2;
-				playBtn.setVisibility(View.VISIBLE);
-				pauseBtn.setVisibility(View.INVISIBLE);
-				Log.v("List-2","--HO PREMUTO IL TASTO PAUSE--");				
-			    stopTime = SystemClock.elapsedRealtime();			    
-			    Intent UIMA;
-			    UIMA = new Intent(getApplicationContext(), MainActivity.class);
-			    UIMA.putExtra(MainActivity.PACKAGE_NAME+".state", s);	
-			    pauseTime=SystemClock.elapsedRealtime()-chronometer.getBase();
-			    Log.v("valore pauseTime","sec>"+(pauseTime/1000 % 60)+"<minuti>"+((pauseTime / (1000*60)) % 60)+"<ore"+((pauseTime / (1000*60*60)) % 24)+"");
-				UIMA.putExtra(MainActivity.PACKAGE_NAME+".StopTime", (chronometer.getBase()-(chronometer.getBase()-pauseTime)));
-				chronometer.stop();				
-				Log.v("stato sessione third", ""+s+"");									    
-			    cdView.cancel();
-			    pause();
-			}				
+						@Override
+						public void onFinish() {
+							vis = true;	
+							Log.v("countdownView","finito");
+						}
+					}.start();*/
+					start();
+				}
+			}
+			});
+
+			
+			pauseBtn.setOnClickListener(new View.OnClickListener(){			
+				@Override
+				public void onClick(View v){
+					s=2;
+					playBtn.setVisibility(View.VISIBLE);
+					pauseBtn.setVisibility(View.INVISIBLE);
+					Log.v("List-2","--HO PREMUTO IL TASTO PAUSE--");				
+				    stopTime = SystemClock.elapsedRealtime();			    
+				    Intent UIMA;
+				    UIMA = new Intent(getApplicationContext(), MainActivity.class);
+				    UIMA.putExtra(MainActivity.PACKAGE_NAME+".state", s);	
+				    pauseTime=SystemClock.elapsedRealtime()-chronometer.getBase();
+				    Log.v("valore pauseTime","sec>"+(pauseTime/1000 % 60)+"<minuti>"+((pauseTime / (1000*60)) % 60)+"<ore"+((pauseTime / (1000*60*60)) % 24)+"");
+					UIMA.putExtra(MainActivity.PACKAGE_NAME+".StopTime", (chronometer.getBase()-(chronometer.getBase()-pauseTime)));
+					chronometer.stop();				
+					Log.v("stato sessione third", ""+s+"");									    
+				    cdView.cancel();
+				    pause();
+				}				
 		});
 		
 		stopBtn.setOnClickListener(new View.OnClickListener(){			
@@ -357,9 +370,7 @@ public class Third extends ActionBarActivity implements SensorEventListener,Loca
 	
 	
 	private void start(){
-		
-		locMg = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-		mysm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		it = System.currentTimeMillis();
 		if(mysm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null){
 			accel = mysm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 			mysm.registerListener((SensorEventListener) this, accel, SensorManager.SENSOR_DELAY_NORMAL);			
@@ -369,7 +380,7 @@ public class Third extends ActionBarActivity implements SensorEventListener,Loca
 			//int hour = c.get(GregorianCalendar.HOUR_OF_DAY);
 			//int min = c.get(GregorianCalendar.MINUTE);
 			//int sec= c.get(GregorianCalendar.SECOND);
-			date = "" + year + month + day /*+ hour + min + sec */;			
+			date = "" + year + month + day /*+ hour + min + sec */;	
 		}				
 	}
 	
@@ -428,6 +439,9 @@ public class Third extends ActionBarActivity implements SensorEventListener,Loca
 	private void stop(){
 		if(mysm != null){
 			mysm.unregisterListener(this);
+		}
+		if(locMg != null){
+			locMg.removeUpdates(this);
 		}
 		
 		//if(!(lastFileName.equals(date))){
@@ -490,29 +504,26 @@ public class Third extends ActionBarActivity implements SensorEventListener,Loca
 				
 				if(rec){
 					float x = event.values[0];
- 					float y = event.values[1];
- 					float z = event.values[2];
- 					AccelData d = new AccelData(System.currentTimeMillis()-it, x, y, z);
- 					acData.add(d);
- 					rec = false;
-					if(acData.size() > 2){
+					float y = event.values[1];
+					float z = event.values[2];
+					long time = System.currentTimeMillis()-it;
+					if(acData.size() >= 1){
 						mService = new Intent(getApplicationContext(), FindFall.class);
 						if(locMg.getLastKnownLocation(LocationManager.GPS_PROVIDER) != null){
-							double longitude = locMg.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude();
-							double latitude = locMg.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude();
 							mService.putExtra("long", longitude);
 							mService.putExtra("lat", latitude);
 						}
-						mService.putExtra("xVal", acData.get(k).getX());
-						mService.putExtra("yVal", acData.get(k).getY());
-						mService.putExtra("zVal", acData.get(k).getZ());
-						mService.putExtra("xValLast", acData.get(k-1).getX());
-						mService.putExtra("yValLast", acData.get(k-1).getY());
-						mService.putExtra("zValLast", acData.get(k-1).getZ());
-						mService.putExtra("noSess", et.getText().toString());
+						mService.putExtra("xVal", x);
+						mService.putExtra("yVal", y);
+						mService.putExtra("zVal", z);
+						mService.putExtra("xValLast", acData.get(k).getX());
+						mService.putExtra("yValLast", acData.get(k).getY());
+						mService.putExtra("zValLast", acData.get(k).getZ());
+						
 						startService(mService);
 						k++;								
 					}
+					acData.add(new AccelData(time, x, y, z));
 					cdSave.start();
 				}
 				
@@ -522,22 +533,23 @@ public class Third extends ActionBarActivity implements SensorEventListener,Loca
 					zAccViewS.setText("" + acData.get(j).getZ());
 					j+=4;
 					vis = false;
-				    cdView.start();
+					cdView.start();
 				}
+				
 			}
 		}
 	}
 
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		//Log.d("Accelerometro", "onAccurancyChanged: " + sensor + ", accuracy: " + accuracy);		
+	//	Log.d("Accelerometro", "onAccurancyChanged: " + sensor + ", accuracy: " + accuracy);
+		
 	}
-	
 	
 	@Override
 	public void onLocationChanged(Location location) {
-			// TODO Auto-generated method stub
-			
+		longitude = location.getLongitude();
+		latitude = location.getLatitude(); 			
 	}
 	
 	@Override

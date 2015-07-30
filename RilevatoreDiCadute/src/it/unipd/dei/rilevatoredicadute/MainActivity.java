@@ -6,7 +6,6 @@ import java.util.List;
 import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
@@ -16,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -28,7 +26,7 @@ public class MainActivity extends ActionBarActivity {
 	//state=0, una sessione si puo' iniziare
 	//state=1 una sessione e' in esecuzione
 	//state=2 una sessione e' in pausa	
-	private boolean doubleBackToExit;	
+	//private boolean doubleBackToExit;	
 	public static String PACKAGE_NAME; 	
 	MyDBManager db;	          
     Intent MA;
@@ -163,7 +161,7 @@ public class MainActivity extends ActionBarActivity {
 		super.onCreateOptionsMenu(menu);		
 			    
     	/*MenuItem meIt1 = */menu.add(0, R.id.nuovaSessione, 1, "Nuova Sessione");
-    	/*MenuItem meIt2 = */menu.add(0, R.id.delete, 2, "Elimina");
+    	/*MenuItem meIt2 = */menu.add(0, R.id.delete, 2, "Elimina Sessione");
     	/*MenuItem meIt3 = */menu.add(0, R.id.sessioneInCorso, 3, "Sessione In Corso" );
     	/*MenuItem meIt4 = */menu.add(0, R.id.preferenze, 4, "Preferenze");
     	/*if(i==0){
@@ -249,21 +247,6 @@ public class MainActivity extends ActionBarActivity {
 	
 	@Override
 	public void onBackPressed() {
-		if(doubleBackToExit){
-			super.onBackPressed();
-			return;
-		}
-		this.doubleBackToExit = true;
-		Toast.makeText(this, "Per favore, premere di nuovo per uscire", Toast.LENGTH_SHORT).show();
-		
-		new Handler().postDelayed(new Runnable() {
-			
-			@Override
-			public void run() {
-				doubleBackToExit = false;
-				
-			}
-		}, 2000);
 	}
 	    
 }

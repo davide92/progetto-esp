@@ -7,9 +7,9 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="20" />
-    
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -31,9 +31,8 @@
         </activity>
         <activity
             android:name=".Third"
-            android:label="@string/title_activity_third"> 
-		</activity>
-    
+            android:label="@string/title_activity_third" >
+        </activity>
         <activity
             android:name=".Fourth"
             android:label="@string/title_activity_fourth" >
@@ -41,7 +40,7 @@
         <activity
             android:name=".Fifth"
             android:label="@string/title_activity_fifth" >
-        </activity>       
+        </activity>
         <activity
             android:name=".Delete"
             android:label="@string/title_activity_delete" >
@@ -50,12 +49,18 @@
             android:name=".SessioneCorrente"
             android:label="@string/title_activity_sixth" >
         </activity>
-         <service
+
+        <service
             android:name=".FindFall"
             android:exported="false" />
-        <receiver android:name=".MyReceiver">            
+
+        <receiver android:name=".MyReceiver" >
         </receiver>
-        
+
+        <activity
+            android:name=".DeleteFall"
+            android:label="@string/title_activity_delete_fall" >
+        </activity>
     </application>
 
 </manifest>

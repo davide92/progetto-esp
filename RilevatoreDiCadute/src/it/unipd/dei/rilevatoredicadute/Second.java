@@ -14,7 +14,6 @@ import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -31,6 +30,8 @@ public class Second extends ActionBarActivity {
 	MyDBManager db;
 	String nS;
 	int countFalls=0;
+	Bitmap bm;
+	TextView nomeSessione;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +39,7 @@ public class Second extends ActionBarActivity {
 		Intent intent=getIntent();		    
 		nS=intent.getStringExtra(MainActivity.PACKAGE_NAME+".nameSession");
 		Bundle extra = intent.getExtras();
-		final Bitmap bm = (Bitmap)extra.getParcelable("image");
+		bm = (Bitmap)extra.getParcelable("image");
 	    setContentView(R.layout.activity_second);
 	    ImageView image = (ImageView)findViewById(R.id.picture2);
 	    cl = intent.getIntExtra("color", 0);
@@ -51,6 +52,21 @@ public class Second extends ActionBarActivity {
 	    FallLV.setAdapter(FALLadapter);
         db=new MyDBManager(this);
         Cursor crs=db.selectSession(nS);
+        nomeSessione = (TextView)findViewById(R.id.nomeSessione);
+		TextView data = (TextView)findViewById(R.id.data);
+		TextView ora = (TextView)findViewById(R.id.ora);
+		TextView durataSessione = (TextView)findViewById(R.id.durataSessione);		
+		//Dati d = getItem(position);
+		//picture.setImage();
+		if (crs.moveToFirst()){
+			nomeSessione.setText(crs.getString(0));
+			data.setText(crs.getString(1));
+			ora.setText(crs.getString(2));
+			durataSessione.setText(crs.getString(3));		   
+		}        
+        Log.v("nome sessione---->",""+nS+"");
+        crs.close();		
+		 
         Cursor c=db.selectCaduta(nS);                      
         if(c.moveToFirst()){
         	do{
@@ -66,7 +82,7 @@ public class Second extends ActionBarActivity {
             int minutes=Integer.parseInt(oraf[1]);  
             int seconds=Integer.parseInt(oraf[2]);
             
-            FallList.add(new DatiCadute(day, month, year,hour, minutes, seconds, Double.parseDouble(c.getString(2)), Double.parseDouble(c.getString(3))));           
+            FallList.add(new DatiCadute(day, month, year,hour, minutes, seconds, Double.parseDouble(c.getString(2)), Double.parseDouble(c.getString(3)), nS));           
         	}while(c.moveToNext());//fine while
         }
         else{
@@ -74,22 +90,7 @@ public class Second extends ActionBarActivity {
         }//fine IF
         //crs.close();        
         c.close();
-        TextView nomeSessione = (TextView)findViewById(R.id.nomeSessione);
-		TextView data = (TextView)findViewById(R.id.data);
-		TextView ora = (TextView)findViewById(R.id.ora);
-		TextView durataSessione = (TextView)findViewById(R.id.durataSessione);		
-		//Dati d = getItem(position);
-		//picture.setImage();
-		if (crs.moveToFirst()){
-			nomeSessione.setText(crs.getString(0));
-			data.setText(crs.getString(1));
-			ora.setText(crs.getString(2));
-			durataSessione.setText(crs.getString(3));		   
-		}        
-        Log.v("nome sessione---->",""+nS+"");
-        c.close();
-        crs.close();		
-		 
+        
 	     FallLV.setOnItemClickListener(new OnItemClickListener(){
 	     public void onItemClick(AdapterView<?> FALLadapter, View v, int position, long id){
 
@@ -127,9 +128,17 @@ public class Second extends ActionBarActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu){
 		super.onCreateOptionsMenu(menu);
-    	MenuItem meIt1 = menu.add(0, R.id.nuovaSessione, 1, "Nuova Sessione");    	
+    	MenuItem meIt1 = menu.add(0, R.id.nuovaSessione, 1, "Nuova Sessione"); 
+    	MenuItem meIt2 = menu.add(0, R.id.delete, 2, "Elimina caduta");
     	MenuItem meIt4 = menu.add(0, R.id.preferenze, 4, "Preferenze");
-    	meIt1.setIntent(new Intent(this, Third.class));    	
+    	meIt1.setIntent(new Intent(this, Third.class)); 
+    	Intent del = new Intent(this, DeleteFall.class);
+    	del.putExtra("session", nomeSessione.getText());
+    	del.putExtra("color", cl);
+		Bundle extra = new Bundle();
+		extra.putParcelable("image", bm);
+    	del.putExtras(extra);
+    	meIt2.setIntent(del);
     	meIt4.setIntent(new Intent(this, Fifth.class));
     	return true;
     } 

@@ -10,9 +10,10 @@ public class DatiCadute {
 	private int second;
 	private double latitudine;
 	private double longitudine;
+	private String session;
 	
 	
-	public DatiCadute(int d, int m, int y, int h, int min, int sec, double lat, double lon){		
+	public DatiCadute(int d, int m, int y, int h, int min, int sec, double lat, double lon, String sess){		
 		day = d;
 		month = m;
 		year = y;
@@ -21,10 +22,11 @@ public class DatiCadute {
 		second = sec;
 		latitudine=lat;
 		longitudine=lon;
+		session = sess;
 	}
 	
 	public DatiCadute(){
-		this( 0, 0, 0, 0, 0, 0, 0, 0);		 
+		this( 0, 0, 0, 0, 0, 0, 0, 0, "nessuna sessione");		 
 	}	
 	
 	public void setData(int d, int m, int y){
@@ -37,8 +39,7 @@ public class DatiCadute {
 		hour = h;
 		minute = min;
 		second = sec;
-	}	
-	
+	}		
 
 	public String getData(){
 		return(Integer.toString(day)+ "/" + Integer.toString(month) + "/" + Integer.toString(year));
@@ -62,5 +63,8 @@ public class DatiCadute {
 
 	public double getLatitudine(){
 		return latitudine;
+	}
+	public String getSessione(){
+		return session;
 	}
 }

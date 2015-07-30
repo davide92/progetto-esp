@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ImageButton;
 import android.content.Intent;
@@ -18,6 +19,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 
 import java.util.GregorianCalendar;
+import java.util.LinkedList;
+import java.util.List;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,6 +29,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.widget.Toast;
 import android.widget.Chronometer;
 
@@ -42,14 +46,16 @@ public class SessioneCorrente extends ActionBarActivity implements SensorEventLi
 	int statoSessione;
 	long tempoPausa;
 	long p=0;
+	long it = 0;
 	private SensorManager mysm;
 	private LocationManager locMg = null;
 	private Sensor accel;
-	private ArrayList<AccelData> acData = new ArrayList<AccelData>(1000);
-	private long it;
-	private int i = 0;
-	private int j = 0;
-	private int k = 1;
+	private ArrayList<AccelData> acData = new ArrayList<AccelData>(15000);
+	private int i, j, k = 0;
+	private double latitude, longitude;
+	private String nS;
+	private  ListView listView;
+	private List<DatiCadute> fallList;
 	int year;
 	int month;
 	int day;
@@ -88,6 +94,8 @@ public class SessioneCorrente extends ActionBarActivity implements SensorEventLi
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
 		setContentView(R.layout.activity_sess_curr);
+		listView = (ListView) findViewById(R.id.listViewCadute);
+		fallList = new LinkedList<DatiCadute>();
 		
 		cdSaveSC = new CountDownTimer(5000L, 1000L) {					
 			@Override
@@ -346,8 +354,9 @@ public class SessioneCorrente extends ActionBarActivity implements SensorEventLi
 	
 //INIZIO GESTIONE SENSORE ACCELEROMETRO	
 private void start(){
-		
+		it = System.currentTimeMillis();
 		locMg = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		locMg.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);
 		mysm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		if(mysm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null){
 			accel = mysm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -360,7 +369,34 @@ private void start(){
 			//int min = c.get(GregorianCalendar.MINUTE);
 			//int sec= c.get(GregorianCalendar.SECOND);
 			date = "" + year + month + day /*+ hour + min + sec */;			
-		}				
+		}
+		nS = tx.getText().toString();
+		int fallCount = db.CountCaduta(nS);
+		db.close();
+		if(fallCount > 0){
+			Cursor crs = db.selectAllCadute(nS);
+			if(crs.moveToFirst()){
+				do{
+					String strData = crs.getString(crs.getColumnIndex("DataCaduta"));
+		            String[] dataf=strData.split("/");
+		            int day=Integer.parseInt(dataf[0]);  
+		            int month=Integer.parseInt(dataf[1]);  
+		            int year=Integer.parseInt(dataf[2]);
+	
+		            String strTime = crs.getString(crs.getColumnIndex("OraCaduta"));
+		            String[] oraf=strTime.split(":");
+		            int hour=Integer.parseInt(oraf[0]);  
+		            int minutes=Integer.parseInt(oraf[1]);  
+		            int seconds=Integer.parseInt(oraf[2]);
+		            double lat = crs.getDouble(crs.getColumnIndex("Latitudine"));
+		            double longi = crs.getDouble(crs.getColumnIndex("Longitudine"));
+		            fallList.add(new DatiCadute(day, month, year, hour, minutes, seconds, lat, longi, nS));
+				}while(crs.moveToNext());	
+			}
+		}
+		
+		CustomAdapterFalls adapter = new CustomAdapterFalls(this, R.id.listViewCadute, fallList);       
+	    listView.setAdapter(adapter);
 	}
 	
 	private void pause(){
@@ -412,6 +448,9 @@ private void start(){
 	private void stop(){
 		if(mysm != null){
 			mysm.unregisterListener(this);
+		}
+		if(locMg != null){
+			locMg.removeUpdates(this);
 		}
 		
 		if(!(lastFileName.equals(date))){
@@ -466,23 +505,27 @@ private void start(){
 			if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
 				
 				if(rec){
-					if(acData.size() > 2){
+					float x = event.values[0];
+					float y = event.values[1];
+					float z = event.values[2];
+					long time = System.currentTimeMillis()-it;					
+					if(acData.size() >= 1){
 						mService = new Intent(getApplicationContext(), FindFall.class);
 						if(locMg.getLastKnownLocation(LocationManager.GPS_PROVIDER) != null){
-							double longitude = locMg.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude();
-							double latitude = locMg.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude();
 							mService.putExtra("long", longitude);
 							mService.putExtra("lat", latitude);
 						}
-						mService.putExtra("xVal", acData.get(k).getX());
-						mService.putExtra("yVal", acData.get(k).getY());
-						mService.putExtra("zVal", acData.get(k).getZ());
-						mService.putExtra("xValLast", acData.get(k-1).getX());
-						mService.putExtra("yValLast", acData.get(k-1).getY());
-						mService.putExtra("zValLast", acData.get(k-1).getZ());
+						mService.putExtra("xVal", x);
+						mService.putExtra("yVal", y);
+						mService.putExtra("zVal", z);
+						mService.putExtra("xValLast", acData.get(k).getX());
+						mService.putExtra("yValLast", acData.get(k).getY());
+						mService.putExtra("zValLast", acData.get(k).getZ());
+						
 						startService(mService);
 						k++;								
 					}
+					acData.add(new AccelData(time, x, y, z));
 					cdSaveSC.start();
 				}
 				
@@ -507,7 +550,8 @@ private void start(){
 	
 	@Override
 	public void onLocationChanged(Location location) {
-			// TODO Auto-generated method stub			
+		longitude = location.getLongitude();
+		latitude = location.getLatitude(); 			
 	}
 	
 	@Override

@@ -13,7 +13,7 @@ public class FindFall extends IntentService{
 	private float yValLast;
 	private float zValLast;
 	Intent mActivity = null;
-	private float alpha=(float)7;
+	private float alpha=(float)10;
 	String sessione;	
 	MyDBManager dbF;
 	GregorianCalendar calendar;
@@ -38,8 +38,12 @@ public class FindFall extends IntentService{
 		lon = intent.getDoubleExtra("long", 0);
 					
 		mActivity = new Intent(this, MyReceiver.class);
+		
+		float x=java.lang.Math.abs(xVal)- java.lang.Math.abs(xValLast);
+		float y=java.lang.Math.abs(yVal)- java.lang.Math.abs(yValLast);
+		float z=java.lang.Math.abs(zVal)- java.lang.Math.abs(zValLast);
 				
-		if(((java.lang.Math.abs(xVal)- java.lang.Math.abs(xValLast))> alpha) || ((java.lang.Math.abs(yVal)- java.lang.Math.abs(yValLast))> alpha) || ((java.lang.Math.abs(zVal)- java.lang.Math.abs(zValLast))> alpha)){
+		if(((java.lang.Math.abs(x))>= alpha) || ((java.lang.Math.abs(y))>= alpha) || ((java.lang.Math.abs(z))>= alpha)){
 			mActivity.putExtra("fall", true);
 			mActivity.putExtra("lat", lat);//intent.getDoubleExtra("lat", 0));
 			mActivity.putExtra("long", lon);//intent.getDoubleExtra("long", 0));

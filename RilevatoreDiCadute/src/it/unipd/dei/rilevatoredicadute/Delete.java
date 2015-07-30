@@ -13,6 +13,8 @@ import android.widget.AdapterView;
 import android.widget.Chronometer;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 //import android.util.Log;
@@ -61,10 +63,30 @@ public class Delete extends ActionBarActivity {
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new OnItemClickListener(){
     	public void onItemClick(AdapterView<?> adapter, View v, int position, long id){    		       	
-    		
-    		db.deleteSessione(((Dati)adapter.getItemAtPosition(position)).getNomeSessione());
-    		Intent UI2 = new Intent(getApplicationContext(), MainActivity.class);
-         	startActivity(UI2);            	
+    		final AdapterView<?> a = adapter;
+	    	 final int pos = position;
+	    	 AlertDialog.Builder alert = new AlertDialog.Builder(Delete.this);
+	    	 alert.setTitle("Elimina");
+	    	 alert.setMessage("Eliminare l'elemento?");
+	    	 alert.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					db.deleteSessione(((Dati)a.getItemAtPosition(pos)).getNomeSessione());
+					Intent UI2 = new Intent(getApplicationContext(), MainActivity.class);
+		         	startActivity(UI2);
+				}
+			});
+	    	 alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					return;
+					
+				}
+			});
+	    	AlertDialog dialog = alert.create();
+	    	dialog.show();           	
     	}
     	
         });        

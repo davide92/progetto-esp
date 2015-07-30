@@ -96,6 +96,19 @@ public Cursor selectSession(String nameSession){
    return crs;
 }
 
+public Cursor selectAllCaduta(){
+    Cursor crs=null;
+     try
+     {
+        SQLiteDatabase db=dbhelper.getReadableDatabase();
+        crs=db.query(MyDBHelper.TABLE_CADUTA, null, null, null, null, null, null, null);        
+     }
+     catch(SQLiteException sqle)
+     {
+       return null;
+       }     
+     return crs;
+ }
 
  public Cursor selectCaduta(String nameSession)
  {
@@ -127,13 +140,37 @@ public Cursor selectSession(String nameSession){
 	 return count;
  }
  
- /*public void numberCaduta(){
+ /*public int numberCaduta(String nameSession){
 	 SQLiteDatabase db=dbhelper.getReadableDatabase();
-	 String numeroCaduta="SELECT COUNT( " +MyDBHelper.COL_IDC+ " FROM " +MyDBHelper.TABLE_CADUTA+ " );";
+	 /*String numeroCaduta="SELECT COUNT( " +MyDBHelper.COL_IDC+ " FROM " +MyDBHelper.TABLE_CADUTA+ " );";
 	 db.execSQL(numeroCaduta);
-	 //return Integer.parseInt(numeroCaduta);
+	 return Integer.parseInt(numeroCaduta);*/
+/*	 String countQuery = "SELECT COUNT(*) FROM " + MyDBHelper.TABLE_CADUTA + " WHERE "+ MyDBHelper.COL_SESS + " = '"+ nameSession+"';";
+	 Cursor cursor = db.rawQuery(countQuery, null);
+	 int cnt = cursor.getCount();
+	 cursor.close();
+	 return cnt;
  }*/
+ 
+public Cursor selectAllCadute(String nameSession){
+	Cursor crs = null;
+	String selectColumns[] = new String[]{""+MyDBHelper.COL_DATAC+"",""+MyDBHelper.COL_ORAC+"",""+MyDBHelper.COL_LAT+"",""+MyDBHelper.COL_LON+""};
+	String whereClause = ""+MyDBHelper.COL_IDC+"= ?" ;
+	String whereArgs[] = new String[]{""+nameSession+""};
+	 try{
+         SQLiteDatabase db=dbhelper.getReadableDatabase();
+         crs=db.query(MyDBHelper.TABLE_CADUTA, selectColumns, whereClause, whereArgs, null, null, null, null);
+         
+     }catch(SQLiteException sqle)
+     {     return null;
+     } 
+	 return crs;
+}
 
-	
+public void deleteCaduta(String nameSession, String hour){
+	SQLiteDatabase db = dbhelper.getWritableDatabase();
+	String delete = "DELETE FROM "+MyDBHelper.TABLE_CADUTA+ " WHERE " +MyDBHelper.COL_SESS+ " = '" +nameSession+ "' AND " + MyDBHelper.COL_ORAC + " = '"+ hour + "';";
+	db.execSQL(delete);	
+}
 	
 }
