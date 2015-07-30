@@ -11,9 +11,11 @@
 
     <ImageView 
         android:id="@+id/picture4" 
+        android:contentDescription="@string/thumbnail"
     	android:layout_width="50dp"
      	android:layout_height="50dp" 
       	android:layout_marginRight="7dp"
+      	android:layout_marginEnd="7dp"
        	/>
          
     <TextView
@@ -30,6 +32,7 @@
      	android:layout_width="wrap_content"
       	android:layout_height="wrap_content" 
        	android:layout_toRightOf="@+id/avvenutaTx"
+       	android:layout_toEndOf="@+id/avvenutaTx"
        	android:layout_below="@+id/picture4"
         android:textSize="20sp"
         />
@@ -48,6 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/latitudeTx"
+        android:layout_toEndOf="@+id/latitudeTx"
         android:layout_below="@+id/avvenutaTx"
         android:textSize="20sp"
         />
@@ -66,25 +70,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/longitudeTx"
+        android:layout_toEndOf="@+id/longitudeTx"
         android:layout_below="@+id/latitudeTx"
         android:textSize="20sp"
         />
     
-    <TextView 
-        android:id="@+id/notificaOk"
-     	android:layout_width="wrap_content" 
-     	android:layout_height="wrap_content"
-       	android:layout_below="@+id/longitude"
-        android:layout_marginRight="5dp" 
-        android:text="@string/notificaOk" 
-        android:textSize="20sp"/>
-
-	<CheckBox 
-	    android:id="@+id/cbNotifica" 
-    	android:layout_width="wrap_content"
-     	android:layout_height="wrap_content"
-      	android:layout_toRightOf="@+id/notificaOk"
-       	android:layout_below="@+id/longitude"
-        android:layout_centerVertical="true"/>
 
 </RelativeLayout>

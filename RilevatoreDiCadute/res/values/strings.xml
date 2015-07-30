@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Rilevatore di cadute</string>
+	<string name="app_name">Rilevatore di cadute</string>
     <string name="action_settings">Settings</string>
     <string name="nuovaSessione">Nuova Sessione</string>
     <string name="delete">Cancella</string>
     <string name="rename">Rinomina</string>
     <string name="preference">Preferenze</string>
     <string name="textDurata">Durata--></string>
-    <string name="textCadute">Cadute:</string>    
+    <string name="textCadute">Cadute:</string>
     <string name="title_activity_second">Dettagli</string>
     <string name="inizio">Inizio Sessione</string>
     <string name="txDataInizio">Data Inizio-></string>
@@ -31,12 +31,15 @@
     <string name="simpleRateTx">Frequenza di campionamento:</string>
     <string name="maxDuratSessTx">Massima durata sessione:</string>
     <string name="emailListTx">Lista e-mail</string>
-    <string name="alarmTx">Allarme</string>    
+    <string name="alarmTx">Allarme</string>
     <string name="title_activity_delete">Elimina Sessione</string>
-    <string name="title_activity_sixth">Sessione In Corso</string> 
-    <string name="mostra">Mostra Sessione</string> 
+    <string name="title_activity_sixth">Sessione In Corso</string>
+    <string name="mostra">Mostra Sessione</string>
     <string name="xTx">Asse x: </string>
     <string name="yTx">Asse y: </string>
-    <string name="zTx">Asse z: </string>      
+    <string name="zTx">Asse z: </string>
+    <string name="title_activity_delete_fall">Elimina caduta</string>
+    <string name="thumbnail">Thumbnail</string>
+      
     
 </resources>

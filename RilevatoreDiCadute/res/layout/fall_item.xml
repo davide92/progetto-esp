@@ -8,10 +8,12 @@
     android:layout_width="wrap_content"
      android:layout_height="wrap_content"
       android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true"
        android:layout_alignParentTop="true"
         android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
          android:text="@string/caduta" 
-         android:textSize="12sp"
+         android:textSize="15sp"
           android:textStyle="italic"/>
 
 
@@ -20,14 +22,16 @@
       android:layout_height="wrap_content" 
       android:layout_below="@+id/caduta"
        android:layout_toRightOf="@+id/caduta"
-        android:textSize="20sp"/>
+        android:layout_toEndOf="@+id/caduta"
+        android:textSize="15sp"/>
 
 <TextView android:id="@+id/ora" 
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content"
      android:layout_below="@+id/caduta" 
      android:layout_toRightOf="@+id/data"
-      android:textSize="20sp"/>
+      android:layout_toEndOf="@+id/data"
+      android:textSize="15sp"/>
 
 <TextView 
         android:id="@+id/latitudeTx"
@@ -43,6 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/latitudeTx"
+         android:layout_toEndOf="@+id/latitudeTx"
         android:layout_below="@+id/data"
         android:textSize="15sp"
         />
@@ -61,6 +66,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/longitudeTx"
+         android:layout_toEndOf="@+id/longitudeTx"
         android:layout_below="@+id/latitudeTx"
         android:textSize="15sp"
         />

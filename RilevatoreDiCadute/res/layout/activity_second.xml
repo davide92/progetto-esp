@@ -9,16 +9,20 @@
          android:paddingTop="@dimen/activity_vertical_margin">
          
 <ImageView android:id="@+id/picture2" 
+    android:contentDescription="@string/thumbnail"
     android:layout_width="50dp"
      android:layout_height="50dp" 
-      android:layout_marginRight="7dp"/>
+      android:layout_marginRight="7dp"
+      android:layout_marginEnd="7dp"/>
 
 <TextView android:id="@+id/nomeSessione"
      android:layout_width="wrap_content" 
      android:layout_height="wrap_content" 
      android:layout_alignParentTop="true" 
-     android:layout_toRightOf="@+id/picture2" 
-     android:layout_marginRight="5dp" 
+     android:layout_toRightOf="@+id/picture2"
+     android:layout_toEndOf="@+id/picture2" 
+     android:layout_marginRight="5dp"
+     android:layout_marginEnd="5dp" 
      android:layout_marginBottom="5dp"      
      android:textSize="20sp"
       android:textStyle="bold"/>
@@ -51,6 +55,7 @@
     android:layout_height="wrap_content"
      android:layout_below="@+id/inizio" 
      android:layout_toRightOf="@+id/txDataInizio"
+     android:layout_toEndOf="@+id/txDataInizio"
       android:textSize="20sp"/>
 
 <TextView android:id="@+id/ora" 
@@ -58,6 +63,7 @@
     android:layout_height="wrap_content"
      android:layout_below="@+id/txDataInizio" 
      android:layout_toRightOf="@+id/txOraInizio"
+     android:layout_toEndOf="@+id/txOraInizio"
       android:textSize="20sp"/>
 
 <TextView android:id="@+id/textDurata"
@@ -72,7 +78,8 @@
      android:layout_height="wrap_content" 
      android:layout_below="@+id/txOraInizio"      
      android:textSize="20sp"
-	 android:layout_toRightOf="@id/textDurata"/>
+	 android:layout_toRightOf="@id/textDurata"
+	 android:layout_toEndOf="@+id/textDurata"/>
 
 <TextView android:id="@+id/txLista" 
     android:layout_width="wrap_content" 
@@ -93,7 +100,7 @@
 <ListView android:id="@+id/listViewCadute" 
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content" 
-    android:layout_marginTop="10dp" 
+    android:layout_marginTop="15dp" 
     android:layout_marginLeft="5dp" 
     android:layout_marginRight="5dp" 
     android:layout_marginBottom="5dp"     
