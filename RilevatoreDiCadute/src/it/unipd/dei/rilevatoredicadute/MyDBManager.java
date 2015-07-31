@@ -20,7 +20,7 @@ public void close(){
 	dbhelper.close();	
 	}	
 
-public void addSessione(String nome, String data, String ora, String durata ,int ncadute, int col){
+public void addSessione(String nome, String data, String ora, String durata ,int ncadute, int col, int stato){
 		
 		SQLiteDatabase db = dbhelper.getWritableDatabase();
 		
@@ -31,6 +31,7 @@ public void addSessione(String nome, String data, String ora, String durata ,int
 		cv.put(MyDBHelper.COL_DURATA, durata);
 		cv.put(MyDBHelper.COL_NCADUTE, ncadute);
 		cv.put(MyDBHelper.COL_COLOR, col);
+		cv.put(MyDBHelper.COL_STATO, stato);
 		
 		db.insert(MyDBHelper.TABLE_SESSIONE, null, cv);
 	}
@@ -171,6 +172,16 @@ public void deleteCaduta(String nameSession, String hour){
 	SQLiteDatabase db = dbhelper.getWritableDatabase();
 	String delete = "DELETE FROM "+MyDBHelper.TABLE_CADUTA+ " WHERE " +MyDBHelper.COL_SESS+ " = '" +nameSession+ "' AND " + MyDBHelper.COL_ORAC + " = '"+ hour + "';";
 	db.execSQL(delete);	
+}
+
+public int MaxIDSessione(){	 
+	
+	 SQLiteDatabase db = dbhelper.getReadableDatabase();
+	 Cursor mCount= db.rawQuery("select max( "+MyDBHelper.COL_IDS+" ) from "+MyDBHelper.TABLE_SESSIONE+ " ;", null);
+	 mCount.moveToFirst();
+	 int countS= mCount.getInt(0);
+	 mCount.close();
+	 return countS;
 }
 	
 }

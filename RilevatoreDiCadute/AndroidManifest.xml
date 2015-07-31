@@ -33,6 +33,12 @@
             android:name=".Third"
             android:label="@string/title_activity_third" >
         </activity>
+        
+        <activity
+            android:name=".NewThird"
+            android:label="@string/title_activity_third" >
+        </activity>
+        
         <activity
             android:name=".Fourth"
             android:label="@string/title_activity_fourth" >
@@ -61,6 +67,8 @@
             android:name=".DeleteFall"
             android:label="@string/title_activity_delete_fall" >
         </activity>
+        
+        <service android:name=".ServiceCronometro" > </service>
     </application>
 
 </manifest>

@@ -35,6 +35,7 @@ public class MainActivity extends ActionBarActivity {
     int state; 
     long pt=0;
     long ddd;
+    String NSC; //nome sessione in corso
     
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,23 +52,23 @@ public class MainActivity extends ActionBarActivity {
         MA=getIntent();        
         PACKAGE_NAME = getApplicationContext().getPackageName();
         
-        name=MA.getStringExtra(MainActivity.PACKAGE_NAME+".nameSession");
-        Log.v("TAG__MA__NAME",""+name+"");
-        tempo=MA.getLongExtra(MainActivity.PACKAGE_NAME+".StopTime", 0);        	
-        Log.v("TAG__MA__TEMPO1","sec>"+(tempo/1000 % 60)+"<minuti>"+((tempo / (1000*60)) % 60)+"<ore"+((tempo / (1000*60*60)) % 24)+"");
-        state=MA.getIntExtra(MainActivity.PACKAGE_NAME+".state", 0);
-        Log.v("stato MA", ""+state+"");
+        //name=MA.getStringExtra(MainActivity.PACKAGE_NAME+".nameSession");
+        //Log.v("TAG__MA__NAME",""+name+"");
+        //tempo=MA.getLongExtra(MainActivity.PACKAGE_NAME+".StopTime", 0);        	
+        //Log.v("TAG__MA__TEMPO1","sec>"+(tempo/1000 % 60)+"<minuti>"+((tempo / (1000*60)) % 60)+"<ore"+((tempo / (1000*60*60)) % 24)+"");
+        //state=MA.getIntExtra(MainActivity.PACKAGE_NAME+".state", 0);
+        //Log.v("stato MA", ""+state+"");
               	
         ListView listView = (ListView) findViewById(R.id.listView1);
         List<Dati> list = new LinkedList<Dati>();        
         
-        if(name!=null){
+        /*if(name!=null){
         	if(state!=0){        		
         		if(state==1){         			       			
         			pt=SystemClock.elapsedRealtime();
         		}        		
         	}
-        }
+        }*/
         
         Cursor crs=db.selectAllSessions();        
         if(crs.moveToFirst()){
@@ -85,8 +86,11 @@ public class MainActivity extends ActionBarActivity {
             int seconds=Integer.parseInt(oraf[2]);
             int falls=db.CountCaduta(crs.getString(1));
             durataSessione = crs.getString(crs.getColumnIndex("Durata"));
+            if(durataSessione.equals("XX:XX:XX"))
+            	NSC=crs.getString(1);
             int cl = crs.getInt(crs.getColumnIndex("Colore"));
-            list.add(new Dati(crs.getString(1),day, month, year,hour, minutes, seconds, durataSessione, falls, cl));           
+            int state = Integer.parseInt(crs.getString(crs.getColumnIndex("Stato")));
+            list.add(new Dati(crs.getString(1),day, month, year,hour, minutes, seconds, durataSessione, falls, cl, state));           
         	}while(crs.moveToNext());//fine while
         }
         else{
@@ -98,21 +102,38 @@ public class MainActivity extends ActionBarActivity {
         listView.setAdapter(adapter);        
         listView.setOnItemClickListener(new OnItemClickListener(){
 	    	public void onItemClick(AdapterView<?> adapter, View v, int position, long id){      		
-	    		
-	    		final ImageView im = (ImageView) v.findViewById(R.id.picture);
-	    		final BitmapDrawable bd = (BitmapDrawable) im.getDrawable();
-	    		final Bitmap b = bd.getBitmap();
-	    		Bundle extra = new Bundle();
-	    		extra.putParcelable("image", b);
-	    		
-	    		
 	    		Intent UI2;    		
-	    		UI2 = new Intent(getApplicationContext(), Second.class);    		
-	    		UI2.putExtra("nameSession", ((Dati)adapter.getItemAtPosition(position)).getNomeSessione()); 
-	    		UI2.putExtras(extra);
-	    		UI2.putExtra("color", ((Dati)adapter.getItemAtPosition(position)).getColor());
-	    		Log.v("Nome Sessione MA-->",((Dati)adapter.getItemAtPosition(position)).getNomeSessione());
-	        	startActivity(UI2);
+	    		Intent ST;
+	    		UI2 = new Intent(getApplicationContext(), Second.class); 
+	    		//SIC = new Intent(getApplicationContext(),SessioneCorrente.class);
+	    		ST = new Intent(getApplicationContext(),NewThird.class);
+	    		
+	    		if((((Dati)adapter.getItemAtPosition(position)).getNomeSessione()).equals(NSC)){    				   					
+	    					/*if(state==1)
+	    						ddd=SystemClock.elapsedRealtime()-pt+tempo;
+	    					else
+	    						ddd=tempo;
+	    					Log.v("TAG__MA__ddd","sec>"+(ddd/1000 % 60)+"<minuti>"+((ddd / (1000*60)) % 60)+"<ore>"+((ddd / (1000*60*60)) % 24)+"");
+	    					Log.v("TAG__MA__TEMPO2","sec>"+(tempo/1000 % 60)+"<minuti>"+((tempo / (1000*60)) % 60)+"<ore>"+((tempo / (1000*60*60)) % 24)+"");
+	    					*/
+	    					//ST.putExtra(PACKAGE_NAME+".TempoPausa",ddd);
+	    					//ST.putExtra(PACKAGE_NAME+".nomeSessione",name);
+	    					ST.putExtra(PACKAGE_NAME+".nomeSessione",NSC);
+	    					ST.putExtra(PACKAGE_NAME+".statoSessione", state);				
+	    					startActivity(ST);	    				    				
+	    			}else{
+	    				final ImageView im = (ImageView) v.findViewById(R.id.picture);
+	    				final BitmapDrawable bd = (BitmapDrawable) im.getDrawable();
+	    				final Bitmap b = bd.getBitmap();
+	    				Bundle extra = new Bundle();
+	    				extra.putParcelable("image", b);	    				  		
+	    				UI2 = new Intent(getApplicationContext(), Second.class);    		
+	    				UI2.putExtra("nameSession", ((Dati)adapter.getItemAtPosition(position)).getNomeSessione()); 
+	    				UI2.putExtras(extra);
+	    				UI2.putExtra("color", ((Dati)adapter.getItemAtPosition(position)).getColor());
+	    				Log.v("Nome Sessione MA-->",((Dati)adapter.getItemAtPosition(position)).getNomeSessione());
+	    				startActivity(UI2);
+	    			}
 	    	}
         });            
 	}
@@ -192,13 +213,16 @@ public class MainActivity extends ActionBarActivity {
 		//}
 		switch (item.getItemId()) {
 		case R.id.nuovaSessione:{
-			if(state==0)
-				startActivity(new Intent(this, Third.class));
-			else{				
-				String text="IMPOSSIBILE INIZIARE NUOVA SESSIONE. SESSIONE "+name+" IN CORSO";				
-				Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
-				toast.show();
-			}
+			//if(state==0){
+				Intent NS= new Intent(getApplicationContext(),NewThird.class);
+				String par="Sessione "+(db.MaxIDSessione()+1)+"";
+				NS.putExtra(PACKAGE_NAME+".nomeSessione", par);
+				startActivity(NS);
+			//}else{				
+				//String text="IMPOSSIBILE INIZIARE NUOVA SESSIONE. SESSIONE "+name+" IN CORSO";				
+				//Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+				//toast.show();
+			//}
 			break;
 		}
 		case R.id.delete:

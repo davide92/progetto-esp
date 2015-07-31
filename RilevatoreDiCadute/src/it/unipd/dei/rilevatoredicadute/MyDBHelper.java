@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class MyDBHelper extends SQLiteOpenHelper {
 
-	private static final int DATABASE_VERSION = 8;
+	private static final int DATABASE_VERSION = 9;
 	private static final String DATABASE_NAME = "progettoDB.db";
 	public static final String TABLE_SESSIONE = "Sessione";
 	public static final String TABLE_CADUTA="Caduta";	
@@ -20,6 +20,7 @@ public class MyDBHelper extends SQLiteOpenHelper {
     public static final String COL_DURATA = "Durata";
     public static final String COL_NCADUTE = "NCadute";
     public static final String COL_COLOR = "Colore";
+    public static final String COL_STATO = "Stato";
 
 	
     public static final String COL_IDC="_id";
@@ -44,7 +45,8 @@ public class MyDBHelper extends SQLiteOpenHelper {
 	                + COL_ORA        +   " TEXT NOT NULL, " 
              		+ COL_DURATA     +   " TEXT NOT NULL, "  
 		            + COL_NCADUTE    +   " INTEGER NOT NULL, "
-		            + COL_COLOR		+	" INTEGER DEFAULT 0"
+		            + COL_COLOR		+	" INTEGER DEFAULT 0, "
+		            + COL_STATO      +   " INTEGER NOT NULL, "
 		            + " CHECK (" +COL_IDS+ ">0)" + ");";
 		
       		db.execSQL(CREATE_SESSIONE_TABLE);

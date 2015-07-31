@@ -49,9 +49,9 @@ public class Delete extends ActionBarActivity {
         		int seconds=Integer.parseInt(oraf[2]); 
         		int falls=db.CountCaduta(crs.getString(1));
         		int cl = crs.getInt(crs.getColumnIndex("Colore"));
-        		
+        		int state =crs.getInt(crs.getColumnIndex("Stato"));
         		durataSessione = crs.getString(crs.getColumnIndex("Durata")); 
-            	list.add(new Dati(crs.getString(1),day, month, year,hour, minutes, seconds, durataSessione, falls, cl));
+            	list.add(new Dati(crs.getString(1),day, month, year,hour, minutes, seconds, durataSessione, falls, cl, state));
             }while(crs.moveToNext());//fine while
         }
         else{
