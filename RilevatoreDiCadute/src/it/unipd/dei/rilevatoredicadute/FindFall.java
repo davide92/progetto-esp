@@ -53,7 +53,7 @@ public class FindFall extends IntentService{
 			dbF.addCaduta(data,ora,Double.toString(lat),Double.toString(lon),sessione);
 			sendBroadcast(mActivity);
 		}
-		stopSelf();
 		dbF.close();
+		stopSelf();
 	}	
 }
