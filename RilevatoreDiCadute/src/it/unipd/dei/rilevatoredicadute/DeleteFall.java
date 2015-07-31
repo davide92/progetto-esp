@@ -100,10 +100,11 @@ public class DeleteFall extends ActionBarActivity {
 				public void onClick(DialogInterface dialog, int which) {
 					db.deleteCaduta(((DatiCadute)fa.getItemAtPosition(pos)).getSessione(), ((DatiCadute)fa.getItemAtPosition(pos)).getHour());
 					Intent UI2 = new Intent(getApplicationContext(), Second.class);
-					UI2.putExtra("session", nomeSessione.getText());
+					UI2.putExtra("nameSession", nomeSessione.getText());
 			    	UI2.putExtra("color", cl);
-					Bundle extra = new Bundle();
-					extra.putParcelable("image", bm);
+		    		Bundle extra = new Bundle();
+		    		extra.putParcelable("image", bm);
+		    		UI2.putExtras(extra);
 		         	startActivity(UI2);
 				}
 			});

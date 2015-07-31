@@ -40,6 +40,7 @@ public class Third extends ActionBarActivity implements SensorEventListener,Loca
 	private Chronometer chronometer;
 	GregorianCalendar cal;
 	MyDBManager db;
+	private String nomeSessione;
 	private long stopTime=0;	
 	private SensorManager mysm = null;
 	private LocationManager locMg = null;
@@ -173,7 +174,7 @@ public class Third extends ActionBarActivity implements SensorEventListener,Loca
 			playBtn.setOnClickListener(new View.OnClickListener() {					
 			@Override
 			public void onClick(View v) {
-				if((et.getText().toString()).equals("")){
+				if((nomeSessione = et.getText().toString()).equals("")){
 					Toast.makeText(getApplicationContext(), "Inserire nome sessione", Toast.LENGTH_LONG).show();
 					return;
 				}else{
@@ -506,13 +507,14 @@ public class Third extends ActionBarActivity implements SensorEventListener,Loca
 					float x = event.values[0];
 					float y = event.values[1];
 					float z = event.values[2];
-					long time = System.currentTimeMillis()-it;
+					long time = System.currentTimeMillis()-it;					
 					if(acData.size() >= 1){
 						mService = new Intent(getApplicationContext(), FindFall.class);
 						if(locMg.getLastKnownLocation(LocationManager.GPS_PROVIDER) != null){
 							mService.putExtra("long", longitude);
 							mService.putExtra("lat", latitude);
 						}
+						mService.putExtra("noSess", nomeSessione);
 						mService.putExtra("xVal", x);
 						mService.putExtra("yVal", y);
 						mService.putExtra("zVal", z);

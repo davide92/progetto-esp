@@ -37,7 +37,7 @@ public class Second extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Intent intent=getIntent();		    
-		nS=intent.getStringExtra(MainActivity.PACKAGE_NAME+".nameSession");
+		nS=intent.getStringExtra("nameSession");
 		Bundle extra = intent.getExtras();
 		bm = (Bitmap)extra.getParcelable("image");
 	    setContentView(R.layout.activity_second);

@@ -108,7 +108,7 @@ public class MainActivity extends ActionBarActivity {
 	    		
 	    		Intent UI2;    		
 	    		UI2 = new Intent(getApplicationContext(), Second.class);    		
-	    		UI2.putExtra(PACKAGE_NAME+".nameSession", ((Dati)adapter.getItemAtPosition(position)).getNomeSessione()); 
+	    		UI2.putExtra("nameSession", ((Dati)adapter.getItemAtPosition(position)).getNomeSessione()); 
 	    		UI2.putExtras(extra);
 	    		UI2.putExtra("color", ((Dati)adapter.getItemAtPosition(position)).getColor());
 	    		Log.v("Nome Sessione MA-->",((Dati)adapter.getItemAtPosition(position)).getNomeSessione());

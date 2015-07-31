@@ -53,7 +53,6 @@ public class SessioneCorrente extends ActionBarActivity implements SensorEventLi
 	private ArrayList<AccelData> acData = new ArrayList<AccelData>(15000);
 	private int i, j, k = 0;
 	private double latitude, longitude;
-	private String nS;
 	private  ListView listView;
 	private List<DatiCadute> fallList;
 	int year;
@@ -370,11 +369,10 @@ private void start(){
 			//int sec= c.get(GregorianCalendar.SECOND);
 			date = "" + year + month + day /*+ hour + min + sec */;			
 		}
-		nS = tx.getText().toString();
-		int fallCount = db.CountCaduta(nS);
+		int fallCount = db.CountCaduta(nomeSessione);
 		db.close();
 		if(fallCount > 0){
-			Cursor crs = db.selectAllCadute(nS);
+			Cursor crs = db.selectAllCadute(nomeSessione);
 			if(crs.moveToFirst()){
 				do{
 					String strData = crs.getString(crs.getColumnIndex("DataCaduta"));
@@ -390,7 +388,7 @@ private void start(){
 		            int seconds=Integer.parseInt(oraf[2]);
 		            double lat = crs.getDouble(crs.getColumnIndex("Latitudine"));
 		            double longi = crs.getDouble(crs.getColumnIndex("Longitudine"));
-		            fallList.add(new DatiCadute(day, month, year, hour, minutes, seconds, lat, longi, nS));
+		            fallList.add(new DatiCadute(day, month, year, hour, minutes, seconds, lat, longi, nomeSessione));
 				}while(crs.moveToNext());	
 			}
 		}
@@ -515,6 +513,7 @@ private void start(){
 							mService.putExtra("long", longitude);
 							mService.putExtra("lat", latitude);
 						}
+						mService.putExtra("noSess", nomeSessione);
 						mService.putExtra("xVal", x);
 						mService.putExtra("yVal", y);
 						mService.putExtra("zVal", z);
