@@ -94,13 +94,14 @@ public class Second extends ActionBarActivity {
 	     FallLV.setOnItemClickListener(new OnItemClickListener(){
 	     public void onItemClick(AdapterView<?> FALLadapter, View v, int position, long id){
 
-	    	   	Intent UI4 = new Intent(getApplicationContext(), Fourth.class);
-	    	   	UI4.putExtra(MainActivity.PACKAGE_NAME+".nameSession", nS);
-	    	   	Bundle extra = new Bundle();
-	    	   	extra.putParcelable("image", bm);
-	    	   	UI4.putExtras(extra);
-	    	   	UI4.putExtra("color", cl);
-	        	startActivity(UI4);
+	    	 Intent UI4 = new Intent(getApplicationContext(), Fourth.class);
+	    	 UI4.putExtra("nameSession", ((DatiCadute)FALLadapter.getItemAtPosition(position)).getSessione());
+	    	 UI4.putExtra("hour", ((DatiCadute)FALLadapter.getItemAtPosition(position)).getHour());
+	    	 Bundle extra = new Bundle();
+	    	 extra.putParcelable("image", bm);
+	    	 UI4.putExtras(extra);
+	    	 UI4.putExtra("color", cl);
+	    	 startActivity(UI4);
 	        	
 	        	}
 	        });     

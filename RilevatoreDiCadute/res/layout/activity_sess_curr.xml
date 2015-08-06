@@ -155,7 +155,7 @@
 		    android:layout_height="match_parent" 
 		    android:layout_alignTop ="@+id/zTextS" 
 		    android:layout_marginTop="24sp"
-		    tools:context="it.unipd.dei.rilevatoredicadute.Second">
+		    tools:context="it.unipd.dei.rilevatoredicadute.SessioneCorrente">
 		    
 			<ListView android:id="@+id/listViewCadute" 
 			    android:layout_width="fill_parent" 

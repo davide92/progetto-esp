@@ -38,13 +38,49 @@ public class Fourth extends ActionBarActivity {
 		TextView DataOra = (TextView) findViewById(R.id.dataEora);
 		TextView latitudine = (TextView) findViewById(R.id.latitude);
 		TextView longitudine = (TextView) findViewById(R.id.longitude);
-		Cursor crs=db.selectCaduta(intent.getStringExtra(MainActivity.PACKAGE_NAME+".nameSession"));
-		nomeSessione.setText(intent.getStringExtra(MainActivity.PACKAGE_NAME+".nameSession"));
-		DataOra.setText(crs.getString(0)+"  "+crs.getString(1));
-		latitudine.setText(crs.getString(2));
-		longitudine.setText(crs.getString(3));
+		String nameSession = intent.getStringExtra("nameSession");
+		String fallHour = intent.getStringExtra("hour");
+		//Cursor crs=db.selectCaduta(intent.getStringExtra(MainActivity.PACKAGE_NAME+".nameSession"));
+		//nomeSessione.setText(intent.getStringExtra(MainActivity.PACKAGE_NAME+".nameSession"));
+		nomeSessione.setText(nameSession);
+		Cursor crs=db.selectCadutaWithHour(nameSession, fallHour);
+		//DataOra.setText(crs.getString(0)+"  "+crs.getString(1));
+		//latitudine.setText(crs.getString(2));
+		//longitudine.setText(crs.getString(3));
+		if(crs.moveToLast()){
+			DataOra.setText(crs.getString(crs.getColumnIndex("DataCaduta"))+" "+fallHour);
+			latitudine.setText(crs.getString(crs.getColumnIndex("Latitudine")));
+			longitudine.setText(crs.getString(crs.getColumnIndex("Longitudine")));
+		}
+		crs.close();
 	}
 
+	@Override
+	protected void onStop() {
+	    //Log.w("TAG", "App stopped");
+	    super.onStop();
+	    if (db != null) 
+	    {
+	        db.close();
+	    }
+	}
+	
+	@Override
+	protected void onPause() {
+	    //Log.w("TAG", "App paused");
+	    super.onPause();
+	}
+		
+	@Override
+	protected void onDestroy() 
+	{
+	    super.onDestroy();
+	    if (db != null) 
+	    {
+	        db.close();
+	    }
+	}	
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu){
 		super.onCreateOptionsMenu(menu);

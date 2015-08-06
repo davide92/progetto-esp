@@ -30,12 +30,14 @@ public class CustomAdapter extends ArrayAdapter<Dati>{
 		thumbnail.setColorFilter(filter);
 		TextView nomeSessione = (TextView)convertView.findViewById(R.id.nomeSessione);
 		TextView dataEora = (TextView)convertView.findViewById(R.id.dataEora);
-		TextView durataSessione = (TextView)convertView.findViewById(R.id.durataSessione);		
+		TextView durataSessione = (TextView)convertView.findViewById(R.id.durataSessione);
+		TextView numeroCadute = (TextView)convertView.findViewById(R.id.numeroCadute);
 		Dati d = getItem(position);
 		//picture.setImage();
 		nomeSessione.setText(d.getNomeSessione());
 		dataEora.setText(d.getData() + " " + d.getHour());
 		durataSessione.setText(d.getDurataSessione());
+		numeroCadute.setText(Integer.toString(d.getFalls()));
 		return convertView;
 	}
 }

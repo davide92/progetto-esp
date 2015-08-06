@@ -73,6 +73,8 @@ public class Delete extends ActionBarActivity {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					db.deleteSessione(((Dati)a.getItemAtPosition(pos)).getNomeSessione());
+					db.deleteCadute(((Dati)a.getItemAtPosition(pos)).getNomeSessione());
+					db.close();
 					Intent UI2 = new Intent(getApplicationContext(), MainActivity.class);
 		         	startActivity(UI2);
 				}

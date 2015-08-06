@@ -196,7 +196,7 @@ public class Third extends ActionBarActivity implements SensorEventListener,Loca
 					String ora = ""+hours+ ":" + minutes+ ":" +seconds+"";
 					Random rm = new Random();
 					int cl = Color.argb(255, rm.nextInt(254), rm.nextInt(254), rm.nextInt(254));
-					db.addSessione(et.getText().toString(), data, ora, "XX:XX:XX", 0, cl);
+					//db.addSessione(et.getText().toString(), data, ora, "XX:XX:XX", 0, cl);
 					//Log.v("ora1",""+cal.get(GregorianCalendar.HOUR_OF_DAY)+ ":" + cal.get(GregorianCalendar.MINUTE)+ ":" +cal.get(GregorianCalendar.SECOND));				
 					db.close();  
 					

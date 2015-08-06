@@ -23,7 +23,6 @@ public class CustomAdapterFalls extends ArrayAdapter<DatiCadute>{
 		
 		TextView longVal = (TextView)convertView.findViewById(R.id.longitude);
 		DatiCadute dc = getItem(position);
-		//picture.setImage();
 		latVal.setText(Double.toString(dc.getLatitudine()));
 		longVal.setText(Double.toString(dc.getLongitudine()));
 		data.setText(dc.getData()+"  ");
