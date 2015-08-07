@@ -513,7 +513,7 @@ private void start(){
 							mService.putExtra("long", longitude);
 							mService.putExtra("lat", latitude);
 						}
-						mService.putExtra("noSess", nomeSessione);
+						mService.putExtra("nomSess", nomeSessione);
 						mService.putExtra("xVal", x);
 						mService.putExtra("yVal", y);
 						mService.putExtra("zVal", z);

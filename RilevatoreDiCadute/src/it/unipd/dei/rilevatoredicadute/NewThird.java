@@ -1,5 +1,6 @@
 package it.unipd.dei.rilevatoredicadute;
 
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -11,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -19,6 +21,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
 import android.app.Activity;
+
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,21 +29,25 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.widget.Chronometer;
 import it.unipd.dei.rilevatoredicadute.ServiceCronometro;
 import android.graphics.Color;
+
 import java.util.Random;
+
 import android.widget.ListView;
+
 import java.util.LinkedList;
 import java.util.List;
+
 import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.os.IBinder;
 import android.content.ComponentName;
-
 import it.unipd.dei.rilevatoredicadute.ServiceCronometro.MyBinder;
 
 
@@ -94,6 +101,7 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 	//long pausa=0;
 	boolean mServiceBound = false;
 	Intent intent;
+
 	
 	
 	@Override
@@ -131,6 +139,7 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 			//Toast.makeText(getApplicationContext(), "Attivi il gps", Toast.LENGTH_LONG).show();
 		//}
 		//Log.v("CREATHIRD",""+sc.GetBase(chronometer)+"");	
+		
 	}
 	
 	@Override
@@ -466,7 +475,7 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 			date = "" + year + month + day /*+ hour + min + sec */;			
 		}
 		nS = tx.getText().toString();
-		int fallCount = db.CountCaduta(nS);
+		/*int fallCount = db.CountCaduta(nS);
 		db.close();
 		if(fallCount > 0){
 		Cursor crs = db.selectCaduta(nS);
@@ -487,7 +496,7 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 		        fallList.add(new DatiCadute(day, month, year, hour, minutes, seconds, lat, longi, nS));
 				}while(crs.moveToNext());	
 			}
-		}
+		}*/
 			
 				CustomAdapterFalls adapter = new CustomAdapterFalls(this, R.id.listViewCadute, fallList);       
 			    listView.setAdapter(adapter);
