@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
+import android.os.Vibrator;
 import android.os.IBinder;
 
 import android.view.Menu;
@@ -101,7 +102,10 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 	ServiceCronometro sc;// = new ServiceCronometro();
 	Intent T;	
 	Intent intent;	
-	MyReceiver myReceiver;	
+	CustomAdapterFalls adapter;
+	MyReceiver myReceiver;
+	BroadcastReceiver receiver;
+	IntentFilter filter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstance) {		
@@ -110,8 +114,25 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 		
 		listView = (ListView) findViewById(R.id.listViewCadute);
 		fallList = new LinkedList<DatiCadute>();
+		adapter = new CustomAdapterFalls(this, R.id.listViewCadute, fallList);       
+	    listView.setAdapter(adapter);
 		cal= new GregorianCalendar();
-		
+		receiver = new BroadcastReceiver(){
+
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				if(intent.getBooleanExtra("fall", false)){
+					Log.v("Receiver newThird", "Entrato");
+					Vibrator vibr = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+					vibr.vibrate(500L);
+					//updateListView();
+					updateUI();
+				}
+				
+			}
+			
+		};
+	    filter = new IntentFilter(FindFall.BROADCAST);
 		//COUNT DOWN TIMER PER LA GESTIONE DELLA TEXTVIEW CHE VISUALIZZA LA DURATA DELLA SESSIONE
 		cdCrono = new CountDownTimer(1000L, 100L) {					
 			@Override
@@ -202,6 +223,7 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 	@Override
 	protected void onStart(){
 		super.onStart();
+		this.registerReceiver(receiver, filter);
 		Log.v("TAG", "----INIZIO-THIRD----");		
 		
 		myReceiver = new MyReceiver();
@@ -428,6 +450,11 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 	@Override
 	protected void onPause(){
 		super.onPause();
+		try{
+			this.unregisterReceiver(receiver);
+		}catch(IllegalArgumentException e){
+			
+		}
 		Log.v("ACT-THIRD","PAUSED");
 	}	
 
@@ -580,7 +607,7 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 			date = "" + year + month + day /*+ hour + min + sec */;			
 		}
 		//nS = tx.getText().toString();
-		MyDBManager db = new MyDBManager(this);
+		/*MyDBManager db = new MyDBManager(this);
 		int fallCount = db.CountCaduta(NS);
 		db.close();
 		if(fallCount > 0){
@@ -602,9 +629,7 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 		        fallList.add(new DatiCadute(day, month, year, hour, minutes, seconds, lat, longi, nS));
 				}while(crs.moveToNext());	
 			}
-		}			
-			CustomAdapterFalls adapter = new CustomAdapterFalls(this, R.id.listViewCadute, fallList);       
-		    listView.setAdapter(adapter);
+		}*/			
 	}
 	
 	private void pause(){
@@ -708,6 +733,49 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 		yAccViewS.setText("0");
 		zAccViewS.setText("0");
 		accel = null;		
+	}
+	
+	private void updateUI() {
+		Log.v("updateUI", "inzio");
+		if(fallList.size() > 0){
+			fallList.clear();
+		}
+		adapter.clear();
+		Cursor crs = db.selectCaduta(NS);
+		if(crs.moveToFirst()){
+			do{
+				String strData = crs.getString(crs.getColumnIndex("DataCaduta"));
+		        String[] dataf=strData.split("/");
+		        int day=Integer.parseInt(dataf[0]);  
+		        int month=Integer.parseInt(dataf[1]);  
+		        int year=Integer.parseInt(dataf[2]);
+		        String strTime = crs.getString(crs.getColumnIndex("OraCaduta"));
+		        String[] oraf=strTime.split(":");
+		        int hour=Integer.parseInt(oraf[0]);  
+		        int minutes=Integer.parseInt(oraf[1]);  
+		        int seconds=Integer.parseInt(oraf[2]);
+		        double lat = crs.getDouble(crs.getColumnIndex("Latitudine"));
+		        double longi = crs.getDouble(crs.getColumnIndex("Longitudine"));
+		        fallList.add(new DatiCadute(day, month, year, hour, minutes, seconds, lat, longi, NS));
+		        //adapter.add(new DatiCadute(day, month, year, hour, minutes, seconds, lat, longi, NS));
+				}while(crs.moveToNext());
+			crs.close();
+			adapter.notifyDataSetChanged();
+			
+			/*runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					adapter.clear();
+					for(int i = 0; i<fallList.size(); i++){
+						adapter.add(fallList.get(i));
+					}
+					adapter.notifyDataSetChanged();
+				}
+			});*/
+				
+			}
+
 	}
 	
 	@Override

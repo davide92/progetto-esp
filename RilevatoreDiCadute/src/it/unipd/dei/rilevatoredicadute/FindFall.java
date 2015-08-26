@@ -18,6 +18,7 @@ public class FindFall extends IntentService{
 	MyDBManager dbF;
 	GregorianCalendar calendar;
 	double lat,lon;
+	public static final String BROADCAST = "it.unipd.dei.rilevatoredicadute.android.action.broadcast";
 
 	public FindFall() {
 		super("Find Fall");
@@ -46,6 +47,7 @@ public class FindFall extends IntentService{
 		if(((java.lang.Math.abs(x))>= alpha) || ((java.lang.Math.abs(y))>= alpha) || ((java.lang.Math.abs(z))>= alpha)){
 			mReceiver.putExtra("fall", true);
 			thActivity.putExtra("fall", true);
+			thActivity.setAction(BROADCAST);
 			mReceiver.putExtra("lat", lat);//intent.getDoubleExtra("lat", 0));
 			mReceiver.putExtra("long", lon);//intent.getDoubleExtra("long", 0));
 			calendar=new GregorianCalendar();
