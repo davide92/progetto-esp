@@ -73,7 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/start"
         android:layout_centerHorizontal="true"
-        android:textSize="20sp"        
+        android:textSize="30sp"        
         android:text=""/>
         
         <TextView 
