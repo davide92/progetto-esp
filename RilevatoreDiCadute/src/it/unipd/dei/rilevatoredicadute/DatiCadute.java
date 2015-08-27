@@ -8,12 +8,11 @@ public class DatiCadute {
 	private int hour;
 	private int minute;
 	private int second;
-	private double latitudine;
-	private double longitudine;
+	private String latitudine;
+	private String longitudine;
 	private String session;
 	
-	
-	public DatiCadute(int d, int m, int y, int h, int min, int sec, double lat, double lon, String sess){		
+	public DatiCadute(int d, int m, int y, int h, int min, int sec, String lat, String lon, String sess){		
 		day = d;
 		month = m;
 		year = y;
@@ -22,11 +21,11 @@ public class DatiCadute {
 		second = sec;
 		latitudine=lat;
 		longitudine=lon;
-		session = sess;
+		session=sess;
 	}
 	
 	public DatiCadute(){
-		this( 0, 0, 0, 0, 0, 0, 0, 0, "nessuna sessione");		 
+		this( 0, 0, 0, 0, 0, 0, "0.0", "0.0", "nessuna sessione");		 
 	}	
 	
 	public void setData(int d, int m, int y){
@@ -39,7 +38,8 @@ public class DatiCadute {
 		hour = h;
 		minute = min;
 		second = sec;
-	}		
+	}	
+	
 
 	public String getData(){
 		return(Integer.toString(day)+ "/" + Integer.toString(month) + "/" + Integer.toString(year));
@@ -49,22 +49,24 @@ public class DatiCadute {
 		return(Integer.toString(hour)+ ":" + Integer.toString(minute) + ":" + Integer.toString(second));
 	}
 	
-	public void setLatitudine(double lat){
+	public void setLatitudine(String lat){
 		latitudine=lat;
 	}
 	
-	public void setLongitudine(double lon){
+	public void setLongitudine(String lon){
 		longitudine=lon;
 	}
 	
-	public double getLongitudine(){
+	public String getLongitudine(){
 		return longitudine;
 	}
 
-	public double getLatitudine(){
+	public String getLatitudine(){
 		return latitudine;
 	}
+	
 	public String getSessione(){
 		return session;
-	}
+		}	
+	
 }

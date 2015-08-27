@@ -39,7 +39,7 @@ public class MainActivity extends ActionBarActivity {
     int state;
     int stateNSC; //stato nuova sessione in corso
     long pt=0;
-    long ddd;
+    long tempoPausaMA;
     String NSC; //nome sessione in corso
     boolean noStartSession = false;   
     
@@ -66,15 +66,7 @@ public class MainActivity extends ActionBarActivity {
         //Log.v("stato MA", ""+state+"");
               	
         ListView listView = (ListView) findViewById(R.id.listView1);
-        List<Dati> list = new LinkedList<Dati>();        
-        
-        /*if(name!=null){
-        	if(state!=0){        		
-        		if(state==1){         			       			
-        			pt=SystemClock.elapsedRealtime();
-        		}        		
-        	}
-        }*/
+        List<Dati> list = new LinkedList<Dati>();         
         
         Cursor crs=db.selectAllSessions();        
         if(crs.moveToFirst()){
@@ -95,7 +87,11 @@ public class MainActivity extends ActionBarActivity {
             if(durataSessione.equals("XX:XX:XX")){
             	NSC = crs.getString(1);
             	stateNSC = Integer.parseInt(crs.getString(crs.getColumnIndex("Stato")));
-            	noStartSession = true;
+            	if(stateNSC == 2){
+            		tempoPausaMA = Long.parseLong(crs.getString(crs.getColumnIndex("TempoPausa")));
+            		Log.v("variabile pausa MA",""+tempoPausaMA);
+            	}
+            	noStartSession = true;            	
             	}
             Log.v("NOME SESSIONE IN CORSO MA",""+NSC+"");
             state = Integer.parseInt(crs.getString(crs.getColumnIndex("Stato")));
@@ -131,7 +127,9 @@ public class MainActivity extends ActionBarActivity {
     					//ST.putExtra(PACKAGE_NAME+".TempoPausa",ddd);
     					//ST.putExtra(PACKAGE_NAME+".nomeSessione",name);    			
     					ST.putExtra(PACKAGE_NAME+".nomeSessione",NSC);
-    					ST.putExtra(PACKAGE_NAME+".statoSessione", stateNSC);				
+    					ST.putExtra(PACKAGE_NAME+".statoSessione", stateNSC);
+    					if(stateNSC == 2)
+    						ST.putExtra(PACKAGE_NAME+".PausaTempo", tempoPausaMA);
     					startActivity(ST);
     				    				
     			}else{
@@ -246,14 +244,14 @@ public class MainActivity extends ActionBarActivity {
 			if(state!=0){
 				Intent SC;			   		
 				SC = new Intent(getApplicationContext(), SessioneCorrente.class);
-				if(state==1)
+				/*if(state==1)
 					ddd=SystemClock.elapsedRealtime()-pt+tempo;
 				else
 					ddd=tempo;
 				Log.v("TAG__MA__ddd","sec>"+(ddd/1000 % 60)+"<minuti>"+((ddd / (1000*60)) % 60)+"<ore>"+((ddd / (1000*60*60)) % 24)+"");
 				Log.v("TAG__MA__TEMPO2","sec>"+(tempo/1000 % 60)+"<minuti>"+((tempo / (1000*60)) % 60)+"<ore>"+((tempo / (1000*60*60)) % 24)+"");
-				
-				SC.putExtra(PACKAGE_NAME+".TempoPausa",ddd);
+				*/
+				//SC.putExtra(PACKAGE_NAME+".TempoPausa",ddd);
 				SC.putExtra(PACKAGE_NAME+".nomeSessione",name);
 				SC.putExtra(PACKAGE_NAME+".statoSessione", state);				
 				startActivity(SC);

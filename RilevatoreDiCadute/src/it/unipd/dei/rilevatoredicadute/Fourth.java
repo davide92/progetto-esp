@@ -7,13 +7,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.database.Cursor;
+import android.util.Log;
+import android.widget.ImageView;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
+
 
 public class Fourth extends ActionBarActivity {
 	
@@ -29,35 +31,42 @@ public class Fourth extends ActionBarActivity {
 		intent = getIntent();
 		Bundle extra = intent.getExtras();
 		final Bitmap bm = (Bitmap)extra.getParcelable("image");
-	    ImageView image = (ImageView)findViewById(R.id.picture4);
-	    image.setImageBitmap(bm);
-	    int cl = intent.getIntExtra("color", 0);
-	    ColorFilter filter = new LightingColorFilter(Color.WHITE, cl);
-	    image.setColorFilter(filter);
+		ImageView image = (ImageView)findViewById(R.id.picture4);
+		image.setImageBitmap(bm);
+		int cl = intent.getIntExtra("color", 0);
+		ColorFilter filter = new LightingColorFilter(Color.WHITE, cl);
+		image.setColorFilter(filter);
 		TextView nomeSessione = (TextView) findViewById(R.id.nomeSessione);
-		TextView DataOra = (TextView) findViewById(R.id.dataEora);
+		TextView Data = (TextView) findViewById(R.id.data);
+		TextView Ora = (TextView) findViewById(R.id.ora);
 		TextView latitudine = (TextView) findViewById(R.id.latitude);
 		TextView longitudine = (TextView) findViewById(R.id.longitude);
-		String nameSession = intent.getStringExtra("nameSession");
-		String fallHour = intent.getStringExtra("hour");
+		String nameSession = intent.getStringExtra(MainActivity.PACKAGE_NAME+".nameSession");
+		//String fallHour = intent.getStringExtra("hour");
 		//Cursor crs=db.selectCaduta(intent.getStringExtra(MainActivity.PACKAGE_NAME+".nameSession"));
 		//nomeSessione.setText(intent.getStringExtra(MainActivity.PACKAGE_NAME+".nameSession"));
 		nomeSessione.setText(nameSession);
-		Cursor crs=db.selectCadutaWithHour(nameSession, fallHour);
+		Data.setText("    "+intent.getStringExtra(MainActivity.PACKAGE_NAME+".dataCaduta"));
+		Ora.setText("    "+intent.getStringExtra(MainActivity.PACKAGE_NAME+".oraCaduta"));		
+		latitudine.setText("  "+intent.getStringExtra(MainActivity.PACKAGE_NAME+".latitudine"));
+		longitudine.setText("  "+intent.getStringExtra(MainActivity.PACKAGE_NAME+".longitudine"));
+		//Cursor crs=db.selectCadutaWithHour(nameSession, fallHour);
 		//DataOra.setText(crs.getString(0)+"  "+crs.getString(1));
 		//latitudine.setText(crs.getString(2));
 		//longitudine.setText(crs.getString(3));
-		if(crs.moveToLast()){
-			DataOra.setText(crs.getString(crs.getColumnIndex("DataCaduta"))+" "+fallHour);
+		/*if(crs.moveToLast()){
+			Data.setText(crs.getString(crs.getColumnIndex("DataCaduta"))+" "+fallHour);
+			Ora.setText(crs.getString(crs.getColumnIndex("DataCaduta"))+" "+fallHour);
 			latitudine.setText(crs.getString(crs.getColumnIndex("Latitudine")));
 			longitudine.setText(crs.getString(crs.getColumnIndex("Longitudine")));
 		}
-		crs.close();
+		crs.close();*/
 	}
+	
 
-	@Override
-	protected void onStop() {
-	    //Log.w("TAG", "App stopped");
+ 	@Override
+ 	protected void onStop() {
+ 		//Log.w("TAG", "App stopped");
 	    super.onStop();
 	    if (db != null) 
 	    {
@@ -80,16 +89,10 @@ public class Fourth extends ActionBarActivity {
 	        db.close();
 	    }
 	}	
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu){
-		super.onCreateOptionsMenu(menu);
-    	MenuItem meIt1 = menu.add(0, R.id.nuovaSessione, 1, "Nuova Sessione");    	
-    	MenuItem meIt4 = menu.add(0, R.id.preferenze, 4, "Preferenze");
-    	meIt1.setIntent(new Intent(this, Third.class));
-    	meIt4.setIntent(new Intent(this, Fifth.class));
-    	
-    	//meIt2.setIntent(int2);
+		super.onCreateOptionsMenu(menu);    	
     	return true;
     } 
 

@@ -15,7 +15,8 @@
     	android:layout_width="50dp"
      	android:layout_height="50dp" 
       	android:layout_marginRight="7dp"
-		android:layout_marginEnd="7dp"
+      	android:layout_marginEnd="7dp"
+
        	/>
          
     <TextView android:id="@+id/nomeSessione"
@@ -24,28 +25,46 @@
      android:layout_alignParentTop="true" 
      android:layout_toRightOf="@+id/picture4" 
      android:layout_toEndOf="@+id/picture4"
-     android:layout_marginRight="5dp"
-     android:layout_marginEnd="5dp" 
+	 android:layout_marginRight="5dp"
+     android:layout_marginEnd="5dp"  
      android:layout_marginBottom="5dp"      
      android:textSize="20sp"
       android:textStyle="bold"/>
     
     <TextView
-        android:id="@+id/avvenutaTx"
+        android:id="@+id/DataAvvenutaTx"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/picture4"
-        android:text="@string/avvenuta"
+        android:text="@string/DataAvvenuta"
         android:textSize="20sp" 
         />
     
     <TextView 
-        android:id="@+id/dataEora"
+        android:id="@+id/data"
      	android:layout_width="wrap_content"
       	android:layout_height="wrap_content" 
-       	android:layout_toRightOf="@+id/avvenutaTx"
-       	android:layout_toEndOf="@+id/avvenutaTx"
+       	android:layout_toRightOf="@+id/DataAvvenutaTx"
+       	android:layout_toEndOf="@+id/DataAvvenutaTx"
        	android:layout_below="@+id/picture4"
+        android:textSize="20sp"
+        />
+     <TextView
+        android:id="@+id/OraAvvenutaTx"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/DataAvvenutaTx"
+        android:text="@string/OraAvvenuta"
+        android:textSize="20sp" 
+        />
+    
+    <TextView 
+        android:id="@+id/ora"
+     	android:layout_width="wrap_content"
+      	android:layout_height="wrap_content" 
+       	android:layout_toRightOf="@+id/OraAvvenutaTx"
+       	android:layout_toEndOf="@+id/OraAvvenutaTx"
+       	android:layout_below="@+id/DataAvvenutaTx"
         android:textSize="20sp"
         />
     
@@ -53,7 +72,7 @@
         android:id="@+id/latitudeTx"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/avvenutaTx"
+        android:layout_below="@+id/OraAvvenutaTx"
         android:text="@string/latitude"
         android:textSize="20sp"
         />
@@ -64,7 +83,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/latitudeTx"
         android:layout_toEndOf="@+id/latitudeTx"
-        android:layout_below="@+id/avvenutaTx"
+        android:layout_below="@+id/OraAvvenutaTx"
         android:textSize="20sp"
         />
     

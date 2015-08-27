@@ -20,7 +20,7 @@ public void close(){
 	dbhelper.close();	
 	}	
 
-public void addSessione(String nome, String data, String ora, String durata ,int ncadute, int col, int stato){
+public void addSessione(String nome, String data, String ora, String durata ,int ncadute, int col, int stato, long tempoPausa){
 		
 		SQLiteDatabase db = dbhelper.getWritableDatabase();
 		
@@ -32,6 +32,7 @@ public void addSessione(String nome, String data, String ora, String durata ,int
 		cv.put(MyDBHelper.COL_NCADUTE, ncadute);
 		cv.put(MyDBHelper.COL_COLOR, col);
 		cv.put(MyDBHelper.COL_STATO, stato);
+		cv.put(MyDBHelper.COL_TEMPOPAUSA, tempoPausa );
 		
 		db.insert(MyDBHelper.TABLE_SESSIONE, null, cv);
 	}
@@ -65,6 +66,12 @@ public void deleteCaduta(String nome_sessione){
 public void updateDurataSessione(String newDurata, String nameSessione){
 	SQLiteDatabase db = dbhelper.getWritableDatabase();
 	String update = "UPDATE "+MyDBHelper.TABLE_SESSIONE+" SET "+MyDBHelper.COL_DURATA+" = '"+newDurata+"' WHERE "+MyDBHelper.COL_NOME+" = '"+nameSessione+"';";
+	db.execSQL(update);
+}
+
+public void inserireTempoPausaSessione(String nomeSessione, long tempoP){
+	SQLiteDatabase db = dbhelper.getWritableDatabase();
+	String update = "UPDATE "+MyDBHelper.TABLE_SESSIONE+" SET "+MyDBHelper.COL_TEMPOPAUSA+" = '"+tempoP+"' WHERE "+MyDBHelper.COL_NOME+" = '"+nomeSessione+"';";
 	db.execSQL(update);
 }
 

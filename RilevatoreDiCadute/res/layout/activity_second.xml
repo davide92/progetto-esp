@@ -19,7 +19,7 @@
      android:layout_width="wrap_content" 
      android:layout_height="wrap_content" 
      android:layout_alignParentTop="true" 
-     android:layout_toRightOf="@+id/picture2"
+      android:layout_toRightOf="@+id/picture2"
      android:layout_toEndOf="@+id/picture2" 
      android:layout_marginRight="5dp"
      android:layout_marginEnd="5dp" 
@@ -90,6 +90,17 @@
     android:textSize="20sp" 
     android:textStyle="bold"/>
 
+<TextView android:id="@+id/spazio"
+      android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true"
+       android:layout_alignParentTop="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_below="@+id/txLista" 
+         android:text="@string/spazio"/> 
+
 <LinearLayout android:id="@+id/linearLayout1" 
     android:orientation="vertical" 
     android:layout_width="match_parent" 
@@ -110,3 +121,53 @@
 </ListView>
 </LinearLayout>
 </RelativeLayout>
+
+
+<!-- <TextView android:id="@+id/dataCaduta" 
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+     android:layout_below="@+id/txLista"     
+      android:textSize="15sp"/>
+
+<TextView android:id="@+id/oraCaduta" 
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+     android:layout_below="@+id/txLista" 
+     android:layout_toRightOf="@+id/dataCaduta"
+      android:textSize="15sp"/>
+
+<TextView 
+        android:id="@+id/latitudeTx"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dataCaduta"
+        android:text="@string/latitude"
+        android:textSize="15sp"
+        />
+    
+    <TextView 
+        android:id="@+id/latitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/latitudeTx"
+        android:layout_below="@+id/dataCaduta"
+        android:textSize="15sp"
+        />
+    
+    <TextView 
+        android:id="@+id/longitudeTx"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/latitudeTx"
+        android:text="@string/longitude"
+        android:textSize="15sp"
+        />
+    
+    <TextView 
+        android:id="@+id/longitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/longitudeTx"
+        android:layout_below="@+id/latitudeTx"
+        android:textSize="15sp"
+        /> -->
