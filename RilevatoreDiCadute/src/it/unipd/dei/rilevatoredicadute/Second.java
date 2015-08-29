@@ -16,9 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
-//import java.util.Date;
 import android.util.Log;
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 import android.graphics.Color;
@@ -121,8 +119,7 @@ public class Second extends ActionBarActivity {
 	}
 	
 	@Override
-	protected void onStop() {
-	    //Log.w("TAG", "App stopped");
+	protected void onStop() {	    
 	    super.onStop();
 	    if (db != null) 
 	    {
@@ -133,10 +130,10 @@ public class Second extends ActionBarActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu){
 		super.onCreateOptionsMenu(menu);
-    	MenuItem meIt1 = menu.add(0, R.id.nuovaSessione, 1, "Nuova Sessione"); 
+    	//MenuItem meIt1 = menu.add(0, R.id.nuovaSessione, 1, "Nuova Sessione"); 
     	MenuItem meIt2 = menu.add(0, R.id.delete, 2, "Elimina caduta");
     	
-    	meIt1.setIntent(new Intent(this, Third.class));
+    	//meIt1.setIntent(new Intent(this, NewThird.class));
     	Intent del = new Intent(this, DeleteFall.class);
     	del.putExtra("session", nomeSessione.getText());
      	del.putExtra("color", cl);

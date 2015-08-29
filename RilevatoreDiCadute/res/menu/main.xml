@@ -1,4 +1,4 @@
-
+<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
      xmlns:app="http://schemas.android.com/apk/res-auto" 
      xmlns:tools="http://schemas.android.com/tools" 
@@ -12,11 +12,4 @@
      android:title="@string/delete"
       android:onClick="methodName"/>
 
-<item android:id="@+id/sessioneInCorso"
-     android:title="@string/rename" 
-     android:onClick="methodName"/>
-
-<item android:id="@+id/preferenze"
-     android:title="@string/preference"
-      android:onClick="methodName"/>
 </menu>

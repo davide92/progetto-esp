@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="it.unipd.dei.rilevatoredicadute.SessioneCorrente" >
+    tools:context="it.unipd.dei.rilevatoredicadute.NewThird" >
     
     <TextView
         android:id="@+id/nomeSessioneTx"
@@ -31,8 +30,8 @@
     <ImageButton
         android:id="@+id/start"
         android:contentDescription="@string/startTx"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
         android:layout_alignLeft="@+id/pause"
         android:layout_alignStart="@+id/pause"
         android:layout_below="@+id/nomeSessioneTx"
@@ -43,8 +42,8 @@
     <ImageButton
         android:id="@+id/pause"
         android:contentDescription="@string/pauseTx"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
         android:layout_alignRight="@+id/nomeSessioneTx"
         android:layout_alignEnd="@+id/nomeSessioneTx"
         android:layout_alignTop="@+id/stop"
@@ -56,8 +55,8 @@
 
     <ImageButton
         android:id="@+id/stop"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
         android:layout_alignLeft="@+id/TestoSessCurr"
         android:layout_alignStart="@+id/TestoSessCurr"
         android:layout_alignTop="@+id/start"
@@ -71,8 +70,8 @@
         android:id="@+id/timestamp_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/zTextS"        
-        android:textSize="30sp"        
+        android:layout_below="@+id/stop"        
+        android:textSize="25sp"        
         android:text=""/>
         
         <TextView 
@@ -85,7 +84,7 @@
         android:layout_marginRight="5dp"
         android:layout_marginEnd="5dp"
         android:text="@string/xTx"
-        android:textSize="24sp"
+        android:textSize="23sp"
         android:textColor="#DF0101"
         />
     
@@ -98,7 +97,7 @@
 	       android:layout_below="@+id/TestoSessCurr"
 	       android:layout_marginRight="5dp"
 	       android:layout_marginEnd="5dp"
-	       android:textSize="24sp"
+	       android:textSize="23sp"
 	       android:textColor="#DF0101"
 	       />
 	   
@@ -112,7 +111,7 @@
 	       android:layout_marginRight="5dp"
 	       android:layout_marginEnd="5dp"
 	       android:text="@string/yTx"
-	       android:textSize="24sp"
+	       android:textSize="23sp"
 	       android:textColor="#01DF01"
 	       />
 	   
@@ -125,7 +124,7 @@
 	       android:layout_toEndOf="@+id/yTextS"
 	       android:layout_marginRight="15dp"
 	       android:layout_marginEnd="15dp"
-	       android:textSize="24sp"
+	       android:textSize="23sp"
 	       android:textColor="#01DF01"
 	       />
 	   
@@ -139,7 +138,7 @@
 	       android:layout_marginRight="5dp"
 	       android:layout_marginEnd="5dp"
 	       android:text="@string/zTx"
-	       android:textSize="24sp"
+	       android:textSize="23sp"
 	       android:textColor="#013ADF"
 	       />
 	   
@@ -150,7 +149,7 @@
 	       android:layout_below="@+id/yTextS"
 	       android:layout_toRightOf="@+id/zTextS"
 	       android:layout_toEndOf="@+id/zTextS"
-	       android:textSize="24sp"
+	       android:textSize="23sp"
 	       android:textColor="#013ADF"
 	       />
 		       
@@ -158,9 +157,9 @@
 		    android:orientation="vertical" 
 		    android:layout_width="match_parent" 
 		    android:layout_height="match_parent" 
-		    android:layout_alignTop ="@+id/zTextS" 
-		    android:layout_marginTop="24sp"
-		    tools:context="it.unipd.dei.rilevatoredicadute.SessioneCorrente">
+		    android:layout_alignTop ="@+id/timestamp_text" 
+		    android:layout_marginTop="20sp"
+		    tools:context="it.unipd.dei.rilevatoredicadute.NewThird">
 		    
 			<ListView android:id="@+id/listViewCadute" 
 			    android:layout_width="fill_parent" 

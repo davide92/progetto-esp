@@ -1,3 +1,5 @@
+//  CLASSE IN CUI E' IMPLEMENTATO IL SERVICE DEDICATO AL CRONOMETRO
+
 package it.unipd.dei.rilevatoredicadute;
 
 import android.content.Intent;
@@ -24,19 +26,16 @@ public class ServiceCronometro extends Service {
 	@Override
 	public void onCreate(){
 		super.onCreate();		
-		crono = new Chronometer(this);
-		Log.v("CREATE-SERVICE-CRONOMETRO","INIZIO_CREATE");
+		crono = new Chronometer(this);		
 		
 		//COUNT DOWN TIMER CHE INVIA ALLA ACTIVITY NEWTHIRD LA STRINGA INDICANTE LA DURATA DELLA SESSIONE		
 		ServiceCrono  = new CountDownTimer(500L, 50L) {					
 			@Override
 			public void onTick(long millisUntilFinished) {
-				// TODO Auto-generated method stub
-				//remainingtimeS= millisUntilFinished /1000;							
+				// TODO Auto-generated method stub											
 				}					
 			@Override
-			public void onFinish() {					 
-					//Log.v("STAMPADURATASERVICE",""+StampaDurata()+"");					
+			public void onFinish() {									
 					Intent NW = new Intent();
 					NW.setAction(MY_ACTION);
 					NW.putExtra("TimeStamp", StampaDurata());
@@ -60,34 +59,16 @@ public class ServiceCronometro extends Service {
 			pausaService = intent.getLongExtra("pausa",0L);
 		
 		else
-			pausaService = 0L;
-		
-			Log.v("valore pausaS",""+pausaService+"");
-			
+			pausaService = 0L;		
+						
 			if(pausaService==0L)
 				crono.setBase(SystemClock.elapsedRealtime());
 			else
 				crono.setBase(crono.getBase() + pausaService);
 			
 			startCrono();
+			Log.v("ESECUZIONE-SERVICE-CRONOMETRO","INIZIO_SERVICE CRONOMETRO");
 			
-			/*ServiceCrono  = new CountDownTimer(500L, 50L) {					
-				@Override
-				public void onTick(long millisUntilFinished) {
-					// TODO Auto-generated method stub
-					//remainingtimeS= millisUntilFinished /1000;							
-					}					
-				@Override
-				public void onFinish() {					 
-						Log.v("STAMPADURATASERVICE",""+StampaDurata()+"");
-						//Intent NW = new Intent(getApplicationContext(), NewThird.class);
-						Intent NW = new Intent();
-						NW.setAction(MY_ACTION);
-						NW.putExtra("TimeStamp", StampaDurata());
-						sendBroadcast(NW);
-						ServiceCrono.start();						
-					}
-			}.start();*/
 			ServiceCrono.start();
 			
 		return START_STICKY;	
@@ -109,12 +90,10 @@ public class ServiceCronometro extends Service {
 	 }	
 	
 	public String StampaDurata() {		
-			long elapsedMillis = SystemClock.elapsedRealtime()- crono.getBase();
-			//Log.v(">>>>>>>",""+crono.getBase()+"");
+			long elapsedMillis = SystemClock.elapsedRealtime()- crono.getBase();			
 			int hours = (int) (elapsedMillis / 3600000);
 			int minutes = (int) (elapsedMillis - hours * 3600000) / 60000;
-			int seconds = (int) (elapsedMillis - hours * 3600000 - minutes * 60000) / 1000;
-			//int millis = (int) (elapsedMillis - hours * 3600000 - minutes * 60000 - seconds * 1000);
+			int seconds = (int) (elapsedMillis - hours * 3600000 - minutes * 60000) / 1000;			
 			String ora = ""+hours+":"+minutes+":"+seconds+""; 
 			return ora;		
 	 }
@@ -133,15 +112,3 @@ public class ServiceCronometro extends Service {
 	 Log.v("----","FINE SERVICE");	 
  } 
 	}//FINE CLASSE SERVICE CRONOMETRO
-
-
-
-
-
-
-
-
-
-
-
-

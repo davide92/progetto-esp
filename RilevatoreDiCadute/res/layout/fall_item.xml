@@ -1,80 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="it.unipd.dei.rilevatoredicadute.Fourth" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="match_parent" 
+    android:layout_height="match_parent" 
+    android:orientation="vertical">
+ 
+  <TextView android:id="@+id/spazio"
+      android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true"
+       android:layout_alignParentTop="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
+         android:text="@string/spazio"/>  
+    
+<TextView android:id="@+id/caduta" 
+    android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true"            
+        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_below="@+id/spazio"
+         android:text="@string/caduta" 
+         android:textSize="17sp"
+          android:textStyle="italic"/>
 
-    <ImageView 
-        android:id="@+id/picture4" 
-        android:contentDescription="@string/thumbnail"
-    	android:layout_width="50dp"
-     	android:layout_height="50dp" 
-      	android:layout_marginRight="7dp"
-      	android:layout_marginEnd="7dp"
+<TextView android:id="@+id/data"
+     android:layout_width="wrap_content"
+      android:layout_height="wrap_content" 
+      android:layout_below="@+id/spazio"      
+       android:layout_toRightOf="@+id/caduta"
+        android:layout_toEndOf="@+id/caduta"
+        android:textSize="17sp"/>
 
-       	/>
-         
-    <TextView android:id="@+id/nomeSessione"
-     android:layout_width="wrap_content" 
-     android:layout_height="wrap_content" 
-     android:layout_alignParentTop="true" 
-     android:layout_toRightOf="@+id/picture4" 
-     android:layout_toEndOf="@+id/picture4"
-	 android:layout_marginRight="5dp"
-     android:layout_marginEnd="5dp"  
-     android:layout_marginBottom="5dp"      
-     android:textSize="20sp"
-      android:textStyle="bold"/>
-    
-    <TextView
-        android:id="@+id/DataAvvenutaTx"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/picture4"
-        android:text="@string/DataAvvenuta"
-        android:textSize="20sp" 
-        />
-    
-    <TextView 
-        android:id="@+id/data"
-     	android:layout_width="wrap_content"
-      	android:layout_height="wrap_content" 
-       	android:layout_toRightOf="@+id/DataAvvenutaTx"
-       	android:layout_toEndOf="@+id/DataAvvenutaTx"
-       	android:layout_below="@+id/picture4"
-        android:textSize="20sp"
-        />
-     <TextView
-        android:id="@+id/OraAvvenutaTx"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/DataAvvenutaTx"
-        android:text="@string/OraAvvenuta"
-        android:textSize="20sp" 
-        />
-    
-    <TextView 
-        android:id="@+id/ora"
-     	android:layout_width="wrap_content"
-      	android:layout_height="wrap_content" 
-       	android:layout_toRightOf="@+id/OraAvvenutaTx"
-       	android:layout_toEndOf="@+id/OraAvvenutaTx"
-       	android:layout_below="@+id/DataAvvenutaTx"
-        android:textSize="20sp"
-        />
-    
-    <TextView 
+<TextView android:id="@+id/ora" 
+        android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+     android:layout_below="@+id/spazio"
+     android:layout_toRightOf="@+id/data"
+      android:layout_toEndOf="@+id/data"
+      android:textSize="17sp"/>
+
+<TextView 
         android:id="@+id/latitudeTx"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/OraAvvenutaTx"
+        android:layout_below="@+id/data"
         android:text="@string/latitude"
-        android:textSize="20sp"
+        android:textSize="17sp"
         />
     
     <TextView 
@@ -82,9 +56,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/latitudeTx"
-        android:layout_toEndOf="@+id/latitudeTx"
-        android:layout_below="@+id/OraAvvenutaTx"
-        android:textSize="20sp"
+         android:layout_toEndOf="@+id/latitudeTx"
+        android:layout_below="@+id/data"
+        android:textSize="17sp"
         />
     
     <TextView 
@@ -93,7 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/latitudeTx"
         android:text="@string/longitude"
-        android:textSize="20sp"
+        android:textSize="17sp"
         />
     
     <TextView 
@@ -101,10 +75,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/longitudeTx"
-        android:layout_toEndOf="@+id/longitudeTx"
+         android:layout_toEndOf="@+id/longitudeTx"
         android:layout_below="@+id/latitudeTx"
-        android:textSize="20sp"
-        />  
-   
+        android:textSize="17sp"
+        />
 
 </RelativeLayout>
+
+<!-- <TextView android:id="@+id/avvenuta" 
+    android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+      android:layout_below="@+id/caduta" 
+      android:layout_alignParentLeft="true"
+       android:layout_marginRight="5dp"
+        android:text="@string/avvenuta"
+         android:textSize="15sp"/> -->

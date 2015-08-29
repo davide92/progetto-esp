@@ -4,9 +4,7 @@
     <string name="app_name">Rilevatore di cadute</string>
     <string name="action_settings">Settings</string>
     <string name="nuovaSessione">Nuova Sessione</string>
-    <string name="delete">Cancella</string>
-    <string name="rename">Rinomina</string>
-    <string name="preference">Preferenze</string>
+    <string name="delete">Cancella</string>    
     <string name="textDurata">Durata--></string>
     <string name="textCadute">Cadute:</string>    
     <string name="title_activity_second">Dettagli</string>
@@ -19,8 +17,7 @@
     <string name="DataCaduta">Data Caduta:</string>
     <string name="OraCaduta">Ora Caduta:</string>
     <string name="DataAvvenuta">Data Avvenuta:</string>
-    <string name="OraAvvenuta">Ora Avvenuta:</string>
-    <string name="notificaOk">Successo notifica</string>
+    <string name="OraAvvenuta">Ora Avvenuta:</string>    
     <string name="title_activity_third">Nuova Sessione</string>
     <string name="sessioneInCorso">Sessione in corso</string>
     <string name="textSessione">Nome sessione:</string>
@@ -30,12 +27,7 @@
     <string name="title_activity_fourth">Dettagli caduta</string>
     <string name="latitude">Latitudine:</string>
     <string name="longitude">Longitudine:</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="title_activity_fifth">Preferenze</string>
-    <string name="simpleRateTx">Frequenza di campionamento:</string>
-    <string name="maxDuratSessTx">Massima durata sessione:</string>
-    <string name="emailListTx">Lista e-mail</string>
-    <string name="alarmTx">Allarme</string>    
+    <string name="hello_world">Hello world!</string>        
     <string name="title_activity_delete">Elimina Sessione</string>
     <string name="title_activity_sixth">Sessione In Corso</string> 
     <string name="mostra">Mostra Sessione</string>    

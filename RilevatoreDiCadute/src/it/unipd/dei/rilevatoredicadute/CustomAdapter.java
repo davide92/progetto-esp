@@ -12,13 +12,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 public class CustomAdapter extends ArrayAdapter<Dati>{
 	
 	private List<Dati> list;
 	public CustomAdapter(Context context, int textViewResourceId, List <Dati> objects){
 		super(context, textViewResourceId, objects);
-		list = objects;
+		list=objects;
 	}
 
 	public View getView( int position, View convertView, ViewGroup parent){
@@ -32,12 +31,11 @@ public class CustomAdapter extends ArrayAdapter<Dati>{
 		TextView dataEora = (TextView)convertView.findViewById(R.id.dataEora);
 		TextView durataSessione = (TextView)convertView.findViewById(R.id.durataSessione);
 		TextView numeroCadute = (TextView)convertView.findViewById(R.id.numeroCadute);
-		Dati d = getItem(position);
-		//picture.setImage();
+		Dati d = getItem(position);		
 		nomeSessione.setText(d.getNomeSessione());
 		dataEora.setText(d.getData() + " " + d.getHour());
 		durataSessione.setText(d.getDurataSessione());
 		numeroCadute.setText(Integer.toString(d.getFalls()));
 		return convertView;
-	}
+	}	
 }
