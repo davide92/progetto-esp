@@ -305,6 +305,7 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 				Log.v("List-3","--HO PREMUTO IL TASTO STOP--");								
 				String ora=StampaDurataService;				
 				db.updateDurataSessione(ora,NS);
+				db.updateStatoSessione(SNT, NS);
 								
 				Log.v("stopSessione------->",""+NS+"");
 				
@@ -339,7 +340,10 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 
 	@Override
 	protected void onStop(){
-		super.onStop();			
+		super.onStop();	
+		if(SNT == 0){
+			mysm.unregisterListener(this);
+		}
 		Log.v("ACTIVITY NEWTHIRD","NEWTHIRD STOPPED");
 		Log.v("sessione stop",""+SNT+"");
 		try{
