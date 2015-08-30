@@ -65,7 +65,7 @@ public class FindFall extends IntentService{
 			sendBroadcast(mReceiver);
 			sendBroadcast(thActivity);			
 		}
-		stopSelf();		
+		stopSelf();
 	}
 	
 	

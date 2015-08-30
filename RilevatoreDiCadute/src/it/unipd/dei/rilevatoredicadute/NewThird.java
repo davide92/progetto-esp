@@ -111,7 +111,7 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 	protected void onCreate(Bundle savedInstance) {		
 		super.onCreate(savedInstance);		
 		setContentView(R.layout.activity_sess_curr);
-		
+				
 		listView = (ListView) findViewById(R.id.listViewCadute);
 		fallList = new LinkedList<DatiCadute>();
 		adapter = new CustomAdapterFalls(this, R.id.listViewCadute, fallList);       
@@ -324,6 +324,7 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 				Intent UIMA;
 			    UIMA = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(UIMA);
+				
 			}			
 			
 		});		
@@ -333,7 +334,7 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 	protected void onPause(){
 		super.onPause();
 		Log.v("ACT-THIRD","PAUSED");
-		if(SNT == 0){
+		if(SNT == 0 && mysm != null){
 			mysm.unregisterListener(this);
 		}
 	}	
@@ -341,9 +342,6 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 	@Override
 	protected void onStop(){
 		super.onStop();	
-		if(SNT == 0){
-			mysm.unregisterListener(this);
-		}
 		Log.v("ACTIVITY NEWTHIRD","NEWTHIRD STOPPED");
 		Log.v("sessione stop",""+SNT+"");
 		try{
@@ -363,7 +361,7 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 		if(s==3){				
 			cdViewSC.cancel();			
 		}
-		stop();			
+		//stop();			
 	}
 	
 	@Override
@@ -427,7 +425,7 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 		// as you specify a parent activity in AndroidManifest.xml.
 		switch(item.getItemId()){
 			case(R.id.mostra):{				  
-				
+				mysm.unregisterListener(this);
 				Intent UIMA;
 				UIMA = new Intent(getApplicationContext(), MainActivity.class);
 				Log.v("---","---");										
@@ -495,10 +493,10 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 	
 	private void pause(){
 		Log.v("GESTIONE FILE","METODO PAUSE");
-		if(mysm != null){
+		//if(mysm != null){
 			mysm.unregisterListener(this);
 			Log.v("SENSORE ACCELEROMETRO----->","ACCELEROMETRO PAUSA");
-		}
+		//}
 		if(locMg != null){
 			locMg.removeUpdates(this);
 		}
@@ -546,13 +544,15 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 	
 	private void stop(){
 		Log.v("GESTIONE FILE","METODO STOP");
-		if(mysm != null){
+		//if(mysm != null){
 			mysm.unregisterListener(this);
+			//mysm.unregisterListener(this, accel);
 			Log.v("SENSORE ACCELEROMETRO----->","ACCELEROMETRO STOPPATO");
-		}
+		//}
 		if(locMg != null){
 			locMg.removeUpdates(this);
-		}		
+		}
+		
 		if(!(lastFileName.equals(date))){
 			lastFileName = date;				
 			}
