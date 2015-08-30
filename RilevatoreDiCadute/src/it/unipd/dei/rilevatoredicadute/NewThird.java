@@ -463,7 +463,7 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 		 @Override
 		 public void onServiceConnected(ComponentName name, IBinder service) {
 		 MyBinderText myBinderT = (MyBinderText) service;
-		 ff = myBinderText.getService();
+		 ff = myBinderT.getService();
 		 mServiceBoundText = true;
 		 } 
 	 };
