@@ -1,7 +1,6 @@
 package it.unipd.dei.rilevatoredicadute;
 
 import java.util.List;
-import java.util.Random;
 
 import android.content.Context;
 import android.graphics.Color;

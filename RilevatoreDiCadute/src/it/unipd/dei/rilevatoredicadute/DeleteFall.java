@@ -63,7 +63,7 @@ public class DeleteFall extends ActionBarActivity {
             int minutes=Integer.parseInt(oraf[1]);  
             int seconds=Integer.parseInt(oraf[2]);
             
-            FallList.add(new DatiCadute(day, month, year,hour, minutes, seconds, Double.parseDouble(c.getString(2)), Double.parseDouble(c.getString(3)), nS));           
+            FallList.add(new DatiCadute(day, month, year,hour, minutes, seconds, c.getString(2), c.getString(3), nS));           
         	}while(c.moveToNext());//fine while
         }
         else{
