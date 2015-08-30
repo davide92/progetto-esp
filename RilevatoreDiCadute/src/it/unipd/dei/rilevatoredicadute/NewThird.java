@@ -56,18 +56,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 import it.unipd.dei.rilevatoredicadute.ServiceCronometro.MyBinder;
+import it.unipd.dei.rilevatoredicadute.FindFall.MyBinderText;
 
 
-public class NewThird extends ActionBarActivity implements SensorEventListener,LocationListener{	
+public class NewThird extends ActionBarActivity{// implements SensorEventListener,LocationListener{	
 		
 	GregorianCalendar cal;
 	MyDBManager db;
 	public long stopTime=0;	
-	private SensorManager mysm = null;
-	private LocationManager locMg = null;
-	private Sensor accel = null;
-	private ArrayList<AccelData> acData = new ArrayList<AccelData>(15000);	
-	private double latitude, longitude;	
+	//private SensorManager mysm = null;
+	//private LocationManager locMg = null;
+	//private Sensor accel = null;
+	//private ArrayList<AccelData> acData = new ArrayList<AccelData>(15000);	
+	//private double latitude, longitude;	
 	private  ListView listView;
 	private List<DatiCadute> fallList;	
 	long it = 0;	
@@ -76,17 +77,17 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 	TextView yAccViewS = null;
 	TextView zAccViewS = null;
 	TextView tx;
-	DataOutputStream f = null;
-	FileOutputStream fo = null;		
-	File file;
+	//DataOutputStream f = null;
+	//FileOutputStream fo = null;		
+	//File file;
 	public static String PACKAGE_NAME;
-	String lastFileName = "null";
+	//String lastFileName = "null";
 	String date,data;
 	String NS;//nomeSessione
 	String StampaDurataService;	
 	Intent mService = null;
-	CountDownTimer cdSaveSC = null;
-	CountDownTimer cdViewSC = null;
+	//CountDownTimer cdSaveSC = null;
+	//CountDownTimer cdViewSC = null;
 	CountDownTimer cdCrono = null;
 	int s;
 	int SNT; //stato sessione activity newthird per gestione parametri
@@ -99,13 +100,17 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 	ImageButton pauseBtn;
 	ImageButton stopBtn;		
 	boolean mServiceBound = false;
+	boolean mServiceBoundText = false;
 	boolean rec, vis = true;
 	ServiceCronometro sc;
+	FindFall ff;
 	Intent T;	
-	Intent intent;	
+	Intent intent;
+	Intent TextIntent;
 	MyReceiver myReceiver;
 	CustomAdapterFalls adapter;	
 	Receiver receiver;		
+	TextReceiver textReceiver;
 	
 	@Override
 	protected void onCreate(Bundle savedInstance) {		
@@ -134,7 +139,7 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 			}
 		};				
 				
-		cdSaveSC = new CountDownTimer(5000L, 1000L) {					
+		/*cdSaveSC = new CountDownTimer(5000L, 1000L) {					
 			@Override
 			public void onTick(long millisUntilFinished) {
 				// TODO Auto-generated method stub				
@@ -154,7 +159,7 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 			public void onFinish() {
 				vis = true;					
 			}
-		};
+		};*/
 		
 		timestampText = (TextView) findViewById(R.id.timestamp_text);
 		playBtn = (ImageButton)findViewById(R.id.start);
@@ -190,12 +195,16 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 		
 		myReceiver = new MyReceiver();
 		receiver = new Receiver();
+		textReceiver = new TextReceiver();
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(ServiceCronometro.MY_ACTION);
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(FindFall.BROADCAST);
+		IntentFilter TextFilt = new IntentFilter();
+		TextFilt.addAction(FindFall.TEXTVIEW);
 		registerReceiver(myReceiver,intentFilter);
 		registerReceiver(receiver, filter);
+		registerReceiver(textReceiver, TextFilt);
 		
 		db = new MyDBManager(this);	
 		PACKAGE_NAME = getApplicationContext().getPackageName();
@@ -211,10 +220,11 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 		if(s==3){//GESTIONE ORIENTAMENTO TELEFONO: s==3 SIGNIFICA CHE L'ORIENTAMENTO DELLO SCHERMO E' CAMBIATA
 			if(SNT==1){				
 				playBtn.setVisibility(View.INVISIBLE);
-				pauseBtn.setVisibility(View.VISIBLE);				
-				start();
-				cdSaveSC.start();
-				cdViewSC.start();				
+				pauseBtn.setVisibility(View.VISIBLE);
+				cStart++;
+				//start();
+				//cdSaveSC.start();
+				//cdViewSC.start();				
 			}
 			else{				
 				playBtn.setVisibility(View.VISIBLE);
@@ -225,9 +235,10 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 			if(s==1){
 				playBtn.setVisibility(View.INVISIBLE);
 				pauseBtn.setVisibility(View.VISIBLE);
-				start();					
-				cdSaveSC.start();
-				cdViewSC.start();				
+				cStart++;
+				//start();					
+				//cdSaveSC.start();
+				//cdViewSC.start();				
 			}
 			else{
 				playBtn.setVisibility(View.VISIBLE);
@@ -236,6 +247,7 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 			}
 		}		
 		intent = new Intent(getApplicationContext(), ServiceCronometro.class);		
+		TextIntent = new Intent(getApplicationContext(),FindFall.class);
 		
 		cdCrono.start();
 		updateUI();
@@ -249,7 +261,8 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 				SNT = 1;
 				playBtn.setVisibility(View.INVISIBLE);
 				pauseBtn.setVisibility(View.VISIBLE);				
-						
+				
+				cStart++;
 				String data = ""+cal.get(GregorianCalendar.YEAR)+ "/" + (cal.get(GregorianCalendar.MONTH)+1)+ "/" +cal.get(GregorianCalendar.DATE);
 																
 				long milliseconds=System.currentTimeMillis();
@@ -267,12 +280,14 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 				
 				startService(intent);
 				bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);				
+				startService(TextIntent);
+				bindService(TextIntent, mServiceConnectionText, Context.BIND_AUTO_CREATE);
 				
 				Log.v("List-1","--HO PREMUTO IL TASTO PLAY---");						
 								
-				cdSaveSC.start();				
-				cdViewSC.start();
-				start();				
+				//cdSaveSC.start();				
+				//cdViewSC.start();
+				//start();				
 			}						
 		});
 		
@@ -281,16 +296,19 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 			public void onClick(View v){				
 				
 				SNT = 2;
+				cStart--;
 				cdCrono.cancel();				
 				timestampText.setText(""+StampaDurataService+"");
 				playBtn.setVisibility(View.VISIBLE);
 				pauseBtn.setVisibility(View.INVISIBLE);
 				Log.v("List-2","--HO PREMUTO IL TASTO PAUSE--");				
-			    stopTime = SystemClock.elapsedRealtime();			    
+			    stopTime = SystemClock.elapsedRealtime();	
+			    TextIntent = new Intent(getApplicationContext(),FindFall.class);
+			    stopService(TextIntent);
 			  	//Log.v("stato sessione third", ""+SNT+"");				
-			    cdSaveSC.cancel();// DA CONTROLLARE SU ARCHOS
-				cdViewSC.cancel();				
-				pause();			    
+			    //cdSaveSC.cancel();// DA CONTROLLARE SU ARCHOS
+				//cdViewSC.cancel();				
+				//pause();			    
 			}				
 		});
 		
@@ -313,14 +331,21 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 					 unbindService(mServiceConnection);
 					 mServiceBound = false;
 					 }
+				if(mServiceBoundText){
+					unbindService(mServiceConnectionText);
+					mServiceBoundText = false;
+				}
 				
 				Intent intent = new Intent(getApplicationContext(), ServiceCronometro.class);				 
-				stopService(intent);								    								
-				cdSaveSC.cancel();
-				cdViewSC.cancel();
+				TextIntent = new Intent(getApplicationContext(),FindFall.class);
+				stopService(intent);
+				if(cStart >0)
+					stopService(TextIntent);
+				//cdSaveSC.cancel();
+				//cdViewSC.cancel();
 				cdCrono.cancel();
-				rec = false;				
-				stop();					
+				//rec = false;				
+				//stop();					
 				Intent UIMA;
 			    UIMA = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(UIMA);
@@ -334,9 +359,9 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 	protected void onPause(){
 		super.onPause();
 		Log.v("ACT-THIRD","PAUSED");
-		if(SNT == 0 && mysm != null){
-			mysm.unregisterListener(this);
-		}
+		//if(SNT == 0 && mysm != null){
+			//mysm.unregisterListener(this);
+		//}
 	}	
 
 	@Override
@@ -352,14 +377,24 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 			unregisterReceiver(myReceiver);
 		}catch(Exception exc){			
 		}
+		try{
+			unregisterReceiver(textReceiver);
+		}catch(Exception exc){
+			
+		}
 		
 		if (mServiceBound) {
 			unbindService(mServiceConnection);
 			mServiceBound = false;
 	    }
+		
+		if(mServiceBoundText){
+			unbindService(mServiceConnectionText);
+			mServiceBoundText = false;
+		}
 		cdCrono.cancel();		
 		if(s==3){				
-			cdViewSC.cancel();			
+			//cdViewSC.cancel();			
 		}
 		//stop();			
 	}
@@ -395,6 +430,15 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 		}						
 	}    
 		
+	private class TextReceiver extends BroadcastReceiver{
+		@Override
+		public void onReceive(Context arg0, Intent arg1){
+			float[] arrayRicevuto = arg1.getFloatArrayExtra("textview");
+			xAccViewS.setText(""+arrayRicevuto[0]);
+			yAccViewS.setText(""+arrayRicevuto[1]);
+			zAccViewS.setText(""+arrayRicevuto[2]);
+		}
+	}
     private ServiceConnection mServiceConnection = new ServiceConnection() {
     	
 		 @Override
@@ -409,6 +453,20 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 		 mServiceBound = true;
 		 }
 	 };		
+	 
+	 private ServiceConnetion mServiceConnectionText= new ServiceConnection(){
+		 @Override
+		 public void onServiceDisconnected(ComponentName name) {
+		 mServiceBoundText = false;
+		 }		 
+		 
+		 @Override
+		 public void onServiceConnected(ComponentName name, IBinder service) {
+		 MyBinderText myBinderT = (MyBinderText) service;
+		 ff = myBinderText.getService();
+		 mServiceBoundText = true;
+		 } 
+	 };
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -444,7 +502,7 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 	public void onBackPressed() {
 	}	
 	
-	private void start(){		
+	/*private void start(){		
 		
 		Log.v("GESTIONE FILE","METODO START");
 		it = System.currentTimeMillis();		
@@ -460,9 +518,9 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 			//int hour = c.get(GregorianCalendar.HOUR_OF_DAY);
 			//int min = c.get(GregorianCalendar.MINUTE);
 			//int sec= c.get(GregorianCalendar.SECOND);
-			date = "" + year + month + day /*+ hour + min + sec */;				
+			date = "" + year + month + day /*+ hour + min + sec ;				
 			Log.v("SENSORE ACCELEROMETRO----->","ACCELEROMETRO REGISTRATO");			
-		}
+		}*/
 		//nS = tx.getText().toString();
 		/*MyDBManager db = new MyDBManager(this);
 		int fallCount = db.CountCaduta(NS);
@@ -489,9 +547,8 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 		}			
 			CustomAdapterFalls adapter = new CustomAdapterFalls(this, R.id.listViewCadute, fallList);       
 		    listView.setAdapter(adapter);*/
-	}
-	
-	private void pause(){
+	//}	
+	/*private void pause(){
 		Log.v("GESTIONE FILE","METODO PAUSE");
 		//if(mysm != null){
 			mysm.unregisterListener(this);
@@ -597,7 +654,7 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 		zAccViewS.setText("0");
 		accel = null;
 		
-	}
+	}*/
 		private void updateUI() {
 			//Log.v("updateUI", "inzio");
 			if(fallList.size() > 0){
@@ -638,7 +695,7 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 			crs.close();
 		}	
 	
-	@Override
+	/*@Override
 	public void onSensorChanged(SensorEvent event) {
 		synchronized (this) {			
 			mService = new Intent(getApplicationContext(), FindFall.class);
@@ -710,5 +767,5 @@ public class NewThird extends ActionBarActivity implements SensorEventListener,L
 	@Override
 	public void onProviderDisabled(String provider) {
 			// TODO Auto-generated method stub			
-	}
+	}*/
 }
