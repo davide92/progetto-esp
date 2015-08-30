@@ -26,7 +26,7 @@ public class FindFall extends Service implements SensorEventListener,LocationLis
 	MyDBManager dbF;
 	GregorianCalendar calendar;
 	double lat,lon;
-	IBinder mBinder = new MyBinder();
+	IBinder mBinder = new MyBinderText();
 	private SensorManager mysm = null;
 	private LocationManager locMg = null;
 	private Sensor accel = null;
