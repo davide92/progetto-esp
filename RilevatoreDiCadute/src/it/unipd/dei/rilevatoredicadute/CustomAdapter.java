@@ -3,7 +3,6 @@ package it.unipd.dei.rilevatoredicadute;
 import java.util.List;
 
 import android.content.Context;
-import android.content.res.Resources.Theme;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;

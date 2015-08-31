@@ -12,7 +12,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.util.Log;
 import android.widget.Toast;
-import it.unipd.dei.rilevatoredicadute.ServiceCronometro.MyBinder;
+//import it.unipd.dei.rilevatoredicadute.ServiceCronometro.MyBinder;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -26,7 +26,7 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 
-public class FindFall extends Service implements SensorEventListener,LocationListener{
+public class FindFall extends Service implements SensorEventListener, LocationListener{
 	long it = 0;
 	private float xVal;
 	private float yVal;
@@ -80,7 +80,7 @@ public class FindFall extends Service implements SensorEventListener,LocationLis
 			public void onFinish() {
 				rec = true;									
 			}
-		};			
+		}.start();			
 		cdViewSC = new CountDownTimer(6000L, 500L) {					
 			@Override
 			public void onTick(long millisUntilFinished) {
@@ -90,7 +90,7 @@ public class FindFall extends Service implements SensorEventListener,LocationLis
 			public void onFinish() {
 				vis = true;					
 			}
-		};
+		}.start();
 		
 		dbF=new MyDBManager(this);
 		start();
@@ -98,30 +98,11 @@ public class FindFall extends Service implements SensorEventListener,LocationLis
 	
 	@Override
 	public int onStartCommand (Intent intent, int flags, int startId) {		
-									
+		Log.v("findFall", "inizio onStartCommand");	
+		sessione = intent.getStringExtra("nome sessione");
+		Log.v("nomesessione service", sessione);
 		mReceiver = new Intent(this, MyReceiver.class);		
 		thActivity = new Intent();
-		float x=java.lang.Math.abs(xVal)- java.lang.Math.abs(xValLast);
-		float y=java.lang.Math.abs(yVal)- java.lang.Math.abs(yValLast);
-		float z=java.lang.Math.abs(zVal)- java.lang.Math.abs(zValLast);				
-		
-		if(((java.lang.Math.abs(x))>= alpha) || ((java.lang.Math.abs(y))>= alpha) || ((java.lang.Math.abs(z))>= alpha)){
-			mReceiver.putExtra("fall", true);			
-			mReceiver.putExtra("lat", lat);
-			mReceiver.putExtra("long", lon);
-			calendar=new GregorianCalendar();
-			thActivity.setAction(BROADCAST);
-			thActivity.setAction(TEXTVIEW);
-			thActivity.putExtra("fall", true);
-			thActivity.putExtra("textview", DatiAccelerometro);
-			String data = ""+calendar.get(GregorianCalendar.YEAR)+ "/" + (calendar.get(GregorianCalendar.MONTH)+1)+ "/" +calendar.get(GregorianCalendar.DATE);
-			String ora = ""+calendar.get(GregorianCalendar.HOUR_OF_DAY)+ ":" + calendar.get(GregorianCalendar.MINUTE)+ ":" +calendar.get(GregorianCalendar.SECOND);
-				
-			dbF.addCaduta(data,ora,Double.toString(lat),Double.toString(lon),sessione);				
-			Log.v("sessione in cui e' avvenuta la caduta",""+sessione);					
-			sendBroadcast(mReceiver);
-			sendBroadcast(thActivity);			
-		}
 		return START_STICKY;
 		//stopSelf();
 	}
@@ -147,7 +128,7 @@ public class FindFall extends Service implements SensorEventListener,LocationLis
  						xValLast = acData.get(k).getX();
  						yValLast = acData.get(k).getY();
  						zValLast = acData.get(k).getZ();
- 						
+ 						caduta();
 						k++;								
 					}
  					acData.add(new AccelData(time, x, y, z));
@@ -162,6 +143,9 @@ public class FindFall extends Service implements SensorEventListener,LocationLis
 					DatiAccelerometro[0] = acData.get(j).getX();
 					DatiAccelerometro[1] = acData.get(j).getY();
 					DatiAccelerometro[2] = acData.get(j).getZ();
+					thActivity.setAction(TEXTVIEW);
+					thActivity.putExtra("textview", DatiAccelerometro);
+					sendBroadcast(thActivity);
 					j+=4;
 					vis = false;
 				    cdViewSC.start();
@@ -197,14 +181,39 @@ public class FindFall extends Service implements SensorEventListener,LocationLis
 			// TODO Auto-generated method stub			
 	}
 	
+	private void caduta(){
+		float x=java.lang.Math.abs(xVal)- java.lang.Math.abs(xValLast);
+		float y=java.lang.Math.abs(yVal)- java.lang.Math.abs(yValLast);
+		float z=java.lang.Math.abs(zVal)- java.lang.Math.abs(zValLast);				
+		
+		if(((java.lang.Math.abs(x))>= alpha) || ((java.lang.Math.abs(y))>= alpha) || ((java.lang.Math.abs(z))>= alpha)){
+			mReceiver.putExtra("fall", true);			
+			mReceiver.putExtra("lat", lat);
+			mReceiver.putExtra("long", lon);
+			calendar=new GregorianCalendar();
+			thActivity.setAction(BROADCAST);
+			//thActivity.setAction(TEXTVIEW);
+			thActivity.putExtra("fall", true);
+			//thActivity.putExtra("textview", DatiAccelerometro);
+			String data = ""+calendar.get(GregorianCalendar.YEAR)+ "/" + (calendar.get(GregorianCalendar.MONTH)+1)+ "/" +calendar.get(GregorianCalendar.DATE);
+			String ora = ""+calendar.get(GregorianCalendar.HOUR_OF_DAY)+ ":" + calendar.get(GregorianCalendar.MINUTE)+ ":" +calendar.get(GregorianCalendar.SECOND);
+				
+			dbF.addCaduta(data,ora,Double.toString(lat),Double.toString(lon),sessione);				
+			Log.v("sessione in cui e' avvenuta la caduta",""+sessione);	
+			
+			sendBroadcast(mReceiver);
+			sendBroadcast(thActivity);			
+		}
+	}
+	
 private void start(){			
 		Log.v("GESTIONE FILE","METODO START");
 		it = System.currentTimeMillis();		
 		locMg = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 		locMg.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);
 		mysm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		accel = mysm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		if(mysm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null){
-			accel = mysm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 			mysm.registerListener((SensorEventListener) this, accel, SensorManager.SENSOR_DELAY_NORMAL);
 			GregorianCalendar cal = new GregorianCalendar(); 
 			year = cal.get(GregorianCalendar.YEAR);
@@ -292,5 +301,7 @@ private void stop(){
 		super.onDestroy();	
 		stop();
 		dbF.close();
+		cdSaveSC.cancel();
+		cdViewSC.cancel();
 	}
 }

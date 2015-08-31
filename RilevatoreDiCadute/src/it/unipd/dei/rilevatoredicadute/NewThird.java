@@ -18,7 +18,7 @@ import android.view.View;
 
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
+//import android.widget.Toast;
 import android.widget.ListView;
 
 import android.content.BroadcastReceiver;
@@ -28,28 +28,28 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.ComponentName;
 
-import android.hardware.Sensor;
+/*import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
+import android.hardware.SensorManager;*/
 
 import android.util.Log;
 
 import android.graphics.Color;
 
-import android.location.Location;
+/*import android.location.Location;
 import android.location.LocationListener;
-import android.location.LocationManager;
+import android.location.LocationManager;*/
 
 import android.database.Cursor;
 
-import java.io.DataOutputStream;
+/*import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import java.util.ArrayList;
+import java.util.ArrayList;*/
 import java.util.GregorianCalendar;
 import java.util.Random;
 import java.util.LinkedList;
@@ -95,7 +95,7 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 	int month;
 	int day;
 	int cStart = 0; // contatore metodo start()
-	private int i, j, k = 0;
+	//private int i, j, k = 0;
 	ImageButton playBtn;
 	ImageButton pauseBtn;
 	ImageButton stopBtn;		
@@ -248,6 +248,7 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 		}		
 		intent = new Intent(getApplicationContext(), ServiceCronometro.class);		
 		TextIntent = new Intent(getApplicationContext(),FindFall.class);
+		TextIntent.putExtra("nome sessione", NS);
 		
 		cdCrono.start();
 		updateUI();
