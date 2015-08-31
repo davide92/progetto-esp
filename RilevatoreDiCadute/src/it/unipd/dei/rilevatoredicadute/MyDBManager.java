@@ -176,6 +176,18 @@ public Cursor selectSession(String nameSession){
 	 return count;
  }
  
+ public boolean notFallSameHour(String session, String hour){
+	 SQLiteDatabase database = dbhelper.getReadableDatabase();
+	 String sql = "select count(*) from "+MyDBHelper.TABLE_CADUTA+ " where "+MyDBHelper.COL_SESS+ " = '"+ session +"' and " + MyDBHelper.COL_ORAC + " = '"+hour+"';" ; 
+	 Cursor cur = database.rawQuery(sql, null);
+	 cur.moveToFirst();
+	 int count = cur.getInt(0);
+	 cur.close();
+	 if(count == 0)
+		 return true;
+	 return false;
+ }
+ 
  
  public Cursor selectCadutaWithHour(String nameSession, String hour)
  	 {

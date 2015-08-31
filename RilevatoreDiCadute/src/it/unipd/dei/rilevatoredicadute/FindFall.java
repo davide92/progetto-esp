@@ -197,12 +197,14 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 			//thActivity.putExtra("textview", DatiAccelerometro);
 			String data = ""+calendar.get(GregorianCalendar.YEAR)+ "/" + (calendar.get(GregorianCalendar.MONTH)+1)+ "/" +calendar.get(GregorianCalendar.DATE);
 			String ora = ""+calendar.get(GregorianCalendar.HOUR_OF_DAY)+ ":" + calendar.get(GregorianCalendar.MINUTE)+ ":" +calendar.get(GregorianCalendar.SECOND);
-				
-			dbF.addCaduta(data,ora,Double.toString(lat),Double.toString(lon),sessione);				
-			Log.v("sessione in cui e' avvenuta la caduta",""+sessione);	
-			
-			sendBroadcast(mReceiver);
-			sendBroadcast(thActivity);			
+			if(dbF.notFallSameHour(sessione, ora)){
+				Log.v("FIND FALL", "NESSUNA CADUTA CON LA STESSA DATA");
+				dbF.addCaduta(data,ora,Double.toString(lat),Double.toString(lon),sessione);				
+				Log.v("sessione in cui e' avvenuta la caduta",""+sessione);	
+				sendBroadcast(mReceiver);
+				sendBroadcast(thActivity);
+			}
+			Log.v("FIND FALL", "GIA' PRESENTE CADUTA");
 		}
 	}
 	
