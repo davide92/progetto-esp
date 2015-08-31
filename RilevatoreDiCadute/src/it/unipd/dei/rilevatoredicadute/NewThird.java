@@ -454,7 +454,7 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 		 }
 	 };		
 	 
-	 private ServiceConnetion mServiceConnectionText= new ServiceConnection(){
+	 private ServiceConnection mServiceConnectionText= new ServiceConnection(){
 		 @Override
 		 public void onServiceDisconnected(ComponentName name) {
 		 mServiceBoundText = false;
@@ -483,7 +483,7 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 		// as you specify a parent activity in AndroidManifest.xml.
 		switch(item.getItemId()){
 			case(R.id.mostra):{				  
-				mysm.unregisterListener(this);
+				//mysm.unregisterListener(this);
 				Intent UIMA;
 				UIMA = new Intent(getApplicationContext(), MainActivity.class);
 				Log.v("---","---");										

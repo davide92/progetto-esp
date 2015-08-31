@@ -1,13 +1,30 @@
 package it.unipd.dei.rilevatoredicadute;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.util.Log;
+import android.widget.Toast;
 import it.unipd.dei.rilevatoredicadute.ServiceCronometro.MyBinder;
 
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import android.os.IBinder;
 import android.os.Binder;
+import android.os.Bundle;
+import android.os.CountDownTimer;
 
 public class FindFall extends Service implements SensorEventListener,LocationListener{
 	long it = 0;
@@ -44,6 +61,7 @@ public class FindFall extends Service implements SensorEventListener,LocationLis
 	int month;
 	int day;
 	String date;
+	int k, i, j;
 	
 	public FindFall() {
 		super();
@@ -104,6 +122,7 @@ public class FindFall extends Service implements SensorEventListener,LocationLis
 			sendBroadcast(mReceiver);
 			sendBroadcast(thActivity);			
 		}
+		return START_STICKY;
 		//stopSelf();
 	}
 	
@@ -186,7 +205,8 @@ private void start(){
 		mysm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		if(mysm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null){
 			accel = mysm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-			mysm.registerListener((SensorEventListener) this, accel, SensorManager.SENSOR_DELAY_NORMAL);			
+			mysm.registerListener((SensorEventListener) this, accel, SensorManager.SENSOR_DELAY_NORMAL);
+			GregorianCalendar cal = new GregorianCalendar(); 
 			year = cal.get(GregorianCalendar.YEAR);
 			month = cal.get(GregorianCalendar.MONTH)+1;
 			day = cal.get(GregorianCalendar.DAY_OF_MONTH);			
