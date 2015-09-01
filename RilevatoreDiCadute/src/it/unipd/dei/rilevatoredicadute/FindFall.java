@@ -14,6 +14,8 @@ import android.util.Log;
 import android.widget.Toast;
 //import it.unipd.dei.rilevatoredicadute.ServiceCronometro.MyBinder;
 
+
+
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,10 +23,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+
 import android.os.IBinder;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Vibrator;
 
 public class FindFall extends Service implements SensorEventListener, LocationListener{
 	long it = 0;
@@ -80,8 +84,8 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 			public void onFinish() {
 				rec = true;									
 			}
-		}.start();			
-		cdViewSC = new CountDownTimer(6000L, 500L) {					
+		};			
+		cdViewSC = new CountDownTimer(5000L, 500L) {					
 			@Override
 			public void onTick(long millisUntilFinished) {
 			// TODO Auto-generated method stub			
@@ -90,7 +94,7 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 			public void onFinish() {
 				vis = true;					
 			}
-		}.start();
+		};
 		
 		dbF=new MyDBManager(this);
 		start();
@@ -100,10 +104,11 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 	public int onStartCommand (Intent intent, int flags, int startId) {		
 		Log.v("findFall", "inizio onStartCommand");	
 		sessione = intent.getStringExtra("nome sessione");
-		Log.v("nomesessione service", sessione);
-		mReceiver = new Intent(this, MyReceiver.class);		
-		return START_STICKY;
-		//stopSelf();
+		Log.v("nomesessione service", ""+sessione);
+		mReceiver = new Intent(this, MyReceiver.class);	
+		cdSaveSC.start();
+		cdViewSC.start();
+		return START_STICKY;		
 	}
 	
 	@Override
@@ -119,8 +124,7 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
  						if(locMg.getLastKnownLocation(LocationManager.GPS_PROVIDER) != null){
 							mReceiver.putExtra("long", longitude);
 							mReceiver.putExtra("lat", latitude);
-						}
-						//mService = new Intent(getApplicationContext(), FindFall.class);
+						}						
  						xVal = x;
  						yVal = y;
  						zVal = z;
@@ -128,8 +132,8 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
  						yValLast = acData.get(k).getY();
  						zValLast = acData.get(k).getZ();
  						caduta();
-						k++;								
-					}
+						k++;						
+					} 					
  					acData.add(new AccelData(time, x, y, z));
 					cdSaveSC.start();
 				}
@@ -191,6 +195,7 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 			mReceiver.putExtra("lat", lat);
 			mReceiver.putExtra("long", lon);
 			calendar=new GregorianCalendar();
+			
 			thActivity.setAction(BROADCAST);
 			//thActivity.setAction(TEXTVIEW);
 			thActivity.putExtra("fall", true);
@@ -204,7 +209,8 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 				sendBroadcast(mReceiver);
 				sendBroadcast(thActivity);
 			}
-			Log.v("FIND FALL", "GIA' PRESENTE CADUTA");
+			else
+				Log.v("FIND FALL", "GIA' PRESENTE CADUTA");
 		}
 	}
 	
@@ -216,7 +222,7 @@ private void start(){
 		mysm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		accel = mysm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		if(mysm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null){
-			mysm.registerListener((SensorEventListener) this, accel, SensorManager.SENSOR_DELAY_NORMAL);
+			mysm.registerListener((SensorEventListener) this, accel,  SensorManager.SENSOR_DELAY_NORMAL);
 			GregorianCalendar cal = new GregorianCalendar(); 
 			year = cal.get(GregorianCalendar.YEAR);
 			month = cal.get(GregorianCalendar.MONTH)+1;

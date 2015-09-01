@@ -1,4 +1,5 @@
 
+
 //  CLASSE PER LA GESTIONE DELLA SESSIONE: QUI SI PUO' COMINCIARE UNA NUOVA SESSIONE, METTERLA IN PAUSA, STOPPARLA,
 //  SONO VISUALIZZATI I DATI PROVENIENTI DALL'ACCELEROMETRO E LE CADUTE IN TEMPO REALE
 
@@ -55,6 +56,7 @@ import java.util.Random;
 import java.util.LinkedList;
 import java.util.List;
 
+
 import it.unipd.dei.rilevatoredicadute.ServiceCronometro.MyBinder;
 import it.unipd.dei.rilevatoredicadute.FindFall.MyBinderText;
 
@@ -89,6 +91,7 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 	//CountDownTimer cdSaveSC = null;
 	//CountDownTimer cdViewSC = null;
 	CountDownTimer cdCrono = null;
+	CountDownTimer cdText = null;
 	int s;
 	int SNT; //stato sessione activity newthird per gestione parametri
 	int year;
@@ -111,6 +114,8 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 	CustomAdapterFalls adapter;	
 	Receiver receiver;		
 	TextReceiver textReceiver;
+	float [] arrayRicevuto = new float[3];
+	boolean VarSavedInstance = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstance) {		
@@ -123,7 +128,7 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 		listView.setAdapter(adapter);
 		cal= new GregorianCalendar();		
 		
-		//COUNT DOWN TIMER PER LA GESTIONE DELLA TEXTVIEW CHE VISUALIZZA LA DURATA DELLA SESSIONE
+		/*//COUNT DOWN TIMER PER LA GESTIONE DELLA TEXTVIEW CHE VISUALIZZA LA DURATA DELLA SESSIONE
 		cdCrono = new CountDownTimer(1000L, 100L) {					
 			@Override
 			public void onTick(long millisUntilFinished) {
@@ -137,27 +142,19 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 				timestampText.setText("0:0:0");			
 			cdCrono.start();								
 			}
-		};				
-				
-		/*cdSaveSC = new CountDownTimer(5000L, 1000L) {					
-			@Override
-			public void onTick(long millisUntilFinished) {
-				// TODO Auto-generated method stub				
-			}					
-			@Override
-			public void onFinish() {
-				rec = true;									
-			}
-		};				
+		};
 		
-		cdViewSC = new CountDownTimer(21000L, 1000L) {					
+		cdText = new CountDownTimer(5000L, 500L) {					
 			@Override
 			public void onTick(long millisUntilFinished) {
-			// TODO Auto-generated method stub			
+			// TODO Auto-generated method stub										
 			}					
 			@Override
-			public void onFinish() {
-				vis = true;					
+			public void onFinish() {						
+				xAccViewS.setText(""+arrayRicevuto[0]);
+				yAccViewS.setText(""+arrayRicevuto[1]);
+				zAccViewS.setText(""+arrayRicevuto[2]);		
+			cdText.start();								
 			}
 		};*/
 		
@@ -166,13 +163,16 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 		pauseBtn = (ImageButton)findViewById(R.id.pause);
 		stopBtn = (ImageButton)findViewById(R.id.stop);		
 		
-		if((savedInstance !=null)){				
+		if((savedInstance !=null)){	
+			VarSavedInstance = true;
+			Log.v("<<SAVED INSTANCE ON>>", "---SAVED INSTANCE ON---");			
 			StampaDurataService = savedInstance.getString("durataCrono");			
 			SNT = savedInstance.getInt("statesession");			
 			data = savedInstance.getString("data");
 			stopTime = savedInstance.getLong("TempoPausa");
 			NS = savedInstance.getString("nomeSessione");
 			cStart = savedInstance.getInt("cMs");
+			Log.v("null","" +NS);
 		}				
 	}
 	
@@ -191,7 +191,44 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 	@Override
 	protected void onStart(){
 		super.onStart();
-		Log.v("TAG", "----INIZIO-THIRD----");			
+		Log.v("TAG", "----INIZIO-THIRD----");
+		
+		//COUNT DOWN TIMER PER LA GESTIONE DELLA TEXTVIEW CHE VISUALIZZA LA DURATA DELLA SESSIONE
+		cdCrono = new CountDownTimer(1000L, 100L) {					
+					@Override
+					public void onTick(long millisUntilFinished) {
+					// TODO Auto-generated method stub										
+					}					
+					@Override
+					public void onFinish() {						
+					if(StampaDurataService != null)	
+						timestampText.setText(""+StampaDurataService+"");
+					else
+						timestampText.setText("0:0:0");			
+					cdCrono.start();								
+					}
+		};
+				
+		cdText = new CountDownTimer(5000L, 500L) {					
+					@Override
+					public void onTick(long millisUntilFinished) {
+					// TODO Auto-generated method stub										
+					}					
+					@Override
+					public void onFinish() {
+						if(arrayRicevuto[0] != 0.0f){
+							xAccViewS.setText(""+arrayRicevuto[0]);
+							yAccViewS.setText(""+arrayRicevuto[1]);
+							zAccViewS.setText(""+arrayRicevuto[2]);
+						}
+						else{
+							xAccViewS.setText("0.0");
+							yAccViewS.setText("0.0");
+							zAccViewS.setText("0.0");
+						}
+					cdText.start();								
+					}
+		};
 		
 		myReceiver = new MyReceiver();
 		receiver = new Receiver();
@@ -208,10 +245,14 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 		
 		db = new MyDBManager(this);	
 		PACKAGE_NAME = getApplicationContext().getPackageName();
-		T = getIntent(); 		        
-        NS = T.getStringExtra(MainActivity.PACKAGE_NAME+".nomeSessione");        
-        s = T.getIntExtra(MainActivity.PACKAGE_NAME+".statoSessione", 3);        
-        
+		T = getIntent(); 
+		if(!(VarSavedInstance)){
+			NS = T.getStringExtra(MainActivity.PACKAGE_NAME+".nomeSessione");
+			Log.v("null","" +NS);
+			        
+		}
+		s = T.getIntExtra(MainActivity.PACKAGE_NAME+".statoSessione", 3);
+		
 		xAccViewS= (TextView) findViewById(R.id.xDataS);
 		yAccViewS= (TextView) findViewById(R.id.yDataS);
 		zAccViewS= (TextView) findViewById(R.id.zDataS);
@@ -222,9 +263,7 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 				playBtn.setVisibility(View.INVISIBLE);
 				pauseBtn.setVisibility(View.VISIBLE);
 				cStart++;
-				//start();
-				//cdSaveSC.start();
-				//cdViewSC.start();				
+				cdText.start();						
 			}
 			else{				
 				playBtn.setVisibility(View.VISIBLE);
@@ -236,9 +275,7 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 				playBtn.setVisibility(View.INVISIBLE);
 				pauseBtn.setVisibility(View.VISIBLE);
 				cStart++;
-				//start();					
-				//cdSaveSC.start();
-				//cdViewSC.start();				
+				cdText.start();								
 			}
 			else{
 				playBtn.setVisibility(View.VISIBLE);
@@ -283,12 +320,9 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 				bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);				
 				startService(TextIntent);
 				bindService(TextIntent, mServiceConnectionText, Context.BIND_AUTO_CREATE);
+				cdText.start();
 				
-				Log.v("List-1","--HO PREMUTO IL TASTO PLAY---");						
-								
-				//cdSaveSC.start();				
-				//cdViewSC.start();
-				//start();				
+				Log.v("List-1","--HO PREMUTO IL TASTO PLAY---");					
 			}						
 		});
 		
@@ -306,10 +340,7 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 			    stopTime = SystemClock.elapsedRealtime();	
 			    TextIntent = new Intent(getApplicationContext(),FindFall.class);
 			    stopService(TextIntent);
-			  	//Log.v("stato sessione third", ""+SNT+"");				
-			    //cdSaveSC.cancel();// DA CONTROLLARE SU ARCHOS
-				//cdViewSC.cancel();				
-				//pause();			    
+			    cdText.cancel();			  		    
 			}				
 		});
 		
@@ -342,11 +373,10 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 				stopService(intent);
 				if(cStart >0)
 					stopService(TextIntent);
-				//cdSaveSC.cancel();
-				//cdViewSC.cancel();
+				
 				cdCrono.cancel();
-				//rec = false;				
-				//stop();					
+				cdText.cancel();
+								
 				Intent UIMA;
 			    UIMA = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(UIMA);
@@ -393,11 +423,14 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 			unbindService(mServiceConnectionText);
 			mServiceBoundText = false;
 		}
-		cdCrono.cancel();		
-		if(s==3){				
-			//cdViewSC.cancel();			
-		}
-		//stop();			
+		cdCrono.cancel();
+		cdText.cancel();					
+	}
+	
+	@Override
+	protected void onRestart(){
+		super.onRestart();	
+		Log.v("NEW THIRD", "ACTIVITY NEWTHIRD RESTART  "+NS);
 	}
 	
 	@Override
@@ -414,7 +447,7 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 		 @Override
 		 public void onReceive(Context arg0, Intent arg1) {
 		  // TODO Auto-generated method stub		  	  
-		  if(SNT !=2)
+		  if(SNT != 2)
 			 StampaDurataService = arg1.getStringExtra("TimeStamp");
 		 }		 
 	}
@@ -434,10 +467,8 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 	private class TextReceiver extends BroadcastReceiver{
 		@Override
 		public void onReceive(Context arg0, Intent arg1){
-			float[] arrayRicevuto = arg1.getFloatArrayExtra("textview");
-			xAccViewS.setText(""+arrayRicevuto[0]);
-			yAccViewS.setText(""+arrayRicevuto[1]);
-			zAccViewS.setText(""+arrayRicevuto[2]);
+			if(SNT != 2)
+				arrayRicevuto = arg1.getFloatArrayExtra("textview");			
 		}
 	}
     private ServiceConnection mServiceConnection = new ServiceConnection() {
