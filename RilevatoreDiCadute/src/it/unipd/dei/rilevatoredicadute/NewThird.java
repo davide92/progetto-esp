@@ -491,7 +491,11 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 				db.updateStatoSessione(SNT, NS);
 				if(SNT == 2){
 					db.inserireTempoPausaSessione(NS, stopTime);					
-				}				
+				}
+				if(mServiceBoundText){
+					unbindService(mServiceConnectionText);
+					mServiceBoundText = false;
+				}
 				startActivity(UIMA);
 			break;
 			}

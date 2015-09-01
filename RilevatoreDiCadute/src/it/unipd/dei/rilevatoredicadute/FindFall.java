@@ -102,7 +102,6 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 		sessione = intent.getStringExtra("nome sessione");
 		Log.v("nomesessione service", sessione);
 		mReceiver = new Intent(this, MyReceiver.class);		
-		thActivity = new Intent();
 		return START_STICKY;
 		//stopSelf();
 	}
@@ -143,6 +142,7 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 					DatiAccelerometro[0] = acData.get(j).getX();
 					DatiAccelerometro[1] = acData.get(j).getY();
 					DatiAccelerometro[2] = acData.get(j).getZ();
+					thActivity = new Intent();
 					thActivity.setAction(TEXTVIEW);
 					thActivity.putExtra("textview", DatiAccelerometro);
 					sendBroadcast(thActivity);
