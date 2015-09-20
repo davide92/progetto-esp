@@ -166,6 +166,16 @@ public Cursor selectSession(String nameSession){
 	 		 return crs;
 	 	}
  
+ public int CountSession(){	 
+		
+	 SQLiteDatabase db = dbhelper.getReadableDatabase();
+	 Cursor mCount= db.rawQuery("select count(*) from "+MyDBHelper.TABLE_SESSIONE+";", null);
+	 mCount.moveToFirst();
+	 int count= mCount.getInt(0);
+	 mCount.close();
+	 return count;
+ }
+ 
  public int CountCaduta(String nameSession){	 
 	
 	 SQLiteDatabase db = dbhelper.getReadableDatabase();
@@ -174,6 +184,18 @@ public Cursor selectSession(String nameSession){
 	 int count= mCount.getInt(0);
 	 mCount.close();
 	 return count;
+ }
+ 
+ public boolean notSessSameName(String session){
+	 SQLiteDatabase database = dbhelper.getReadableDatabase();
+	 String sql = "select count(*) from "+MyDBHelper.TABLE_SESSIONE+ " where "+MyDBHelper.COL_NOME+ " = '"+ session +"';" ; 
+	 Cursor cur = database.rawQuery(sql, null);
+	 cur.moveToFirst();
+	 int count = cur.getInt(0);
+	 cur.close();
+	 if(count == 0)
+		 return true;
+	 return false;
  }
  
  public boolean notFallSameHour(String session, String hour){

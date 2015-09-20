@@ -28,7 +28,6 @@ import android.os.IBinder;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Vibrator;
 
 public class FindFall extends Service implements SensorEventListener, LocationListener{
 	long it = 0;

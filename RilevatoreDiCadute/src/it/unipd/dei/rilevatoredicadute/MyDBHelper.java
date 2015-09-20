@@ -41,7 +41,7 @@ public class MyDBHelper extends SQLiteOpenHelper {
 		String CREATE_SESSIONE_TABLE = "CREATE TABLE "
 	                + TABLE_SESSIONE + "("	                
              		+ COL_IDS        +   " INTEGER PRIMARY KEY AUTOINCREMENT, " 
-             		+ COL_NOME 	     +   " TEXT UNIQUE NOT NULL, "
+             		+ COL_NOME 	     +   " TEXT NOT NULL, "
              		+ COL_DATA       +   " TEXT NOT NULL, "
 	                + COL_ORA        +   " TEXT NOT NULL, " 
              		+ COL_DURATA     +   " TEXT NOT NULL, "  

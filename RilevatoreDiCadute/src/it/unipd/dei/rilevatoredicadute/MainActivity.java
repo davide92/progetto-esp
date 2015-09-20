@@ -170,7 +170,7 @@ public class MainActivity extends ActionBarActivity {
 		case R.id.nuovaSessione:{
 			if(!(noSessioneInCorso)){
 				Intent NS= new Intent(getApplicationContext(),NewThird.class);
-				String par="Sessione "+(db.MaxIDSessione()+1)+"";
+				String par="Sessione "/*+(db.MaxIDSessione()+1)+""*/ + findNumSess();
 				NS.putExtra(PACKAGE_NAME+".nomeSessione", par);
 				startActivity(NS);
 			}
@@ -189,6 +189,16 @@ public class MainActivity extends ActionBarActivity {
 		return true;		
 	}
 	
+	private int findNumSess(){
+		int i;
+		int count = db.CountSession();
+		for(i=1; i<(count+1); i++){
+			if(db.notSessSameName("Sessione "+i)){
+				break;
+			}
+		}
+		return i;
+	}
 	
 	@Override
 	public void onBackPressed() {		
