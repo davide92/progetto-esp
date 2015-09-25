@@ -310,7 +310,9 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 				String ora = ""+hours+ ":" + minutes+ ":" +seconds+"";	
 				Random rm = new Random();
 				int cl = Color.argb(255, rm.nextInt(254), rm.nextInt(254), rm.nextInt(254));
-				db.addSessione(NS, data, ora, "XX:XX:XX", 0, cl, 1, 0);													
+				if(db.notSessSameName(NS)){
+						db.addSessione(NS, data, ora, "XX:XX:XX", 0, cl, 1, 0);
+				}
 				if ( stopTime != 0 ){
 					long intervalloPausa = (SystemClock.elapsedRealtime() - stopTime);
 					intent.putExtra("pausa",intervalloPausa);
@@ -322,7 +324,7 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 				bindService(TextIntent, mServiceConnectionText, Context.BIND_AUTO_CREATE);
 				cdText.start();
 				
-				Log.v("List-1","--HO PREMUTO IL TASTO PLAY---");					
+				Log.v("List-1","--HO PREMUTO IL TASTO PLAY---");				
 			}						
 		});
 		
@@ -338,7 +340,16 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 				pauseBtn.setVisibility(View.INVISIBLE);
 				Log.v("List-2","--HO PREMUTO IL TASTO PAUSE--");				
 			    stopTime = SystemClock.elapsedRealtime();	
-			    TextIntent = new Intent(getApplicationContext(),FindFall.class);
+			    //TextIntent = new Intent(getApplicationContext(),FindFall.class);
+			   	//stopService(TextIntent);		    
+			    if (mServiceBound) {
+					 unbindService(mServiceConnection);
+					 mServiceBound = false;
+					 }
+				if(mServiceBoundText){
+					unbindService(mServiceConnectionText);
+					mServiceBoundText = false;
+				}
 			    stopService(TextIntent);
 			    cdText.cancel();			  		    
 			}				
@@ -368,8 +379,8 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 					mServiceBoundText = false;
 				}
 				
-				Intent intent = new Intent(getApplicationContext(), ServiceCronometro.class);				 
-				TextIntent = new Intent(getApplicationContext(),FindFall.class);
+				//Intent intent = new Intent(getApplicationContext(), ServiceCronometro.class);				 
+				//TextIntent = new Intent(getApplicationContext(),FindFall.class);
 				stopService(intent);
 				if(cStart >0)
 					stopService(TextIntent);

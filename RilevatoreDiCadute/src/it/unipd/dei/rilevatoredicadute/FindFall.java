@@ -39,7 +39,7 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 	private float zValLast;
 	Intent mReceiver = null;
 	Intent thActivity = null;
-	private float alpha=(float)10;
+	private float alpha=(float)15;
 	String sessione;
 	public static final String BROADCAST = "it.unipd.dei.rilevatoredicadute.android.action.broadcast";
 	public static final String TEXTVIEW = "Gestione Textview";
@@ -303,7 +303,6 @@ private void stop(){
 		 return FindFall.this;
 	 }
  }
- 
 	public void onDestroy(){
 		super.onDestroy();	
 		stop();
