@@ -42,18 +42,21 @@
             
         <activity
             android:name=".Delete"
-            android:label="@string/title_activity_delete" >
+            android:label="@string/title_activity_delete" 
+            android:noHistory="true">
         </activity>
        
         
           <activity
             android:name=".DeleteFall"
-            android:label="@string/title_activity_delete_fall" >
+            android:label="@string/title_activity_delete_fall"
+			android:noHistory="true">
           </activity>
         
          <service
             android:name=".FindFall"
             android:exported="false" />
+         
         <receiver android:name=".MyReceiver">            
         </receiver>
         

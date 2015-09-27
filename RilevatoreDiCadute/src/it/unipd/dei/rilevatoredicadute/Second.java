@@ -36,7 +36,7 @@ public class Second extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Intent intent=getIntent();		    
-		nS=intent.getStringExtra(MainActivity.PACKAGE_NAME+".nameSession");	
+		nS=intent.getStringExtra("nameSession");	
 		Bundle extra = intent.getExtras();
 		bm = (Bitmap)extra.getParcelable("image");
 	    setContentView(R.layout.activity_second);
@@ -131,16 +131,16 @@ public class Second extends ActionBarActivity {
 	public boolean onCreateOptionsMenu(Menu menu){
 		super.onCreateOptionsMenu(menu);
     	//MenuItem meIt1 = menu.add(0, R.id.nuovaSessione, 1, "Nuova Sessione"); 
-    	MenuItem meIt2 = menu.add(0, R.id.delete, 2, "Elimina caduta");
+    	/*MenuItem meIt2 =*/ menu.add(0, R.id.delete, 2, "Elimina caduta");
     	
     	//meIt1.setIntent(new Intent(this, NewThird.class));
-    	Intent del = new Intent(this, DeleteFall.class);
+    	/*Intent del = new Intent(this, DeleteFall.class);
     	del.putExtra("session", nomeSessione.getText());
      	del.putExtra("color", cl);
     	Bundle extra = new Bundle();
     	extra.putParcelable("image", bm);
     	del.putExtras(extra);
-    	meIt2.setIntent(del);
+    	meIt2.setIntent(del);*/
     	
     	return true;
     } 
@@ -151,10 +151,20 @@ public class Second extends ActionBarActivity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		/*if (id == R.id.action_settings) {
 			return true;
 		}
-		return super.onOptionsItemSelected(item);
+		return super.onOptionsItemSelected(item);*/
+		if(id == R.id.delete){
+			Intent del = new Intent(this, DeleteFall.class);
+	    	del.putExtra("session", nomeSessione.getText());
+	     	del.putExtra("color", cl);
+	    	Bundle extra = new Bundle();
+	    	extra.putParcelable("image", bm);
+	    	del.putExtras(extra);
+	    	startActivity(del);
+		}
+		return true;
 	}
 
 

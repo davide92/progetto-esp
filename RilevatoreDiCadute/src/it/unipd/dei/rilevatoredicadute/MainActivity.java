@@ -116,7 +116,7 @@ public class MainActivity extends ActionBarActivity {
     				Bundle extra = new Bundle();
     				extra.putParcelable("image", b);    				   		
     				UI2 = new Intent(getApplicationContext(), Second.class);    		
-    				UI2.putExtra(PACKAGE_NAME+".nameSession", ((Dati)adapter.getItemAtPosition(position)).getNomeSessione()); 
+    				UI2.putExtra("nameSession", ((Dati)adapter.getItemAtPosition(position)).getNomeSessione()); 
     				UI2.putExtras(extra);
     				UI2.putExtra("color", ((Dati)adapter.getItemAtPosition(position)).getColor());    				
     				startActivity(UI2);    				

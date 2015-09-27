@@ -7,7 +7,7 @@
     <string name="delete">Cancella</string>    
     <string name="textDurata">Durata--></string>
     <string name="textCadute">Cadute:</string>    
-    <string name="title_activity_second">Dettagli</string>
+    <string name="title_activity_second">Dettagli Sessione</string>
     <string name="inizio">Inizio Sessione</string>
     <string name="txDataInizio">Data Inizio-></string>
     <string name="txOraInizio">Ora Inizio-></string>

@@ -84,7 +84,7 @@ public class DeleteFall extends ActionBarActivity {
 			durataSessione.setText(crs.getString(3));		   
 		}        
         Log.v("nome sessione---->",""+nS+"");
-        c.close();
+        //c.close();
         crs.close();		
 		 
 	     FallLV.setOnItemClickListener(new OnItemClickListener(){
@@ -99,6 +99,7 @@ public class DeleteFall extends ActionBarActivity {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					db.deleteCaduta(((DatiCadute)fa.getItemAtPosition(pos)).getSessione(), ((DatiCadute)fa.getItemAtPosition(pos)).getHour());
+					db.close();
 					Intent UI2 = new Intent(getApplicationContext(), Second.class);
 					UI2.putExtra("nameSession", nomeSessione.getText());
 			    	UI2.putExtra("color", cl);
@@ -121,7 +122,7 @@ public class DeleteFall extends ActionBarActivity {
     	}
     	
         });
-	     crs.close();
+	    //crs.close();
             
 	}
 	@Override
