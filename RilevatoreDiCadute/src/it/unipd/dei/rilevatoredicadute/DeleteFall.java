@@ -28,6 +28,7 @@ public class DeleteFall extends ActionBarActivity {
 	String nS;
 	int countFalls=0;
 	TextView nomeSessione;
+	Bitmap bm;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,7 @@ public class DeleteFall extends ActionBarActivity {
 		Intent intent=getIntent();		    
 		nS=intent.getStringExtra("session");
 		Bundle extra = intent.getExtras();
-		final Bitmap bm = (Bitmap)extra.getParcelable("image");
+		bm = (Bitmap)extra.getParcelable("image");
 	    setContentView(R.layout.activity_second);
 	    ImageView image = (ImageView)findViewById(R.id.picture2);
 	    cl = intent.getIntExtra("color", 0);
@@ -142,5 +143,17 @@ public class DeleteFall extends ActionBarActivity {
 	    {
 	        db.close();
 	    }
+	}
+	
+	@Override
+	public void onBackPressed() {
+		Intent UI2 = new Intent(this, Second.class);
+		Bundle extra = new Bundle();
+		extra.putParcelable("image", bm);
+		UI2.putExtra("nameSession", nS);
+		UI2.putExtras(extra);
+		UI2.putExtra("color", cl);
+		startActivity(UI2);
+		super.onBackPressed();
 	}
 }

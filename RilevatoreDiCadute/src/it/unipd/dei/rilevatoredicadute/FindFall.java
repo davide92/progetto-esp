@@ -248,11 +248,11 @@ private void start(){
 		accel = mysm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		if(mysm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null){
 			mysm.registerListener((SensorEventListener) this, accel,  SensorManager.SENSOR_DELAY_NORMAL);
-			GregorianCalendar cal = new GregorianCalendar(); 
+			/*GregorianCalendar cal = new GregorianCalendar(); 
 			year = cal.get(GregorianCalendar.YEAR);
 			month = cal.get(GregorianCalendar.MONTH)+1;
 			day = cal.get(GregorianCalendar.DAY_OF_MONTH);			
-			date = "" + year + month + day ;				
+			date = "" + year + month + day ;*/				
 			Log.v("SENSORE ACCELEROMETRO----->","ACCELEROMETRO REGISTRATO");			
 		}
 }
@@ -274,8 +274,8 @@ private void stop(){
 		locMg.removeUpdates(this);
 	}
 	
-	if(!(lastFileName.equals(date))){
-		lastFileName = date;				
+	if(!(lastFileName.equals(sessione))){
+		lastFileName = sessione;				
 		}
 		
 	try {
@@ -291,7 +291,7 @@ private void stop(){
 	
 	if(i < acData.size()){
 		try {
-			fo = openFileOutput(date, Context.MODE_APPEND);
+			fo = openFileOutput(sessione, Context.MODE_APPEND);
 			while(i < acData.size()){
 				fo.write(("" + acData.get(i).getT() + " " + acData.get(i).getX() + " " + acData.get(i).getY() + " " + acData.get(i).getZ() + '\n').getBytes());
 				i++;

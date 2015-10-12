@@ -85,9 +85,9 @@ public class MainActivity extends ActionBarActivity {
             list.add(new Dati(crs.getString(1),day, month, year,hour, minutes, seconds, durataSessione, falls, cl, state));           
         	}while(crs.moveToNext());//fine while
         }
-        else{
+       /* else{
         	list.add(new Dati());
-        }//fine IF
+        }//fine IF*/
         crs.close();        
         Log.v("NOME SESSIONE IN CORSO MA",""+NSC+"");
         
@@ -118,7 +118,7 @@ public class MainActivity extends ActionBarActivity {
     				UI2 = new Intent(getApplicationContext(), Second.class);    		
     				UI2.putExtra("nameSession", ((Dati)adapter.getItemAtPosition(position)).getNomeSessione()); 
     				UI2.putExtras(extra);
-    				UI2.putExtra("color", ((Dati)adapter.getItemAtPosition(position)).getColor());    				
+    				UI2.putExtra("color", ((Dati)adapter.getItemAtPosition(position)).getColor());
     				startActivity(UI2);    				
     			}
         	}

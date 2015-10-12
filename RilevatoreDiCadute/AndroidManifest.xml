@@ -27,7 +27,8 @@
         </activity>
         <activity
             android:name=".Second"
-            android:label="@string/title_activity_second" >
+            android:label="@string/title_activity_second" 
+            android:noHistory="true">
         </activity>
         <activity
             android:name=".NewThird"

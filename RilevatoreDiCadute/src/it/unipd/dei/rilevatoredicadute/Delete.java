@@ -54,9 +54,9 @@ public class Delete extends ActionBarActivity {
             	list.add(new Dati(crs.getString(1),day, month, year,hour, minutes, seconds, durataSessione, falls, cl, state));
             }while(crs.moveToNext());//fine while
         }
-        else{
+        /*else{
         	list.add(new Dati());
-        }
+        }*/
         //crs.close();
         
         CustomAdapter adapter = new CustomAdapter(this, R.layout.list_items, list);
@@ -72,9 +72,11 @@ public class Delete extends ActionBarActivity {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					db.deleteSessione(((Dati)a.getItemAtPosition(pos)).getNomeSessione());
-					db.deleteCadute(((Dati)a.getItemAtPosition(pos)).getNomeSessione());
+					String session = ((Dati)a.getItemAtPosition(pos)).getNomeSessione();
+					db.deleteSessione(session);
+					db.deleteCadute(session);
 					db.close();
+					getApplicationContext().deleteFile(session);
 					Intent UI2 = new Intent(getApplicationContext(), MainActivity.class);
 		         	startActivity(UI2);
 				}
