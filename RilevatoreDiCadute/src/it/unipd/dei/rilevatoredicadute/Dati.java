@@ -2,31 +2,31 @@ package it.unipd.dei.rilevatoredicadute;
 
 public class Dati {
 	
-	private int year;
-	private int month;
-	private int day;
-	private int hour;
-	private int minute;
-	private int second;
-	private int falls;
-	private int cl;
-	private int state;
+	private int anno;
+	private int mese;
+	private int giorno;
+	private int ora;
+	private int minuti;
+	private int secondi;
+	private int cadute;
+	private int colore;
+	private int stato;
 	private String nomeSessione;
 	private String durataSessione;
 	
 	
 	public Dati(String nS, int d, int m, int y, int h, int min, int sec, String dS, int fal, int col, int sta){
 		nomeSessione = nS;
-		day = d;
-		month = m;
-		year = y;
-		hour = h;
-		minute = min;
-		second = sec;
+		giorno = d;
+		mese = m;
+		anno = y;
+		ora = h;
+		minuti = min;
+		secondi = sec;
 		durataSessione = dS;
-		falls=fal;
-		cl = col;
-		state=sta;
+		cadute=fal;
+		colore = col;
+		stato=sta;
 	}
 	
 	public Dati(){
@@ -40,50 +40,49 @@ public class Dati {
 	}
 	
 	public void setData(int d, int m, int y){
-		day = d;
-		month = m;
-		year = y;
+		giorno = d;
+		mese = m;
+		anno = y;
 	}
 	
-	public void setHour(int h, int min, int sec){
-		hour = h;
-		minute = min;
-		second = sec;
-	}
-	
-		
-	public String getNomeSessione(){
-		return nomeSessione;
-	}
-
-	public String getData(){
-		return(Integer.toString(day)+ "/" + Integer.toString(month) + "/" + Integer.toString(year));
-	}
-	
-	public String getHour(){
-		return(Integer.toString(hour)+ ":" + Integer.toString(minute) + ":" + Integer.toString(second));
-	}
-	
-	public String getDurataSessione(){
-		return durataSessione;
+	public void setOra(int h, int min, int sec){
+		ora = h;
+		minuti = min;
+		secondi = sec;
 	}
 	
 	public void setSessione(String ds){
 		durataSessione=ds;
 	}
 	
-	public int getFalls(){
-		return falls;
+	public void setStato(int s){
+		stato=s;
 	}
-	public int getColor(){
-		return cl;
+		
+	public String getNomeSessione(){
+		return nomeSessione;
+	}
+
+	public String getData(){
+		return(Integer.toString(giorno)+ "/" + Integer.toString(mese) + "/" + Integer.toString(anno));
 	}
 	
-	public void setState(int s){
-		state=s;
+	public String getOra(){
+		return(Integer.toString(ora)+ ":" + Integer.toString(minuti) + ":" + Integer.toString(secondi));
 	}
 	
-	public int getState(){
-		return state;
+	public String getDurataSessione(){
+		return durataSessione;
+	}
+	
+	public int getCadute(){
+		return cadute;
+	}
+	public int getColore(){
+		return colore;
+	}
+	
+	public int getStato(){
+		return stato;
 	}
 }

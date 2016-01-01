@@ -33,7 +33,7 @@ public class Delete extends ActionBarActivity {
         final ListView listView = (ListView) findViewById(R.id.listView1);
         List<Dati> list = new LinkedList<Dati>();       
         
-        crs=db.selectAllSessions();         
+        crs=db.selezTutteSessioni();         
         if(crs.moveToFirst()){
         	do{
         		String strData = crs.getString(crs.getColumnIndex("DataInizio"));
@@ -47,7 +47,7 @@ public class Delete extends ActionBarActivity {
         		int hour=Integer.parseInt(oraf[0]);  
         		int minutes=Integer.parseInt(oraf[1]);  
         		int seconds=Integer.parseInt(oraf[2]); 
-        		int falls=db.CountCaduta(crs.getString(1));
+        		int falls=db.contaCadute(crs.getString(1));
         		int cl = crs.getInt(crs.getColumnIndex("Colore"));
         		int state =crs.getInt(crs.getColumnIndex("Stato"));
         		durataSessione = crs.getString(crs.getColumnIndex("Durata")); 
@@ -73,8 +73,8 @@ public class Delete extends ActionBarActivity {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					String session = ((Dati)a.getItemAtPosition(pos)).getNomeSessione();
-					db.deleteSessione(session);
-					db.deleteCadute(session);
+					db.cancSessione(session);
+					db.cancCadute(session);
 					db.close();
 					getApplicationContext().deleteFile(session);
 					Intent UI2 = new Intent(getApplicationContext(), MainActivity.class);

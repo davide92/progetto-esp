@@ -25,17 +25,17 @@ import android.graphics.LightingColorFilter;
 
 public class Second extends ActionBarActivity {
 	
-	private int cl;
+	private int cl; //colore immagine
 	MyDBManager db;
-	String nS;
-	int countFalls=0;
-	Bitmap bm;
+	String nS; //nome sessione
+	int contaCadute = 0;
+	Bitmap bm; //immagine
 	TextView nomeSessione;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Intent intent=getIntent();		    
+		Intent intent = getIntent();		    
 		nS=intent.getStringExtra("nameSession");	
 		Bundle extra = intent.getExtras();
 		bm = (Bitmap)extra.getParcelable("image");
@@ -48,14 +48,15 @@ public class Second extends ActionBarActivity {
 	    ListView FallLV = (ListView) findViewById(R.id.listViewCadute);
 	    List<DatiCadute> FallList = new LinkedList<DatiCadute>();
 	   
-        db=new MyDBManager(this);
-        Cursor crs=db.selectSession(nS);
+        db = new MyDBManager(this);
+        //recupero dati della sessione selezionata nella main activity
+        Cursor crs = db.selezSessione(nS);
         nomeSessione = (TextView)findViewById(R.id.nomeSessione);
         TextView data = (TextView)findViewById(R.id.data);
         TextView ora = (TextView)findViewById(R.id.ora);
         TextView durataSessione = (TextView)findViewById(R.id.durataSessione);		
         //Dati d = getItem(position);
-        //picture.setImage();
+        //picture.setImage();        
         if (crs.moveToFirst()){
         	nomeSessione.setText(crs.getString(0));
         	data.setText(crs.getString(1));
@@ -64,23 +65,24 @@ public class Second extends ActionBarActivity {
         }        
         Log.v("nome sessione---->",""+nS+"");
         crs.close();		
-        		 
-        Cursor c=db.selectCaduta(nS);                      
+        
+        //recupero dati di tutte le cadute della sessione selezionata nella main activity
+        Cursor c = db.selezCaduta(nS);                      
         if(c.moveToFirst()){
         	do{
-            String strData = c.getString(c.getColumnIndex("DataCaduta"));
-            String[] dataf=strData.split("/");
-            int day=Integer.parseInt(dataf[0]);  
-            int month=Integer.parseInt(dataf[1]);  
-            int year=Integer.parseInt(dataf[2]);
-
-            String strTime = c.getString(c.getColumnIndex("OraCaduta"));
-            String[] oraf=strTime.split(":");
-            int hour=Integer.parseInt(oraf[0]);  
-            int minutes=Integer.parseInt(oraf[1]);  
-            int seconds=Integer.parseInt(oraf[2]);           	
-            
-            FallList.add(new DatiCadute(day, month, year,hour, minutes, seconds, (c.getString(2)), (c.getString(3)),nS));           
+		        String strData = c.getString(c.getColumnIndex("DataCaduta"));
+		        String[] dataf=strData.split("/");
+		        int giorno=Integer.parseInt(dataf[0]);  
+		        int mese=Integer.parseInt(dataf[1]);  
+		        int anno=Integer.parseInt(dataf[2]);
+		
+		        String strTime = c.getString(c.getColumnIndex("OraCaduta"));
+		        String[] oraf=strTime.split(":");
+		        int ore = Integer.parseInt(oraf[0]);  
+		        int minuti = Integer.parseInt(oraf[1]);  
+		        int secondi = Integer.parseInt(oraf[2]);           	
+		        
+		        FallList.add(new DatiCadute(giorno, mese, anno,ore, minuti, secondi, (c.getString(2)), (c.getString(3)),nS));           
         	}while(c.moveToNext());//fine while
         }
         else{
@@ -91,12 +93,12 @@ public class Second extends ActionBarActivity {
         CustomAdapterFalls FALLadapter = new CustomAdapterFalls(this, R.layout.fall_item, FallList);
 	    FallLV.setAdapter(FALLadapter);        
         FallLV.setOnItemClickListener(new OnItemClickListener(){
-	     public void onItemClick(AdapterView<?> FALLadapter, View v, int position, long id){	    	 	
+	    public void onItemClick(AdapterView<?> FALLadapter, View v, int position, long id){	    	 	
 	    	 	
 	    	   	Intent UI4 = new Intent(getApplicationContext(), Fourth.class);
 	    	   	UI4.putExtra(MainActivity.PACKAGE_NAME+".nameSession", nS);
 	    	   	UI4.putExtra(MainActivity.PACKAGE_NAME+".dataCaduta", ((DatiCadute) FALLadapter.getItemAtPosition(position)).getData());
-	    	   	UI4.putExtra(MainActivity.PACKAGE_NAME+".oraCaduta", ((DatiCadute) FALLadapter.getItemAtPosition(position)).getHour());
+	    	   	UI4.putExtra(MainActivity.PACKAGE_NAME+".oraCaduta", ((DatiCadute) FALLadapter.getItemAtPosition(position)).getOra());
 	    	   	UI4.putExtra(MainActivity.PACKAGE_NAME+".longitudine", ((DatiCadute) FALLadapter.getItemAtPosition(position)).getLongitudine());
 	    	   	UI4.putExtra(MainActivity.PACKAGE_NAME+".latitudine", ((DatiCadute) FALLadapter.getItemAtPosition(position)).getLatitudine());
 	    	   	Bundle extra = new Bundle();
@@ -106,8 +108,9 @@ public class Second extends ActionBarActivity {
 	        	startActivity(UI4);
 	        	
 	        	}
-	        });     
+	       });     
 	}
+	
 	@Override
 	protected void onDestroy() 
 	{

@@ -22,10 +22,10 @@ public class CustomAdapter extends ArrayAdapter<Dati>{
 	public View getView( int position, View convertView, ViewGroup parent){
 		LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		Dati d = getItem(position);
-		if(d.getState() == 0){
+		if(d.getStato() == 0){
 			convertView = inflater.inflate(R.layout.list_items, null);
 			ImageView thumbnail = (ImageView)convertView.findViewById(R.id.picture);
-			int cl = list.get(position).getColor();
+			int cl = list.get(position).getColore();
 			ColorFilter filter = new LightingColorFilter(Color.WHITE, cl);
 			thumbnail.setColorFilter(filter);
 			TextView nomeSessione = (TextView)convertView.findViewById(R.id.nomeSessione);
@@ -33,13 +33,13 @@ public class CustomAdapter extends ArrayAdapter<Dati>{
 			TextView durataSessione = (TextView)convertView.findViewById(R.id.durataSessione);
 			TextView numeroCadute = (TextView)convertView.findViewById(R.id.numeroCadute);
 			nomeSessione.setText(d.getNomeSessione());
-			dataEora.setText(d.getData() + " " + d.getHour());
+			dataEora.setText(d.getData() + " " + d.getOra());
 			durataSessione.setText(d.getDurataSessione());
-			numeroCadute.setText(Integer.toString(d.getFalls()));
+			numeroCadute.setText(Integer.toString(d.getCadute()));
 		}else{
 			convertView = inflater.inflate(R.layout.list_items_2, null);
 			ImageView thumbnail = (ImageView)convertView.findViewById(R.id.picture);
-			int cl = list.get(position).getColor();
+			int cl = list.get(position).getColore();
 			ColorFilter filter = new LightingColorFilter(Color.WHITE, cl);
 			thumbnail.setColorFilter(filter);
 			TextView nomeSessione = (TextView)convertView.findViewById(R.id.nomeSessione);
@@ -47,9 +47,9 @@ public class CustomAdapter extends ArrayAdapter<Dati>{
 			TextView durataSessione = (TextView)convertView.findViewById(R.id.durataSessione);
 			TextView numeroCadute = (TextView)convertView.findViewById(R.id.numeroCadute);
 			nomeSessione.setText(d.getNomeSessione());
-			dataEora.setText(d.getData() + " " + d.getHour());
+			dataEora.setText(d.getData() + " " + d.getOra());
 			durataSessione.setText(d.getDurataSessione());
-			numeroCadute.setText(Integer.toString(d.getFalls()));
+			numeroCadute.setText(Integer.toString(d.getCadute()));
 			nomeSessione.setTextColor(Color.BLUE);
 			dataEora.setTextColor(Color.BLUE);
 			durataSessione.setTextColor(Color.BLUE);

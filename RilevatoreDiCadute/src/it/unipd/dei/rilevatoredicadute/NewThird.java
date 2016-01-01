@@ -1,5 +1,3 @@
-
-
 //  CLASSE PER LA GESTIONE DELLA SESSIONE: QUI SI PUO' COMINCIARE UNA NUOVA SESSIONE, METTERLA IN PAUSA, STOPPARLA,
 //  SONO VISUALIZZATI I DATI PROVENIENTI DALL'ACCELEROMETRO E LE CADUTE IN TEMPO REALE
 
@@ -72,7 +70,7 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 	//private ArrayList<AccelData> acData = new ArrayList<AccelData>(15000);	
 	//private double latitude, longitude;	
 	private  ListView listView;
-	private List<DatiCadute> fallList;	
+	private List<DatiCadute> fallList;//lista delle cadute temporanea 
 	long it = 0;	
 	TextView timestampText;
 	TextView xAccViewS = null;
@@ -90,8 +88,14 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 	Intent mService = null;
 	//CountDownTimer cdSaveSC = null;
 	//CountDownTimer cdViewSC = null;
-	CountDownTimer cdCrono = null;
-	CountDownTimer cdText = null;
+	CountDownTimer cdCrono = null; //conto alla rovescia perla visualizzazione dati del cronometro
+	CountDownTimer cdText = null; //conto alla rovescia per la visualizzazione dati accelerometro
+	/*memorizza stato della sessione
+	  0 -> activity stoppata
+	  1 -> activity avviata
+	  2 -> activity in pausa
+	  3 -> cambio rotazione schermo
+	 */
 	int s;
 	int SNT; //stato sessione activity newthird per gestione parametri
 	int year;
@@ -115,7 +119,7 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 	Receiver receiver;		
 	TextReceiver textReceiver;
 	float [] arrayRicevuto = new float[3];
-	boolean VarSavedInstance = false;
+	boolean VarSavedInstance = false; //variabile per sapere se è stata salvata l'istanza dell'activity
 	
 	@Override
 	protected void onCreate(Bundle savedInstance) {		
@@ -253,13 +257,13 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 		}
 		s = T.getIntExtra(MainActivity.PACKAGE_NAME+".statoSessione", 3);
 		
-		xAccViewS= (TextView) findViewById(R.id.xDataS);
-		yAccViewS= (TextView) findViewById(R.id.yDataS);
-		zAccViewS= (TextView) findViewById(R.id.zDataS);
-		tx=(TextView)findViewById(R.id.TestoSessCurr);        
+		xAccViewS = (TextView) findViewById(R.id.xDataS);
+		yAccViewS = (TextView) findViewById(R.id.yDataS);
+		zAccViewS = (TextView) findViewById(R.id.zDataS);
+		tx = (TextView)findViewById(R.id.TestoSessCurr);        
         tx.setText(NS);     
-		if(s==3){//GESTIONE ORIENTAMENTO TELEFONO: s==3 SIGNIFICA CHE L'ORIENTAMENTO DELLO SCHERMO E' CAMBIATA
-			if(SNT==1){				
+		if(s == 3){//GESTIONE ORIENTAMENTO TELEFONO: s==3 SIGNIFICA CHE L'ORIENTAMENTO DELLO SCHERMO E' CAMBIATA
+			if(SNT == 1){				
 				playBtn.setVisibility(View.INVISIBLE);
 				pauseBtn.setVisibility(View.VISIBLE);
 				cStart++;
@@ -271,7 +275,7 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 			}
 		}else{
 			SNT = s;
-			if(s==1){
+			if(s == 1){
 				playBtn.setVisibility(View.INVISIBLE);
 				pauseBtn.setVisibility(View.VISIBLE);
 				cStart++;
@@ -284,11 +288,11 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 			}
 		}		
 		intent = new Intent(getApplicationContext(), ServiceCronometro.class);		
-		TextIntent = new Intent(getApplicationContext(),FindFall.class);
+		TextIntent = new Intent(getApplicationContext(), FindFall.class);
 		TextIntent.putExtra("nome sessione", NS);
 		
 		cdCrono.start();
-		updateUI();
+		updateUI();//aggiornamento interfaccia utente
 		
 		
 		playBtn.setOnClickListener(new View.OnClickListener() {					
@@ -310,8 +314,8 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 				String ora = ""+hours+ ":" + minutes+ ":" +seconds+"";	
 				Random rm = new Random();
 				int cl = Color.argb(255, rm.nextInt(254), rm.nextInt(254), rm.nextInt(254));
-				if(db.notSessSameName(NS)){
-						db.addSessione(NS, data, ora, "XX:XX:XX", 0, cl, 1, 0);
+				if(db.noSessStessoNome(NS)){
+						db.aggSessione(NS, data, ora, "XX:XX:XX", 0, cl, 1, 0);
 				}
 				if ( stopTime != 0 ){
 					long intervalloPausa = (SystemClock.elapsedRealtime() - stopTime);
@@ -365,8 +369,8 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 				SNT = 0;
 				Log.v("List-3","--HO PREMUTO IL TASTO STOP--");								
 				String ora=StampaDurataService;				
-				db.updateDurataSessione(ora,NS);
-				db.updateStatoSessione(SNT, NS);
+				db.aggiornaDurataSessione(ora,NS);
+				db.aggiornaStatoSessione(SNT, NS);
 								
 				Log.v("stopSessione------->",""+NS+"");
 				
@@ -463,6 +467,7 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 		 }		 
 	}
 	
+	//receiver che fa vibrare il dispositivo e aggiorna l'interfaccia utente avvenuta una caduta
 	private class Receiver extends BroadcastReceiver{			
 		@Override
 		public void onReceive(Context arg0, Intent arg1) {
@@ -530,7 +535,7 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 				Intent UIMA;
 				UIMA = new Intent(getApplicationContext(), MainActivity.class);
 				Log.v("---","---");										
-				db.updateStatoSessione(SNT, NS);
+				db.aggiornaStatoSessione(SNT, NS);
 				if(SNT == 2){
 					db.inserireTempoPausaSessione(NS, stopTime);					
 				}
@@ -702,13 +707,16 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 		accel = null;
 		
 	}*/
+		//metodo peraggiornala la UI nel caso di una caduta rilevata
 		private void updateUI() {
 			//Log.v("updateUI", "inzio");
+			//cancellazione dei dati salvati e visualizzati precedentemente
 			if(fallList.size() > 0){
 				fallList.clear();
 			}
-			adapter.clear();			
-			Cursor crs = db.selectCaduta(NS);
+			adapter.clear();
+			//lettura di tutte le cadute avvenute nella sessione
+			Cursor crs = db.selezCaduta(NS);
 			if(crs.moveToFirst()){
 				do{
 					String strData = crs.getString(crs.getColumnIndex("DataCaduta"));
@@ -726,18 +734,8 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 			        fallList.add(new DatiCadute(day, month, year, hour, minutes, seconds, lat, longi, NS));
 				    //adapter.add(new DatiCadute(day, month, year, hour, minutes, seconds, lat, longi, NS));
 				}while(crs.moveToNext());
-				
-				adapter.notifyDataSetChanged();				
-						/*runOnUiThread(new Runnable() {							
-							@Override
-							public void run() {
-								adapter.clear();
-								for(int i = 0; i<fallList.size(); i++){
-									adapter.add(fallList.get(i));
-								}
-								adapter.notifyDataSetChanged();
-							}
-						});*/			       				
+				//avviso della presenza di una nuova caduta
+				adapter.notifyDataSetChanged();								       				
 			}
 			crs.close();
 		}	

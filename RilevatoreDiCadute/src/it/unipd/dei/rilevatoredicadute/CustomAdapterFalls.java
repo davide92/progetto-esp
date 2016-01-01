@@ -26,7 +26,7 @@ public class CustomAdapterFalls extends ArrayAdapter<DatiCadute>{
 		latVal.setText((dc.getLatitudine()));
 		longVal.setText((dc.getLongitudine()));
 		data.setText(dc.getData()+"  ");
-		ora.setText(" "+dc.getHour());
+		ora.setText(" "+dc.getOra());
 		return convertView;
 	}	
 }

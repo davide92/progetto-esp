@@ -2,26 +2,26 @@ package it.unipd.dei.rilevatoredicadute;
 
 public class DatiCadute {
 	
-	private int year;
-	private int month;
-	private int day;
-	private int hour;
-	private int minute;
-	private int second;
+	private int anno;
+	private int mese;
+	private int giorno;
+	private int ora;
+	private int minuti;
+	private int secondi;
 	private String latitudine;
 	private String longitudine;
-	private String session;
+	private String sessione;
 	
 	public DatiCadute(int d, int m, int y, int h, int min, int sec, String lat, String lon, String sess){		
-		day = d;
-		month = m;
-		year = y;
-		hour = h;
-		minute = min;
-		second = sec;
+		giorno = d;
+		mese = m;
+		anno = y;
+		ora = h;
+		minuti = min;
+		secondi = sec;
 		latitudine=lat;
 		longitudine=lon;
-		session=sess;
+		sessione=sess;
 	}
 	
 	public DatiCadute(){
@@ -29,24 +29,24 @@ public class DatiCadute {
 	}	
 	
 	public void setData(int d, int m, int y){
-		day = d;
-		month = m;
-		year = y;
+		giorno = d;
+		mese = m;
+		anno = y;
 	}
 	
-	public void setHour(int h, int min, int sec){
-		hour = h;
-		minute = min;
-		second = sec;
+	public void setOra(int h, int min, int sec){
+		ora = h;
+		minuti = min;
+		secondi = sec;
 	}	
 	
 
 	public String getData(){
-		return(Integer.toString(day)+ "/" + Integer.toString(month) + "/" + Integer.toString(year));
+		return(Integer.toString(giorno)+ "/" + Integer.toString(mese) + "/" + Integer.toString(anno));
 	}
 	
-	public String getHour(){
-		return(Integer.toString(hour)+ ":" + Integer.toString(minute) + ":" + Integer.toString(second));
+	public String getOra(){
+		return(Integer.toString(ora)+ ":" + Integer.toString(minuti) + ":" + Integer.toString(secondi));
 	}
 	
 	public void setLatitudine(String lat){
@@ -66,7 +66,7 @@ public class DatiCadute {
 	}
 	
 	public String getSessione(){
-		return session;
+		return sessione;
 		}	
 	
 }

@@ -11,7 +11,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
-import android.graphics.drawable.BitmapDrawable;
 
 
 public class Fourth extends ActionBarActivity {
@@ -19,15 +18,15 @@ public class Fourth extends ActionBarActivity {
 	
     MyDBManager db;
     Intent intent;
-    String nameSession;
-    int cl;
-    Bitmap bm;
+    String nomeSess;
+    int cl; //colore
+    Bitmap bm; //immagine
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_fourth);
-		db=new MyDBManager(this);
+		db = new MyDBManager(this);
 		intent = getIntent();
 		Bundle extra = intent.getExtras();
 		bm = (Bitmap)extra.getParcelable("image");
@@ -41,8 +40,8 @@ public class Fourth extends ActionBarActivity {
 		TextView Ora = (TextView) findViewById(R.id.ora);
 		TextView latitudine = (TextView) findViewById(R.id.latitude);
 		TextView longitudine = (TextView) findViewById(R.id.longitude);
-		nameSession = intent.getStringExtra(MainActivity.PACKAGE_NAME+".nameSession");		
-		nomeSessione.setText(nameSession);
+		nomeSess = intent.getStringExtra(MainActivity.PACKAGE_NAME+".nameSession");		
+		nomeSessione.setText(nomeSess);
 		Data.setText("    "+intent.getStringExtra(MainActivity.PACKAGE_NAME+".dataCaduta"));
 		Ora.setText("    "+intent.getStringExtra(MainActivity.PACKAGE_NAME+".oraCaduta"));		
 		latitudine.setText("  "+intent.getStringExtra(MainActivity.PACKAGE_NAME+".latitudine"));
@@ -76,11 +75,11 @@ public class Fourth extends ActionBarActivity {
     } 
 	
 	@Override
-	public void onBackPressed() {
+	public void onBackPressed() {//ritorno alla activity 2 alla pressione del tasto di ritorno
 		Intent UI2 = new Intent(this, Second.class);
 		Bundle extra = new Bundle();
 		extra.putParcelable("image", bm);
-		UI2.putExtra("nameSession", nameSession);
+		UI2.putExtra("nameSession", nomeSess);
 		UI2.putExtras(extra);
 		UI2.putExtra("color", cl);
 		startActivity(UI2);

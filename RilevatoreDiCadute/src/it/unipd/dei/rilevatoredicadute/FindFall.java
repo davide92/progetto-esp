@@ -1,3 +1,6 @@
+/*service per la rilevazione delle cadute, il salvataggio dei datiaccelerometro su file, 
+  la lettura dei dati da accelerometro e dati della posizione via GPS
+ */
 package it.unipd.dei.rilevatoredicadute;
 
 import android.app.Service;
@@ -13,8 +16,6 @@ import android.location.LocationManager;
 import android.util.Log;
 import android.widget.Toast;
 //import it.unipd.dei.rilevatoredicadute.ServiceCronometro.MyBinder;
-
-
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -32,15 +33,17 @@ import android.os.CountDownTimer;
 
 public class FindFall extends Service implements SensorEventListener, LocationListener{
 	long it = 0;
+	//valori immediati
 	private float xVal;
 	private float yVal;
 	private float zVal;
+	//valori precedenti
 	private float xValLast;
 	private float yValLast;
 	private float zValLast;
 	Intent mReceiver = null;
 	Intent thActivity = null;
-	private float alpha=(float)15;
+	private float alpha = (float)15; //differenza tra valore immediato e precedente per cui si ha una caduta
 	String sessione;
 	public static final String BROADCAST = "it.unipd.dei.rilevatoredicadute.android.action.broadcast";
 	public static final String TEXTVIEW = "Gestione Textview";
@@ -51,13 +54,13 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 	private SensorManager mysm = null;
 	private LocationManager locMg = null;
 	private Sensor accel = null;
-	private ArrayList<AccelData> acData = new ArrayList<AccelData>(15000);	
+	private ArrayList<AccelData> acData = new ArrayList<AccelData>(15000);	//lista temporanea dati accelerometro
 	DataOutputStream f = null;
 	FileOutputStream fo = null;		
-	File file;
+	File file; //file per il salvataggio di tutti i dati dell'accelerometro
 	String lastFileName = "null";
-	CountDownTimer cdSaveSC = null;
-	CountDownTimer cdViewSC = null;
+	CountDownTimer cdSaveSC = null; //conto alla rovescia lettura/salvataggio nella lista temporanea dati accelerometro
+	CountDownTimer cdViewSC = null; //conto alla rovescia visualizzazione dati accelerometro
 	boolean rec, vis = true;
 	private double latitude, longitude;
 	float[] DatiAccelerometro = new float[3];
@@ -97,7 +100,7 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 			}
 		};
 		
-		dbF=new MyDBManager(this);
+		dbF = new MyDBManager(this);
 		start();
 	}
 	
@@ -117,7 +120,7 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 			startActivity(ISetting);
 		}
 		while (!locMg.isProviderEnabled( LocationManager.GPS_PROVIDER )){
-			ReSettingGPS();
+			resettaGPS();
 		}
 		cdSaveSC.start();
 		cdViewSC.start();
@@ -153,7 +156,7 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 					cdSaveSC.start();
 				}
 				
-				if(vis && !acData.isEmpty() && j<acData.size()){
+				if(vis && !acData.isEmpty() && j < acData.size()){
 					//xAccViewS.setText("" + acData.get(j).getX());
 					//yAccViewS.setText("" + acData.get(j).getY());
 					//zAccViewS.setText("" + acData.get(j).getZ());
@@ -165,7 +168,7 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 					thActivity.setAction(TEXTVIEW);
 					thActivity.putExtra("textview", DatiAccelerometro);
 					sendBroadcast(thActivity);
-					j+=4;
+					j += 4;
 					vis = false;
 				    cdViewSC.start();
 				}
@@ -203,13 +206,13 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 	public void onProviderDisabled(String provider) {
 			// TODO Auto-generated method stub			
 	}
-	
+	//metodo per rilevare una caduta
 	private void caduta(){
-		float x=java.lang.Math.abs(xVal)- java.lang.Math.abs(xValLast);
-		float y=java.lang.Math.abs(yVal)- java.lang.Math.abs(yValLast);
-		float z=java.lang.Math.abs(zVal)- java.lang.Math.abs(zValLast);				
+		float x = java.lang.Math.abs(xVal)- java.lang.Math.abs(xValLast);
+		float y = java.lang.Math.abs(yVal)- java.lang.Math.abs(yValLast);
+		float z = java.lang.Math.abs(zVal)- java.lang.Math.abs(zValLast);				
 		
-		if(((java.lang.Math.abs(x))>= alpha) || ((java.lang.Math.abs(y))>= alpha) || ((java.lang.Math.abs(z))>= alpha)){
+		if(((java.lang.Math.abs(x)) >= alpha) || ((java.lang.Math.abs(y)) >= alpha) || ((java.lang.Math.abs(z)) >= alpha)){
 			//Location l = locMg.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 			if(l != null){	
 				longitude = l.getLongitude();
@@ -226,9 +229,9 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 			//thActivity.putExtra("textview", DatiAccelerometro);
 			String data = ""+calendar.get(GregorianCalendar.YEAR)+ "/" + (calendar.get(GregorianCalendar.MONTH)+1)+ "/" +calendar.get(GregorianCalendar.DATE);
 			String ora = ""+calendar.get(GregorianCalendar.HOUR_OF_DAY)+ ":" + calendar.get(GregorianCalendar.MINUTE)+ ":" +calendar.get(GregorianCalendar.SECOND);
-			if(dbF.notFallSameHour(sessione, ora)){
+			if(dbF.noCaduteStessaOra(sessione, ora)){
 				Log.v("FIND FALL", "NESSUNA CADUTA CON LA STESSA DATA");
-				dbF.addCaduta(data,ora,Double.toString(latitude),Double.toString(longitude),sessione);				
+				dbF.aggCaduta(data,ora,Double.toString(latitude),Double.toString(longitude),sessione);				
 				Log.v("sessione in cui e' avvenuta la caduta",""+sessione);	
 				sendBroadcast(mReceiver);
 				sendBroadcast(thActivity);
@@ -257,7 +260,7 @@ private void start(){
 		}
 }
 
-private void ReSettingGPS(){
+private void resettaGPS(){
 	locMg = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 	locMg.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);		
 	l = locMg.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -273,7 +276,7 @@ private void stop(){
 	if(locMg != null){
 		locMg.removeUpdates(this);
 	}
-	
+	//scrittura dei dati dell'accelerometro salvati nella lista 
 	if(!(lastFileName.equals(sessione))){
 		lastFileName = sessione;				
 		}

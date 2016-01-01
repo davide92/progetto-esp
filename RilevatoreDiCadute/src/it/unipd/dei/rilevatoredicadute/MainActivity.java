@@ -30,10 +30,10 @@ public class MainActivity extends ActionBarActivity {
 	
 	public static String PACKAGE_NAME; 	
 	MyDBManager db;	          
-    Intent MA;
-    String name;       
-    int state;
-    int stateNSC; //stato nuova sessione in corso    
+    Intent MA; //intent dell'activity
+    String nome;       
+    int stato; //stato di ogni sessione salvata
+    int statoNSC; //stato nuova sessione in corso    
     long tempoPausaMA;
     String NSC; //nome sessione in corso
     boolean noSessioneInCorso = false;   
@@ -41,8 +41,7 @@ public class MainActivity extends ActionBarActivity {
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);        
-        db = new MyDBManager(this);
-        setContentView(R.layout.activity_main);       
+        db = new MyDBManager(this);               
 	}
 	
 	@Override
@@ -50,79 +49,84 @@ public class MainActivity extends ActionBarActivity {
 		super.onStart();
 		Log.v("TAG", "----INIZIO-MAIN-ACTIVITY----");		
         String durataSessione = 0 + ":" + 0 + ":" + 0; 
-        MA=getIntent();        
-        PACKAGE_NAME = getApplicationContext().getPackageName();       
-              	
-        ListView listView = (ListView) findViewById(R.id.listView1);
-        List<Dati> list = new LinkedList<Dati>();         
-        
-        Cursor crs=db.selectAllSessions();        
-        if(crs.moveToFirst()){
-        	do{
-            String strData = crs.getString(crs.getColumnIndex("DataInizio"));
-            String[] dataf=strData.split("/");
-            int day=Integer.parseInt(dataf[0]);  
-            int month=Integer.parseInt(dataf[1]);  
-            int year=Integer.parseInt(dataf[2]);           
+        MA = getIntent();        
+        PACKAGE_NAME = getApplicationContext().getPackageName();
+        if(db.contaSessioni() != 0){//layout in presenza di sessioni salvate
+        	setContentView(R.layout.activity_main);
+        	ListView listView = (ListView) findViewById(R.id.listView1);
+            List<Dati> list = new LinkedList<Dati>();         
+            //lettura dal database di tutte le sessioni salvate e visualizzazione
+            Cursor crs = db.selezTutteSessioni();        
+            if(crs.moveToFirst()){
+            	do{
+                String strData = crs.getString(crs.getColumnIndex("DataInizio"));
+                String[] dataf = strData.split("/");
+                int day = Integer.parseInt(dataf[0]);  
+                int month = Integer.parseInt(dataf[1]);  
+                int year = Integer.parseInt(dataf[2]);           
 
-            String strTime = crs.getString(crs.getColumnIndex("OraInizio"));
-            String[] oraf=strTime.split(":");
-            int hour=Integer.parseInt(oraf[0]);  
-            int minutes=Integer.parseInt(oraf[1]);  
-            int seconds=Integer.parseInt(oraf[2]);
-            int falls=db.CountCaduta(crs.getString(1));
-            durataSessione = crs.getString(crs.getColumnIndex("Durata"));
-            if(durataSessione.equals("XX:XX:XX")){
-            	NSC = crs.getString(1);
-            	stateNSC = Integer.parseInt(crs.getString(crs.getColumnIndex("Stato")));
-            	if(stateNSC == 2){
-            		tempoPausaMA = Long.parseLong(crs.getString(crs.getColumnIndex("TempoPausa")));            		
+                String strTime = crs.getString(crs.getColumnIndex("OraInizio"));
+                String[] oraf = strTime.split(":");
+                int hour = Integer.parseInt(oraf[0]);  
+                int minutes = Integer.parseInt(oraf[1]);  
+                int seconds = Integer.parseInt(oraf[2]);
+                int falls = db.contaCadute(crs.getString(1));
+                durataSessione = crs.getString(crs.getColumnIndex("Durata"));
+                if(durataSessione.equals("XX:XX:XX")){
+                	NSC = crs.getString(1);
+                	statoNSC = Integer.parseInt(crs.getString(crs.getColumnIndex("Stato")));
+                	if(statoNSC == 2){
+                		tempoPausaMA = Long.parseLong(crs.getString(crs.getColumnIndex("TempoPausa")));            		
+                	}
+                	noSessioneInCorso = true;            	
+                }            
+                stato = Integer.parseInt(crs.getString(crs.getColumnIndex("Stato")));
+                int cl = crs.getInt(crs.getColumnIndex("Colore"));
+                list.add(new Dati(crs.getString(1),day, month, year,hour, minutes, seconds, durataSessione, falls, cl, stato));           
+            	}while(crs.moveToNext());//fine while
+            }
+           /* else{
+            	list.add(new Dati());
+            }//fine IF*/
+            crs.close();        
+            Log.v("NOME SESSIONE IN CORSO MA",""+NSC+"");
+            
+            CustomAdapter adapter = new CustomAdapter(this, R.layout.list_items, list);       
+            listView.setAdapter(adapter);        
+            listView.setOnItemClickListener(new OnItemClickListener(){
+        	public void onItemClick(AdapterView<?> adapter, View v, int position, long id){      		
+        		
+        		Log.v("MA-SELEZIONE-SESSIONE",""+(((Dati)adapter.getItemAtPosition(position)).getNomeSessione())+"");
+        		Intent UI2;    		
+        		Intent ST;
+        		UI2 = new Intent(getApplicationContext(), Second.class);    		
+        		ST = new Intent(getApplicationContext(),NewThird.class);
+        		
+        		if((((Dati)adapter.getItemAtPosition(position)).getNomeSessione()).equals(NSC)){    				   					
+        					   			
+        					ST.putExtra(PACKAGE_NAME+".nomeSessione",NSC);
+        					ST.putExtra(PACKAGE_NAME+".statoSessione", statoNSC);
+        					if(statoNSC == 2)
+        						ST.putExtra(PACKAGE_NAME+".PausaTempo", tempoPausaMA);
+        					startActivity(ST);    				    				
+        			}else{
+        				final ImageView im = (ImageView) v.findViewById(R.id.picture);
+        				final BitmapDrawable bd = (BitmapDrawable) im.getDrawable();
+        				final Bitmap b = bd.getBitmap();
+        				Bundle extra = new Bundle();
+        				extra.putParcelable("image", b);    				   		
+        				UI2 = new Intent(getApplicationContext(), Second.class);    		
+        				UI2.putExtra("nameSession", ((Dati)adapter.getItemAtPosition(position)).getNomeSessione()); 
+        				UI2.putExtras(extra);
+        				UI2.putExtra("color", ((Dati)adapter.getItemAtPosition(position)).getColore());
+        				startActivity(UI2);    				
+        			}
             	}
-            	noSessioneInCorso = true;            	
-            }            
-            state = Integer.parseInt(crs.getString(crs.getColumnIndex("Stato")));
-            int cl = crs.getInt(crs.getColumnIndex("Colore"));
-            list.add(new Dati(crs.getString(1),day, month, year,hour, minutes, seconds, durataSessione, falls, cl, state));           
-        	}while(crs.moveToNext());//fine while
-        }
-       /* else{
-        	list.add(new Dati());
-        }//fine IF*/
-        crs.close();        
-        Log.v("NOME SESSIONE IN CORSO MA",""+NSC+"");
-        
-        CustomAdapter adapter = new CustomAdapter(this, R.layout.list_items, list);       
-        listView.setAdapter(adapter);        
-        listView.setOnItemClickListener(new OnItemClickListener(){
-    	public void onItemClick(AdapterView<?> adapter, View v, int position, long id){      		
-    		
-    		Log.v("MA-SELEZIONE-SESSIONE",""+(((Dati)adapter.getItemAtPosition(position)).getNomeSessione())+"");
-    		Intent UI2;    		
-    		Intent ST;
-    		UI2 = new Intent(getApplicationContext(), Second.class);    		
-    		ST = new Intent(getApplicationContext(),NewThird.class);
-    		
-    		if((((Dati)adapter.getItemAtPosition(position)).getNomeSessione()).equals(NSC)){    				   					
-    					   			
-    					ST.putExtra(PACKAGE_NAME+".nomeSessione",NSC);
-    					ST.putExtra(PACKAGE_NAME+".statoSessione", stateNSC);
-    					if(stateNSC == 2)
-    						ST.putExtra(PACKAGE_NAME+".PausaTempo", tempoPausaMA);
-    					startActivity(ST);    				    				
-    			}else{
-    				final ImageView im = (ImageView) v.findViewById(R.id.picture);
-    				final BitmapDrawable bd = (BitmapDrawable) im.getDrawable();
-    				final Bitmap b = bd.getBitmap();
-    				Bundle extra = new Bundle();
-    				extra.putParcelable("image", b);    				   		
-    				UI2 = new Intent(getApplicationContext(), Second.class);    		
-    				UI2.putExtra("nameSession", ((Dati)adapter.getItemAtPosition(position)).getNomeSessione()); 
-    				UI2.putExtras(extra);
-    				UI2.putExtra("color", ((Dati)adapter.getItemAtPosition(position)).getColor());
-    				startActivity(UI2);    				
-    			}
-        	}
-        });            
+            });
+        }else{
+        	setContentView(R.layout.empty_main); //layout senza sessioni
+        }             	
+                    
 	}	
 	
 	@Override
@@ -169,13 +173,13 @@ public class MainActivity extends ActionBarActivity {
 		switch (item.getItemId()) {
 		case R.id.nuovaSessione:{
 			if(!(noSessioneInCorso)){
-				Intent NS= new Intent(getApplicationContext(),NewThird.class);
-				String par="Sessione "/*+(db.MaxIDSessione()+1)+""*/ + findNumSess();
+				Intent NS = new Intent(getApplicationContext(),NewThird.class);
+				String par = "Sessione "/*+(db.MaxIDSessione()+1)+""*/ + trovaNumSess();
 				NS.putExtra(PACKAGE_NAME+".nomeSessione", par);
 				startActivity(NS);
 			}
 			else{				
-				String text="IMPOSSIBILE INIZIARE NUOVA SESSIONE. SESSIONE "+NSC+" IN CORSO";				
+				String text = "IMPOSSIBILE INIZIARE NUOVA SESSIONE. SESSIONE "+NSC+" IN CORSO";				
 				Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
 				toast.show();
 			}
@@ -189,11 +193,12 @@ public class MainActivity extends ActionBarActivity {
 		return true;		
 	}
 	
-	private int findNumSess(){
+	//metodo per trovare il primo numero di sessione disponibile
+	private int trovaNumSess(){
 		int i;
-		int count = db.CountSession();
-		for(i=1; i<(count+1); i++){
-			if(db.notSessSameName("Sessione "+i)){
+		int count = db.contaSessioni();
+		for(i = 1; i < (count+1); i++){
+			if(db.noSessStessoNome("Sessione "+i)){
 				break;
 			}
 		}

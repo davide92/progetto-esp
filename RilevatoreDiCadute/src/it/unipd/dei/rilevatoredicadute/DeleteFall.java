@@ -23,18 +23,18 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class DeleteFall extends ActionBarActivity {
 
-	private int cl;
-	MyDBManager db;
-	String nS;
-	int countFalls=0;
+	private int cl; //colore
+	MyDBManager db; 
+	String nS; //nome sessione
+	int contaCadute = 0;
 	TextView nomeSessione;
-	Bitmap bm;
+	Bitmap bm; //immagine
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Intent intent=getIntent();		    
-		nS=intent.getStringExtra("session");
+		nS = intent.getStringExtra("session");
 		Bundle extra = intent.getExtras();
 		bm = (Bitmap)extra.getParcelable("image");
 	    setContentView(R.layout.activity_second);
@@ -47,9 +47,10 @@ public class DeleteFall extends ActionBarActivity {
 	    List<DatiCadute> FallList = new LinkedList<DatiCadute>();
 	    CustomAdapterFalls FALLadapter = new CustomAdapterFalls(this, R.layout.fall_item, FallList);
 	    FallLV.setAdapter(FALLadapter);
-        db=new MyDBManager(this);
-        Cursor crs=db.selectSession(nS);
-        Cursor c=db.selectCaduta(nS);                      
+	    //visualizzazione delle cadute relative alla sessione selezionata
+        db = new MyDBManager(this);
+        Cursor crs = db.selezSessione(nS);
+        Cursor c = db.selezCaduta(nS);                      
         if(c.moveToFirst()){
         	do{
             String strData = c.getString(c.getColumnIndex("DataCaduta"));
@@ -92,14 +93,14 @@ public class DeleteFall extends ActionBarActivity {
 	     public void onItemClick(AdapterView<?> FALLadapter, View v, int position, long id){ 
 	    	 final AdapterView<?> fa = FALLadapter;
 	    	 final int pos = position;
-	    	 AlertDialog.Builder alert = new AlertDialog.Builder(DeleteFall.this);
+	    	 AlertDialog.Builder alert = new AlertDialog.Builder(DeleteFall.this);//mesaggio di allerta
 	    	 alert.setTitle("Elimina");
 	    	 alert.setMessage("Eliminare l'elemento?");
 	    	 alert.setPositiveButton("Si", new DialogInterface.OnClickListener() {
 				
 				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					db.deleteCaduta(((DatiCadute)fa.getItemAtPosition(pos)).getSessione(), ((DatiCadute)fa.getItemAtPosition(pos)).getHour());
+				public void onClick(DialogInterface dialog, int which) {//eliminazione della caduta
+					db.cancCaduta(((DatiCadute)fa.getItemAtPosition(pos)).getSessione(), ((DatiCadute)fa.getItemAtPosition(pos)).getOra());
 					db.close();
 					Intent UI2 = new Intent(getApplicationContext(), Second.class);
 					UI2.putExtra("nameSession", nomeSessione.getText());
@@ -118,7 +119,7 @@ public class DeleteFall extends ActionBarActivity {
 					
 				}
 			});
-	    	AlertDialog dialog = alert.create();
+	    	AlertDialog dialog = alert.create(); //creazione del dialogo di allerta
 	    	dialog.show();            	
     	}
     	
@@ -146,7 +147,7 @@ public class DeleteFall extends ActionBarActivity {
 	}
 	
 	@Override
-	public void onBackPressed() {
+	public void onBackPressed() {//ritorno alla activity precedente(seconda)
 		Intent UI2 = new Intent(this, Second.class);
 		Bundle extra = new Bundle();
 		extra.putParcelable("image", bm);
