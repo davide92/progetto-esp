@@ -55,30 +55,24 @@ public class DeleteFall extends ActionBarActivity {
         	do{
             String strData = c.getString(c.getColumnIndex("DataCaduta"));
             String[] dataf=strData.split("/");
-            int day=Integer.parseInt(dataf[0]);  
-            int month=Integer.parseInt(dataf[1]);  
-            int year=Integer.parseInt(dataf[2]);
+            int giorno =Integer.parseInt(dataf[0]);  
+            int mese=Integer.parseInt(dataf[1]);  
+            int anno=Integer.parseInt(dataf[2]);
 
             String strTime = c.getString(c.getColumnIndex("OraCaduta"));
             String[] oraf=strTime.split(":");
-            int hour=Integer.parseInt(oraf[0]);  
-            int minutes=Integer.parseInt(oraf[1]);  
-            int seconds=Integer.parseInt(oraf[2]);
+            int ora=Integer.parseInt(oraf[0]);  
+            int minuti=Integer.parseInt(oraf[1]);  
+            int secondi=Integer.parseInt(oraf[2]);
             
-            FallList.add(new DatiCadute(day, month, year,hour, minutes, seconds, c.getString(2), c.getString(3), nS));           
+            FallList.add(new DatiCadute(giorno , mese, anno,ora, minuti, secondi, c.getString(2), c.getString(3), nS));           
         	}while(c.moveToNext());//fine while
-        }
-        else{
-        	//list.add(new Dati());
-        }//fine IF
-        //crs.close();        
+        }        
         c.close();
         nomeSessione = (TextView)findViewById(R.id.nomeSessione);
 		TextView data = (TextView)findViewById(R.id.data);
 		TextView ora = (TextView)findViewById(R.id.ora);
 		TextView durataSessione = (TextView)findViewById(R.id.durataSessione);		
-		//Dati d = getItem(position);
-		//picture.setImage();
 		if (crs.moveToFirst()){
 			nomeSessione.setText(crs.getString(0));
 			data.setText(crs.getString(1));
@@ -86,14 +80,13 @@ public class DeleteFall extends ActionBarActivity {
 			durataSessione.setText(crs.getString(3));		   
 		}        
         Log.v("nome sessione---->",""+nS+"");
-        //c.close();
         crs.close();		
 		 
 	     FallLV.setOnItemClickListener(new OnItemClickListener(){
 	     public void onItemClick(AdapterView<?> FALLadapter, View v, int position, long id){ 
 	    	 final AdapterView<?> fa = FALLadapter;
 	    	 final int pos = position;
-	    	 AlertDialog.Builder alert = new AlertDialog.Builder(DeleteFall.this);//mesaggio di allerta
+	    	 AlertDialog.Builder alert = new AlertDialog.Builder(DeleteFall.this);//messaggio di allerta cancellazione caduta
 	    	 alert.setTitle("Elimina");
 	    	 alert.setMessage("Eliminare l'elemento?");
 	    	 alert.setPositiveButton("Si", new DialogInterface.OnClickListener() {
@@ -123,9 +116,7 @@ public class DeleteFall extends ActionBarActivity {
 	    	dialog.show();            	
     	}
     	
-        });
-	    //crs.close();
-            
+        });            
 	}
 	@Override
 	protected void onDestroy() 
@@ -138,7 +129,6 @@ public class DeleteFall extends ActionBarActivity {
 	}
 	@Override
 	protected void onStop() {
-	    //Log.w("TAG", "App stopped");
 	    super.onStop();
 	    if (db != null) 
 	    {
@@ -147,7 +137,7 @@ public class DeleteFall extends ActionBarActivity {
 	}
 	
 	@Override
-	public void onBackPressed() {//ritorno alla activity precedente(seconda)
+	public void onBackPressed() {//ritorno alla activity precedente(seconda activity)
 		Intent UI2 = new Intent(this, Second.class);
 		Bundle extra = new Bundle();
 		extra.putParcelable("image", bm);

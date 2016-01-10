@@ -4,71 +4,41 @@
 package it.unipd.dei.rilevatoredicadute;
 
 import android.support.v7.app.ActionBarActivity;
-
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
 import android.os.IBinder;
 import android.os.Vibrator;
-
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
 import android.widget.ImageButton;
 import android.widget.TextView;
-//import android.widget.Toast;
 import android.widget.ListView;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.ComponentName;
-
-/*import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;*/
-
 import android.util.Log;
-
 import android.graphics.Color;
-
-/*import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;*/
-
 import android.database.Cursor;
 
-/*import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import java.util.ArrayList;*/
 import java.util.GregorianCalendar;
 import java.util.Random;
 import java.util.LinkedList;
 import java.util.List;
 
-
 import it.unipd.dei.rilevatoredicadute.ServiceCronometro.MyBinder;
 import it.unipd.dei.rilevatoredicadute.FindFall.MyBinderText;
 
 
-public class NewThird extends ActionBarActivity{// implements SensorEventListener,LocationListener{	
+public class NewThird extends ActionBarActivity{
 		
 	GregorianCalendar cal;
 	MyDBManager db;
-	public long stopTime=0;	
-	//private SensorManager mysm = null;
-	//private LocationManager locMg = null;
-	//private Sensor accel = null;
-	//private ArrayList<AccelData> acData = new ArrayList<AccelData>(15000);	
-	//private double latitude, longitude;	
+	public long stopTime=0;		
 	private  ListView listView;
 	private List<DatiCadute> fallList;//lista delle cadute temporanea 
 	long it = 0;	
@@ -77,17 +47,11 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 	TextView yAccViewS = null;
 	TextView zAccViewS = null;
 	TextView tx;
-	//DataOutputStream f = null;
-	//FileOutputStream fo = null;		
-	//File file;
 	public static String PACKAGE_NAME;
-	//String lastFileName = "null";
 	String date,data;
 	String NS;//nomeSessione
 	String StampaDurataService;	
 	Intent mService = null;
-	//CountDownTimer cdSaveSC = null;
-	//CountDownTimer cdViewSC = null;
 	CountDownTimer cdCrono = null; //conto alla rovescia perla visualizzazione dati del cronometro
 	CountDownTimer cdText = null; //conto alla rovescia per la visualizzazione dati accelerometro
 	/*memorizza stato della sessione
@@ -102,7 +66,6 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 	int month;
 	int day;
 	int cStart = 0; // contatore metodo start()
-	//private int i, j, k = 0;
 	ImageButton playBtn;
 	ImageButton pauseBtn;
 	ImageButton stopBtn;		
@@ -131,42 +94,12 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 		adapter = new CustomAdapterFalls(this, R.id.listViewCadute, fallList);       
 		listView.setAdapter(adapter);
 		cal= new GregorianCalendar();		
-		
-		/*//COUNT DOWN TIMER PER LA GESTIONE DELLA TEXTVIEW CHE VISUALIZZA LA DURATA DELLA SESSIONE
-		cdCrono = new CountDownTimer(1000L, 100L) {					
-			@Override
-			public void onTick(long millisUntilFinished) {
-			// TODO Auto-generated method stub										
-			}					
-			@Override
-			public void onFinish() {						
-			if(StampaDurataService != null)	
-				timestampText.setText(""+StampaDurataService+"");
-			else
-				timestampText.setText("0:0:0");			
-			cdCrono.start();								
-			}
-		};
-		
-		cdText = new CountDownTimer(5000L, 500L) {					
-			@Override
-			public void onTick(long millisUntilFinished) {
-			// TODO Auto-generated method stub										
-			}					
-			@Override
-			public void onFinish() {						
-				xAccViewS.setText(""+arrayRicevuto[0]);
-				yAccViewS.setText(""+arrayRicevuto[1]);
-				zAccViewS.setText(""+arrayRicevuto[2]);		
-			cdText.start();								
-			}
-		};*/
-		
+				
 		timestampText = (TextView) findViewById(R.id.timestamp_text);
 		playBtn = (ImageButton)findViewById(R.id.start);
 		pauseBtn = (ImageButton)findViewById(R.id.pause);
 		stopBtn = (ImageButton)findViewById(R.id.stop);		
-		
+		//inizializzazione dello stato della sessione
 		if((savedInstance !=null)){	
 			VarSavedInstance = true;
 			Log.v("<<SAVED INSTANCE ON>>", "---SAVED INSTANCE ON---");			
@@ -179,7 +112,7 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 			Log.v("null","" +NS);
 		}				
 	}
-	
+	//salvataggio dello stato della sessione in corso
 	@Override
 	protected void onSaveInstanceState(Bundle savedInstance) {			
 	    savedInstance.putInt("statesession", SNT);	    
@@ -212,7 +145,7 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 					cdCrono.start();								
 					}
 		};
-				
+		//COUNT DOWN TIMER PER LA GESTIONE DELLA TEXTVIEW CHE VISUALIZZA I VALORI DELL'ACCELEROMETRO	
 		cdText = new CountDownTimer(5000L, 500L) {					
 					@Override
 					public void onTick(long millisUntilFinished) {
@@ -262,7 +195,7 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 		zAccViewS = (TextView) findViewById(R.id.zDataS);
 		tx = (TextView)findViewById(R.id.TestoSessCurr);        
         tx.setText(NS);     
-		if(s == 3){//GESTIONE ORIENTAMENTO TELEFONO: s==3 SIGNIFICA CHE L'ORIENTAMENTO DELLO SCHERMO E' CAMBIATA
+		if(s == 3){//GESTIONE ORIENTAMENTO TELEFONO
 			if(SNT == 1){				
 				playBtn.setVisibility(View.INVISIBLE);
 				pauseBtn.setVisibility(View.VISIBLE);
@@ -307,7 +240,7 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 				cStart++;
 				String data = ""+cal.get(GregorianCalendar.YEAR)+ "/" + (cal.get(GregorianCalendar.MONTH)+1)+ "/" +cal.get(GregorianCalendar.DATE);
 																
-				long milliseconds=System.currentTimeMillis();
+				long milliseconds = System.currentTimeMillis();
 				int seconds = (int) (milliseconds / 1000) % 60 ;
 				int minutes = (int) ((milliseconds / (1000*60)) % 60);
 				int hours   = (int) ((milliseconds / (1000*60*60)) % 24);
@@ -321,7 +254,7 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 					long intervalloPausa = (SystemClock.elapsedRealtime() - stopTime);
 					intent.putExtra("pausa",intervalloPausa);
 				}				
-				
+				//avvio dei service
 				startService(intent);
 				bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);				
 				startService(TextIntent);
@@ -344,25 +277,25 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 				pauseBtn.setVisibility(View.INVISIBLE);
 				Log.v("List-2","--HO PREMUTO IL TASTO PAUSE--");				
 			    stopTime = SystemClock.elapsedRealtime();	
-			    //TextIntent = new Intent(getApplicationContext(),FindFall.class);
-			   	//stopService(TextIntent);		    
+			    //chiusura della "connessione" al service		    
 			    if (mServiceBound) {
 					 unbindService(mServiceConnection);
 					 mServiceBound = false;
 					 }
+			    //chiusura della "connessione" al service
 				if(mServiceBoundText){
 					unbindService(mServiceConnectionText);
 					mServiceBoundText = false;
 				}
 			    stopService(TextIntent);
-			    cdText.cancel();			  		    
+			    cdText.cancel();	//cancella conto alla rovescia		  		    
 			}				
 		});
 		
 		stopBtn.setOnClickListener(new View.OnClickListener(){			
 			@Override
 			public void onClick(View v){
-				//update della durata della sessione					
+				//aggiornamento della durata della sessione					
 				if(SNT == 0){
 					return;
 				}
@@ -373,18 +306,17 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 				db.aggiornaStatoSessione(SNT, NS);
 								
 				Log.v("stopSessione------->",""+NS+"");
-				
+				//chiusura della "connessione" al service
 				if (mServiceBound) {
 					 unbindService(mServiceConnection);
 					 mServiceBound = false;
 					 }
+				//chiusura della "connessione" al service
 				if(mServiceBoundText){
 					unbindService(mServiceConnectionText);
 					mServiceBoundText = false;
 				}
 				
-				//Intent intent = new Intent(getApplicationContext(), ServiceCronometro.class);				 
-				//TextIntent = new Intent(getApplicationContext(),FindFall.class);
 				stopService(intent);
 				if(cStart >0)
 					stopService(TextIntent);
@@ -405,9 +337,6 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 	protected void onPause(){
 		super.onPause();
 		Log.v("ACT-THIRD","PAUSED");
-		//if(SNT == 0 && mysm != null){
-			//mysm.unregisterListener(this);
-		//}
 	}	
 
 	@Override
@@ -428,12 +357,12 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 		}catch(Exception exc){
 			
 		}
-		
+		//chiusura della "connessione" al service
 		if (mServiceBound) {
 			unbindService(mServiceConnection);
 			mServiceBound = false;
 	    }
-		
+		//chiusura della "connessione" al service
 		if(mServiceBoundText){
 			unbindService(mServiceConnectionText);
 			mServiceBoundText = false;
@@ -479,14 +408,15 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 			}						
 		}						
 	}    
-		
+	//receiver per la lettura dei valori dell'accelerometro
 	private class TextReceiver extends BroadcastReceiver{
 		@Override
 		public void onReceive(Context arg0, Intent arg1){
 			if(SNT != 2)
-				arrayRicevuto = arg1.getFloatArrayExtra("textview");			
+				arrayRicevuto = arg1.getFloatArrayExtra("textview");//array dei valori degli assi x, y e z dell'accelerometro	
 		}
 	}
+	
     private ServiceConnection mServiceConnection = new ServiceConnection() {
     	
 		 @Override
@@ -515,23 +445,20 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 		 mServiceBoundText = true;
 		 } 
 	 };
-	
+	// aggiunta degli elementi del menù	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.		
+			
 		super .onCreateOptionsMenu(menu);		
 		menu.add(0, R.id.mostra, 1, "Mostra Sessioni");		
 		return true;
 	}
-
+	//azioni da fare nella selezione di un elemento
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
+		
 		switch(item.getItemId()){
 			case(R.id.mostra):{				  
-				//mysm.unregisterListener(this);
 				Intent UIMA;
 				UIMA = new Intent(getApplicationContext(), MainActivity.class);
 				Log.v("---","---");										
@@ -554,31 +481,16 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 	public void onBackPressed() {
 	}	
 	
-	/*private void start(){		
-		
-		Log.v("GESTIONE FILE","METODO START");
-		it = System.currentTimeMillis();		
-		locMg = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-		locMg.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);
-		mysm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-		if(mysm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null){
-			accel = mysm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-			mysm.registerListener((SensorEventListener) this, accel, SensorManager.SENSOR_DELAY_NORMAL);			
-			year = cal.get(GregorianCalendar.YEAR);
-			month = cal.get(GregorianCalendar.MONTH)+1;
-			day = cal.get(GregorianCalendar.DAY_OF_MONTH);
-			//int hour = c.get(GregorianCalendar.HOUR_OF_DAY);
-			//int min = c.get(GregorianCalendar.MINUTE);
-			//int sec= c.get(GregorianCalendar.SECOND);
-			date = "" + year + month + day /*+ hour + min + sec ;				
-			Log.v("SENSORE ACCELEROMETRO----->","ACCELEROMETRO REGISTRATO");			
-		}*/
-		//nS = tx.getText().toString();
-		/*MyDBManager db = new MyDBManager(this);
-		int fallCount = db.CountCaduta(NS);
-		db.close();
-		if(fallCount > 0){
-		Cursor crs = db.selectCaduta(NS);
+	//metodo per aggiornare la UI nel caso di una caduta rilevata
+	private void updateUI() {
+		//Log.v("updateUI", "inzio");
+		//cancellazione dei dati salvati e visualizzati precedentemente
+		if(fallList.size() > 0){
+			fallList.clear();
+		}
+		adapter.clear();
+		//lettura di tutte le cadute avvenute nella sessione
+		Cursor crs = db.selezCaduta(NS);
 		if(crs.moveToFirst()){
 			do{
 				String strData = crs.getString(crs.getColumnIndex("DataCaduta"));
@@ -591,226 +503,14 @@ public class NewThird extends ActionBarActivity{// implements SensorEventListene
 		        int hour=Integer.parseInt(oraf[0]);  
 		        int minutes=Integer.parseInt(oraf[1]);  
 		        int seconds=Integer.parseInt(oraf[2]);
-		        double lat = crs.getDouble(crs.getColumnIndex("Latitudine"));
-		        double longi = crs.getDouble(crs.getColumnIndex("Longitudine"));
-		        fallList.add(new DatiCadute(day, month, year, hour, minutes, seconds, lat, longi, nS));
-				}while(crs.moveToNext());	
-			}
-		}			
-			CustomAdapterFalls adapter = new CustomAdapterFalls(this, R.id.listViewCadute, fallList);       
-		    listView.setAdapter(adapter);*/
-	//}	
-	/*private void pause(){
-		Log.v("GESTIONE FILE","METODO PAUSE");
-		//if(mysm != null){
-			mysm.unregisterListener(this);
-			Log.v("SENSORE ACCELEROMETRO----->","ACCELEROMETRO PAUSA");
-		//}
-		if(locMg != null){
-			locMg.removeUpdates(this);
+		        String lat = crs.getString(crs.getColumnIndex("Latitudine"));
+		        String longi = crs.getString(crs.getColumnIndex("Longitudine"));
+		        fallList.add(new DatiCadute(day, month, year, hour, minutes, seconds, lat, longi, NS));
+			    //adapter.add(new DatiCadute(day, month, year, hour, minutes, seconds, lat, longi, NS));
+			}while(crs.moveToNext());
+			//avviso della presenza di una nuova caduta
+			adapter.notifyDataSetChanged();								       				
 		}
-		xAccViewS.setText("0");
-		yAccViewS.setText("0");
-		zAccViewS.setText("0");		
-		
-		if(!(lastFileName.equals(date))){
-			lastFileName = date;
-		
-		try {
-			fo = openFileOutput(lastFileName, Context.MODE_PRIVATE);
-			fo.close();
-		} catch (FileNotFoundException e) {
-			Log.e("Impossibile trovare il file ", date, e);
-			Toast.makeText(	this, "Errore openFileOutput", Toast.LENGTH_LONG).show();
-		}catch (IOException e) {
-			Log.e("Impossibile chiudere il file", date, e); 
-			Toast.makeText(	this, "Errore chiusura", Toast.LENGTH_LONG).show();
-		}			
-		}		
-		
-		if(i < acData.size()){
-			try {
-				fo = openFileOutput(date, Context.MODE_APPEND);
-				while(i < acData.size()){
-					fo.write(("" + acData.get(i).getT() + " " + acData.get(i).getX() + " " + acData.get(i).getY() + " " + acData.get(i).getZ() + '\n').getBytes());
-					i++;
-				}
-			} catch (FileNotFoundException e) {
-				Log.e("Impossibile trovare il file ", date, e);
-				Toast.makeText(	this, "Errore openFileOutput", Toast.LENGTH_LONG).show();
-			}catch (IOException e) {
-				Log.e("Impossibile scrivere sul file", date, e); 
-				Toast.makeText(	this, "Errore scrittura", Toast.LENGTH_LONG).show();
-			}
-			try {
-				fo.close();
-			} catch (IOException e) {
-				Log.e("Impossibile chiudere il file", date, e); 
-				Toast.makeText(	this, "Errore chiusura", Toast.LENGTH_LONG).show(); 
-			}
-		}
-	}
-	
-	private void stop(){
-		Log.v("GESTIONE FILE","METODO STOP");
-		//if(mysm != null){
-			mysm.unregisterListener(this);
-			//mysm.unregisterListener(this, accel);
-			Log.v("SENSORE ACCELEROMETRO----->","ACCELEROMETRO STOPPATO");
-		//}
-		if(locMg != null){
-			locMg.removeUpdates(this);
-		}
-		
-		if(!(lastFileName.equals(date))){
-			lastFileName = date;				
-			}
-			
-		try {
-			fo = openFileOutput(lastFileName, Context.MODE_PRIVATE);
-			fo.close();
-		} catch (FileNotFoundException e) {
-			Log.e("Impossibile trovare il file ", date, e);
-			Toast.makeText(	this, "Errore openFileOutput", Toast.LENGTH_LONG).show();
-		}catch (IOException e) {
-			Log.e("Impossibile chiudere il file", date, e); 
-			Toast.makeText(	this, "Errore chiusura", Toast.LENGTH_LONG).show();
-		}				
-		
-		if(i < acData.size()){
-			try {
-				fo = openFileOutput(date, Context.MODE_APPEND);
-				while(i < acData.size()){
-					fo.write(("" + acData.get(i).getT() + " " + acData.get(i).getX() + " " + acData.get(i).getY() + " " + acData.get(i).getZ() + '\n').getBytes());
-					i++;
-				}
-			} catch (FileNotFoundException e) {
-				Log.e("Impossibile trovare il file ", date, e);
-				Toast.makeText(	this, "Errore openFileOutput", Toast.LENGTH_LONG).show();
-			}catch (IOException e) {
-				Log.e("Impossibile scrivere sul file", date, e); 
-				Toast.makeText(	this, "Errore scrittura", Toast.LENGTH_LONG).show();
-			}
-			try {
-				fo.close();
-			} catch (IOException e) {
-				Log.e("Impossibile chiudere il file", date, e); 
-				Toast.makeText(	this, "Errore chiusura", Toast.LENGTH_LONG).show(); 
-			}
-		}
-		acData.clear();
-		i = j = 0;
-		
-		xAccViewS.setText("0");
-		yAccViewS.setText("0");
-		zAccViewS.setText("0");
-		accel = null;
-		
-	}*/
-		//metodo peraggiornala la UI nel caso di una caduta rilevata
-		private void updateUI() {
-			//Log.v("updateUI", "inzio");
-			//cancellazione dei dati salvati e visualizzati precedentemente
-			if(fallList.size() > 0){
-				fallList.clear();
-			}
-			adapter.clear();
-			//lettura di tutte le cadute avvenute nella sessione
-			Cursor crs = db.selezCaduta(NS);
-			if(crs.moveToFirst()){
-				do{
-					String strData = crs.getString(crs.getColumnIndex("DataCaduta"));
-			        String[] dataf=strData.split("/");
-			        int day=Integer.parseInt(dataf[0]);  
-			        int month=Integer.parseInt(dataf[1]);  
-			        int year=Integer.parseInt(dataf[2]);
-			        String strTime = crs.getString(crs.getColumnIndex("OraCaduta"));
-			        String[] oraf=strTime.split(":");
-			        int hour=Integer.parseInt(oraf[0]);  
-			        int minutes=Integer.parseInt(oraf[1]);  
-			        int seconds=Integer.parseInt(oraf[2]);
-			        String lat = crs.getString(crs.getColumnIndex("Latitudine"));
-			        String longi = crs.getString(crs.getColumnIndex("Longitudine"));
-			        fallList.add(new DatiCadute(day, month, year, hour, minutes, seconds, lat, longi, NS));
-				    //adapter.add(new DatiCadute(day, month, year, hour, minutes, seconds, lat, longi, NS));
-				}while(crs.moveToNext());
-				//avviso della presenza di una nuova caduta
-				adapter.notifyDataSetChanged();								       				
-			}
-			crs.close();
-		}	
-	
-	/*@Override
-	public void onSensorChanged(SensorEvent event) {
-		synchronized (this) {			
-			mService = new Intent(getApplicationContext(), FindFall.class);
-			if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){				
-				if(rec){					
-					float x = event.values[0];
- 					float y = event.values[1];
- 					float z = event.values[2]; 					
- 					//rec = false;
- 					long time = System.currentTimeMillis()-it;					
- 					if(acData.size() >= 1){
-						//mService = new Intent(getApplicationContext(), FindFall.class);
-						if(locMg.getLastKnownLocation(LocationManager.GPS_PROVIDER) != null){
-							mService.putExtra("long", longitude);
-							mService.putExtra("lat", latitude);
-						}
-						mService.putExtra("xVal", x);
-						mService.putExtra("yVal", y);   
-						mService.putExtra("zVal", z);
-						mService.putExtra("xValLast", acData.get(k).getX());
-						mService.putExtra("yValLast", acData.get(k).getY());
-						mService.putExtra("zValLast", acData.get(k).getZ());						
-						mService.putExtra("nomSess", NS);
-						
-						startService(mService);
-						
-						k++;								
-					}
- 					acData.add(new AccelData(time, x, y, z));
-					cdSaveSC.start();
-				}
-				
-				if(vis && !acData.isEmpty() && j<acData.size()){
-					xAccViewS.setText("" + acData.get(j).getX());
-					yAccViewS.setText("" + acData.get(j).getY());
-					zAccViewS.setText("" + acData.get(j).getZ());
-					j+=4;
-					vis = false;
-				    cdViewSC.start();
-				}
-			}
-			else
-				stopService(mService);			
-		}
-	}
-
-	@Override
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		//Log.d("Accelerometro", "onAccurancyChanged: " + sensor + ", accuracy: " + accuracy);		
+		crs.close();
 	}	
-	
-	@Override
-	public void onLocationChanged(Location location) {
-			// TODO Auto-generated method stub
-		longitude = location.getLongitude();
-		latitude = location.getLatitude(); 			
-	}
-	
-	@Override
-	public void onStatusChanged(String provider, int status, Bundle extras) {
-			// TODO Auto-generated method stub			
-	}
-	
-	@Override
-	public void onProviderEnabled(String provider) {
-			// TODO Auto-generated method stub			
-	}
-	
-	@Override
-	public void onProviderDisabled(String provider) {
-			// TODO Auto-generated method stub			
-	}*/
 }

@@ -13,13 +13,13 @@ public class MyDBManager{
 	public MyDBManager(Context ctx){
 		
 		dbhelper=new MyDBHelper(ctx);
-		//SQLiteDatabase db = dbhelper.getWritableDatabase();
+		
 	}
 	
 	public void close(){	
 		dbhelper.close();	
-		}	
-	
+	}	
+	//aggiunta di una nuova sessione nel database
 	public void aggSessione(String nome, String data, String ora, String durata ,int ncadute, int col, int stato, long tempoPausa){
 			
 			SQLiteDatabase db = dbhelper.getWritableDatabase();
@@ -36,7 +36,7 @@ public class MyDBManager{
 			
 			db.insert(MyDBHelper.TABLE_SESSIONE, null, cv);
 		}
-		
+	//aggiunta di una caduta relativa a una sessione assegnata	
 	public void aggCaduta(String data, String ora, String lat, String lon, String sessione){
 			
 			SQLiteDatabase db = dbhelper.getWritableDatabase();
@@ -50,39 +50,31 @@ public class MyDBManager{
 			
 			db.insert(MyDBHelper.TABLE_CADUTA, null, cv);
 		}
-	
+	//cancellazione di una sessione
 	public void cancSessione(String nome_sessione){
 		SQLiteDatabase db = dbhelper.getWritableDatabase();
 		String delete = "DELETE FROM "+MyDBHelper.TABLE_SESSIONE+ " WHERE " +MyDBHelper.COL_NOME+ " = '" +nome_sessione+"';";
 		db.execSQL(delete);	
 	}
-	
-	public void cancCaduta(String nome_sessione){
-		SQLiteDatabase db = dbhelper.getWritableDatabase();
-		String delete = "DELETE FROM "+MyDBHelper.TABLE_CADUTA+ " WHERE " +MyDBHelper.COL_SESS+ " = '" +nome_sessione+"';";
-		db.execSQL(delete);	
-	}
-	
+	//aggiornamento della durata di una sessione
 	public void aggiornaDurataSessione(String newDurata, String nameSessione){
 		SQLiteDatabase db = dbhelper.getWritableDatabase();
 		String update = "UPDATE "+MyDBHelper.TABLE_SESSIONE+" SET "+MyDBHelper.COL_DURATA+" = '"+newDurata+"' WHERE "+MyDBHelper.COL_NOME+" = '"+nameSessione+"';";
 		db.execSQL(update);
 	}
-	
+	//aggiornamento della durata della sessione pausata
 	public void inserireTempoPausaSessione(String nomeSessione, long tempoP){
 		SQLiteDatabase db = dbhelper.getWritableDatabase();
 		String update = "UPDATE "+MyDBHelper.TABLE_SESSIONE+" SET "+MyDBHelper.COL_TEMPOPAUSA+" = '"+tempoP+"' WHERE "+MyDBHelper.COL_NOME+" = '"+nomeSessione+"';";
 		db.execSQL(update);
 	}
-	
+	//aggiornamento dello stato della sessione
 	public void aggiornaStatoSessione(int statoP, String nomeSessioneP){
 		SQLiteDatabase db = dbhelper.getWritableDatabase();
 		String update = "UPDATE "+MyDBHelper.TABLE_SESSIONE+" SET "+MyDBHelper.COL_STATO+" = '"+statoP+"' WHERE "+MyDBHelper.COL_NOME+" = '"+nomeSessioneP+"';";
 		db.execSQL(update);
 	}
-	
-	
-	//ESEGUE IL SELECT SU TUTTE LE SESSIONI
+	//ESEGUE LA SELEZIONE DI TUTTE LE SEZIONICON RELATIVE INFORMAZIONI
 	public Cursor selezTutteSessioni(){
 	    Cursor crs=null;
 	     try
@@ -97,7 +89,7 @@ public class MyDBManager{
 	     return crs;
 	 }
 	
-	//ESEGUE IL SELECT SULLA SESSIONE PASSATA PER PARAMETRO
+	//ESEGUE LA SELEZIONE SULLA SESSIONE PASSATA PER PARAMETRO
 	public Cursor selezSessione(String nameSession){
 	  Cursor crs = null;
 	  String selectColumns[] = new String[]{""+MyDBHelper.COL_NOME+"",""+MyDBHelper.COL_DATA+"",""+MyDBHelper.COL_ORA+"",""+MyDBHelper.COL_DURATA+"", ""+MyDBHelper.COL_NCADUTE+"",""+MyDBHelper.COL_COLOR+""};
@@ -116,7 +108,7 @@ public class MyDBManager{
 	   return crs;
 	}
 	
-	
+	//esegue la selezione delle cadute sulla sezione passata per parametro
 	 public Cursor selezCaduta(String nameSession)
 	 {
 	     Cursor crs=null;
@@ -136,7 +128,7 @@ public class MyDBManager{
 	     }     
 	     return crs;     
 	 }
-	 
+	 //selezione di tutte le cadute
 	 public Cursor selezTutteCadute(){
 		   Cursor crs = null;
 		    try
@@ -150,23 +142,7 @@ public class MyDBManager{
 		     }     
 		    return crs;
 		  }
-	 
-	 public Cursor selezTutteCadute(String nameSession){
-		 		Cursor crs = null;
-		 		String selectColumns[] = new String[]{""+MyDBHelper.COL_DATAC+"",""+MyDBHelper.COL_ORAC+"",""+MyDBHelper.COL_LAT+"",""+MyDBHelper.COL_LON+""};
-		 		String whereClause = ""+MyDBHelper.COL_IDC+"= ?" ;
-		 		String whereArgs[] = new String[]{""+nameSession+""};
-		 		 try{
-		 	         SQLiteDatabase db = dbhelper.getReadableDatabase();
-		 	         crs = db.query(MyDBHelper.TABLE_CADUTA, selectColumns, whereClause, whereArgs, null, null, null, null);
-		 	         
-		 	     }catch(SQLiteException sqle)
-		 	     {     
-		 	    	 return null;
-		 	     } 
-		 		 return crs;
-		 	}
-	 
+	 //conta il numero di sessioni salvate nel database	 
 	 public int contaSessioni(){	 
 			
 		 SQLiteDatabase db = dbhelper.getReadableDatabase();
@@ -176,7 +152,7 @@ public class MyDBManager{
 		 mCount.close();
 		 return count;
 	 }
-	 
+	 //conta numero di cadute per ogni sessione
 	 public int contaCadute(String nameSession){	 
 		
 		 SQLiteDatabase db = dbhelper.getReadableDatabase();
@@ -186,7 +162,7 @@ public class MyDBManager{
 		 mCount.close();
 		 return count;
 	 }
-	 
+	//metodo per trovare il primo numero disponibile per il nome della sessione 
 	 public boolean noSessStessoNome(String session){
 		 SQLiteDatabase database = dbhelper.getReadableDatabase();
 		 String sql = "select count(*) from "+MyDBHelper.TABLE_SESSIONE+ " where "+MyDBHelper.COL_NOME+ " = '"+ session +"';" ; 
@@ -198,7 +174,7 @@ public class MyDBManager{
 			 return true;
 		 return false;
 	 }
-	 
+	 //metodo per non avere più di una sessione nello stesso momento
 	 public boolean noCaduteStessaOra(String session, String hour){
 		 SQLiteDatabase database = dbhelper.getReadableDatabase();
 		 String sql = "select count(*) from "+MyDBHelper.TABLE_CADUTA+ " where "+MyDBHelper.COL_SESS+ " = '"+ session +"' and " + MyDBHelper.COL_ORAC + " = '"+hour+"';" ; 
@@ -210,8 +186,7 @@ public class MyDBManager{
 			 return true;
 		 return false;
 	 }
-	 
-	 
+	 //selezione della caduta di una sessione e avvenuta in una determinata ora
 	 public Cursor selezCadutaConOra(String nameSession, String hour)
 	 	 {
 	 	     Cursor crs=null;
@@ -231,27 +206,16 @@ public class MyDBManager{
 	 	     }     
 	 	     return crs;     
 	 	 }
-	 	
+	 	//cancellare una caduta di una determinata sessione e ora
 	 	public void cancCaduta(String nameSession, String hour){
 	 		SQLiteDatabase db = dbhelper.getWritableDatabase();
 	 		String delete = "DELETE FROM "+MyDBHelper.TABLE_CADUTA+ " WHERE " +MyDBHelper.COL_SESS+ " = '" +nameSession+ "' AND " + MyDBHelper.COL_ORAC + " = '"+ hour + "';";
 	 		db.execSQL(delete);	
 	 	}
-	 	
+	 	//cazncella tute le cadute di una sessione
 	 	public void cancCadute(String nameSession){
 	 		SQLiteDatabase db = dbhelper.getWritableDatabase();
 	 		String delete = "DELETE FROM "+MyDBHelper.TABLE_CADUTA+ " WHERE " +MyDBHelper.COL_SESS+ " = '" +nameSession+ "';";
 	 		db.execSQL(delete);	
-	 	}
-	 
-	 public int MaxIDSessione(){	 
-			
-		 SQLiteDatabase db = dbhelper.getReadableDatabase();
-		 Cursor mCount = db.rawQuery("select max( "+MyDBHelper.COL_IDS+" ) from "+MyDBHelper.TABLE_SESSIONE+ " ;", null);
-		 mCount.moveToFirst();
-		 int countS = mCount.getInt(0);
-		 mCount.close();
-		 return countS;
-	 }
-		
+	 	}	
 }

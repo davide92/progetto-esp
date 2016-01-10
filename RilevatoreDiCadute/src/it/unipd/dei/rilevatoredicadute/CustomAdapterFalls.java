@@ -9,10 +9,8 @@ import android.widget.TextView;
 
 public class CustomAdapterFalls extends ArrayAdapter<DatiCadute>{
 	
-	//private List<DatiCadute> listC;
 	public CustomAdapterFalls(Context context, int textViewResourceId, List <DatiCadute> objects){
 		super(context, textViewResourceId, objects);
-		//listC = objects;
 	}
 
 	public View getView( int position, View convertView, ViewGroup parent){

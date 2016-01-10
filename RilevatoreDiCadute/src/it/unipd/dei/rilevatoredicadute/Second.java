@@ -54,9 +54,7 @@ public class Second extends ActionBarActivity {
         nomeSessione = (TextView)findViewById(R.id.nomeSessione);
         TextView data = (TextView)findViewById(R.id.data);
         TextView ora = (TextView)findViewById(R.id.ora);
-        TextView durataSessione = (TextView)findViewById(R.id.durataSessione);		
-        //Dati d = getItem(position);
-        //picture.setImage();        
+        TextView durataSessione = (TextView)findViewById(R.id.durataSessione);		        
         if (crs.moveToFirst()){
         	nomeSessione.setText(crs.getString(0));
         	data.setText(crs.getString(1));
@@ -84,10 +82,7 @@ public class Second extends ActionBarActivity {
 		        
 		        FallList.add(new DatiCadute(giorno, mese, anno,ore, minuti, secondi, (c.getString(2)), (c.getString(3)),nS));           
         	}while(c.moveToNext());//fine while
-        }
-        else{
-        	//list.add(new Dati());
-        }//fine IF               
+        }              
         c.close();        
        
         CustomAdapterFalls FALLadapter = new CustomAdapterFalls(this, R.layout.fall_item, FallList);
@@ -129,35 +124,17 @@ public class Second extends ActionBarActivity {
 	        db.close();
 	    }
 	}
-
+	//creazione degli elementi del menù
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu){
 		super.onCreateOptionsMenu(menu);
-    	//MenuItem meIt1 = menu.add(0, R.id.nuovaSessione, 1, "Nuova Sessione"); 
-    	/*MenuItem meIt2 =*/ menu.add(0, R.id.delete, 2, "Elimina caduta");
-    	
-    	//meIt1.setIntent(new Intent(this, NewThird.class));
-    	/*Intent del = new Intent(this, DeleteFall.class);
-    	del.putExtra("session", nomeSessione.getText());
-     	del.putExtra("color", cl);
-    	Bundle extra = new Bundle();
-    	extra.putParcelable("image", bm);
-    	del.putExtras(extra);
-    	meIt2.setIntent(del);*/
-    	
+		menu.add(0, R.id.delete, 2, "Elimina caduta");
     	return true;
     } 
-
+	//azioni di ogni elemento del menù
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		/*if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);*/
 		if(id == R.id.delete){
 			Intent del = new Intent(this, DeleteFall.class);
 	    	del.putExtra("session", nomeSessione.getText());

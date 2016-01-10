@@ -23,10 +23,10 @@ import android.graphics.drawable.BitmapDrawable;
 
 public class MainActivity extends ActionBarActivity {	
 	
-	//IL VALORE VAIRAIBILE s:
-	//s=0, una sessione si puo' iniziare
-	//s=1 una sessione e' in esecuzione
-	//s=2 una sessione e' in pausa		
+	//IL VALORE VARIAIBILE s:
+	//s=0, una sessione puo' iniziare
+	//s=1, una sessione e' in esecuzione
+	//s=2, una sessione e' in pausa		
 	
 	public static String PACKAGE_NAME; 	
 	MyDBManager db;	          
@@ -85,9 +85,6 @@ public class MainActivity extends ActionBarActivity {
                 list.add(new Dati(crs.getString(1),day, month, year,hour, minutes, seconds, durataSessione, falls, cl, stato));           
             	}while(crs.moveToNext());//fine while
             }
-           /* else{
-            	list.add(new Dati());
-            }//fine IF*/
             crs.close();        
             Log.v("NOME SESSIONE IN CORSO MA",""+NSC+"");
             
@@ -152,7 +149,7 @@ public class MainActivity extends ActionBarActivity {
 	        db.close();
 	    }
 	}	
-
+	//creazione degli elementi del menù
 	@Override
     public boolean onCreateOptionsMenu(Menu menu){
 		super.onCreateOptionsMenu(menu);		
@@ -163,13 +160,10 @@ public class MainActivity extends ActionBarActivity {
 		return true;
 		
     } 
-	
+	// azioni per ogni elemento del menù
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		
+				
 		switch (item.getItemId()) {
 		case R.id.nuovaSessione:{
 			if(!(noSessioneInCorso)){
