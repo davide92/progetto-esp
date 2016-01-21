@@ -6,6 +6,7 @@ package it.unipd.dei.rilevatoredicadute;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -41,7 +42,7 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 	private float zValLast;
 	Intent mReceiver = null;
 	Intent thActivity = null;
-	private float alpha = (float)15; //differenza tra valore immediato e precedente per cui si ha una caduta
+	private float alpha = (float)9; //differenza tra valore immediato e precedente per cui si ha una caduta
 	String sessione;
 	public static final String BROADCAST = "it.unipd.dei.rilevatoredicadute.android.action.broadcast";
 	public static final String TEXTVIEW = "Gestione Textview";
@@ -66,7 +67,10 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 	int day;
 	String date;
 	int k, i, j;
-	Location l;
+	int permesso;
+	PackageManager packMan;
+	Location l;	
+	final int DUE_SECONDI = 2 * 1000; 
 	
 	public FindFall() {
 		super();
@@ -108,16 +112,18 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 		sessione = intent.getStringExtra("nome sessione");
 		Log.v("nomesessione service", ""+sessione);
 		mReceiver = new Intent(this, MyReceiver.class);	
-		if ( !locMg.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {			
+		//avvio delle impostazioni per attivare il GPS
+		if (!locMg.isProviderEnabled( LocationManager.NETWORK_PROVIDER) ) {			
 			Intent ISetting = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);			
 			ISetting.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);			
 			ISetting.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);			
-			ISetting.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK); 
+			ISetting.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 			startActivity(ISetting);
+			while(!locMg.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+				settaGPS();
+			}
 		}
-		while (!locMg.isProviderEnabled( LocationManager.GPS_PROVIDER )){
-			resettaGPS();
-		}
+		
 		//avvio conto alla rovescia
 		cdSaveSC.start();
 		cdViewSC.start();
@@ -140,9 +146,10 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
  						xValLast = acData.get(k).getX();
  						yValLast = acData.get(k).getY();
  						zValLast = acData.get(k).getZ();
- 						caduta();//metodo per la verifica dell'avvenuta di una caduta
-						k++;						
-					} 					
+ 						caduta();//metodo per la verifica dell'avvenuta di una caduta	
+ 						k++;
+					} 
+ 					
  					acData.add(new AccelData(time, x, y, z));
 					cdSaveSC.start();
 				}
@@ -170,7 +177,9 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 	
 	@Override
 	public void onLocationChanged(Location location) {
-			// TODO Auto-generated method stub 			
+			// TODO Auto-generated method stub
+		latitude = location.getLatitude();
+		longitude = location.getLongitude();
 	}
 	
 	@Override
@@ -180,27 +189,25 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 	
 	@Override
 	public void onProviderEnabled(String provider) {
-			// TODO Auto-generated method stub			
+			// TODO Auto-generated method stub	
+		Log.v("FindFall->onProviderEnabled","NETWORK_PROVIDER ABILITATO");
 	}
 	
 	@Override
 	public void onProviderDisabled(String provider) {
-			// TODO Auto-generated method stub			
+			// TODO Auto-generated method stub	
+		Log.v("FindFall->onProviderDisabled","NETWORK_PROVIDER NON ABILITATO");
 	}
 	//metodo per rilevare una caduta
 	private void caduta(){
 		float x = java.lang.Math.abs(xVal)- java.lang.Math.abs(xValLast);
 		float y = java.lang.Math.abs(yVal)- java.lang.Math.abs(yValLast);
-		float z = java.lang.Math.abs(zVal)- java.lang.Math.abs(zValLast);				
-		
-		if(((java.lang.Math.abs(x)) >= alpha) || ((java.lang.Math.abs(y)) >= alpha) || ((java.lang.Math.abs(z)) >= alpha)){
-			if(l != null){	
-				longitude = l.getLongitude();
-				latitude = l.getLatitude();
-			}			
+		float z = java.lang.Math.abs(zVal)- java.lang.Math.abs(zValLast);
+				
+		if(((java.lang.Math.abs(x)) >= alpha) || ((java.lang.Math.abs(y)) >= alpha) || ((java.lang.Math.abs(z)) >= alpha)){		
 			mReceiver.putExtra("fall", true);			
 			mReceiver.putExtra("lat", latitude);
-			mReceiver.putExtra("long", longitude);
+			mReceiver.putExtra("long", longitude);		
 			calendar=new GregorianCalendar();
 			
 			thActivity.setAction(BROADCAST);
@@ -221,10 +228,23 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 	
 	private void start(){			
 			Log.v("GESTIONE FILE","METODO START");
-			it = System.currentTimeMillis();		
+			it = System.currentTimeMillis();				
 			locMg = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-			locMg.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);		
-			l = locMg.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+			Log.i("valore locationManager", ""+locMg);
+			//locMg.requestLocationUpdates(LocationManager./*NETWORK_PROVIDER*/GPS_PROVIDER, 20000, 10, this);
+			locMg.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 5, this);			
+			l = locMg.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+			//avvio delle impostazioni per attivare il GPS
+			if ( !locMg.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ){			
+				Intent ISetting = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);			
+				ISetting.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);			
+				ISetting.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);			
+				ISetting.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+				startActivity(ISetting);				    
+			}
+			while(!locMg.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+			    settaGPS();
+		    }
 			mysm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);					
 			accel = mysm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 			if(mysm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null){
@@ -233,10 +253,9 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 			}
 	}
 	
-	private void resettaGPS(){
-		locMg = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-		locMg.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);		
-		l = locMg.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+	private void settaGPS(){
+		locMg.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 5, this);		
+		l = locMg.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);		
 	}
 	
 	private void stop(){

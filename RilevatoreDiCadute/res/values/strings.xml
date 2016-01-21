@@ -36,6 +36,6 @@
     <string name="zTx">Asse z: </string>      
     <string name="title_activity_delete_fall">Elimina caduta</string>
     <string name="thumbnail">Thumbnail</string> 
-    <string name="messaggio">Nessuna sessione presente, iniziare una nuova sessione</string>    
-    
+    <string name="messaggio">Nessuna sessione presente, iniziare una nuova sessione</string> 
+
 </resources>

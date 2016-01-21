@@ -35,7 +35,7 @@ import it.unipd.dei.rilevatoredicadute.FindFall.MyBinderText;
 
 
 public class NewThird extends ActionBarActivity{
-		
+	
 	GregorianCalendar cal;
 	MyDBManager db;
 	public long stopTime=0;		
@@ -83,6 +83,7 @@ public class NewThird extends ActionBarActivity{
 	TextReceiver textReceiver;
 	float [] arrayRicevuto = new float[3];
 	boolean VarSavedInstance = false; //variabile per sapere se è stata salvata l'istanza dell'activity
+	boolean permesso;
 	
 	@Override
 	protected void onCreate(Bundle savedInstance) {		
@@ -129,7 +130,6 @@ public class NewThird extends ActionBarActivity{
 	protected void onStart(){
 		super.onStart();
 		Log.v("TAG", "----INIZIO-THIRD----");
-		
 		//COUNT DOWN TIMER PER LA GESTIONE DELLA TEXTVIEW CHE VISUALIZZA LA DURATA DELLA SESSIONE
 		cdCrono = new CountDownTimer(1000L, 100L) {					
 					@Override
@@ -260,7 +260,9 @@ public class NewThird extends ActionBarActivity{
 				startService(TextIntent);
 				bindService(TextIntent, mServiceConnectionText, Context.BIND_AUTO_CREATE);
 				cdText.start();
-				
+				if(!permesso){
+					
+				}
 				Log.v("List-1","--HO PREMUTO IL TASTO PLAY---");				
 			}						
 		});
@@ -416,7 +418,7 @@ public class NewThird extends ActionBarActivity{
 				arrayRicevuto = arg1.getFloatArrayExtra("textview");//array dei valori degli assi x, y e z dell'accelerometro	
 		}
 	}
-	
+		
     private ServiceConnection mServiceConnection = new ServiceConnection() {
     	
 		 @Override
@@ -445,6 +447,7 @@ public class NewThird extends ActionBarActivity{
 		 mServiceBoundText = true;
 		 } 
 	 };
+	 
 	// aggiunta degli elementi del menù	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -483,7 +486,6 @@ public class NewThird extends ActionBarActivity{
 	
 	//metodo per aggiornare la UI nel caso di una caduta rilevata
 	private void updateUI() {
-		//Log.v("updateUI", "inzio");
 		//cancellazione dei dati salvati e visualizzati precedentemente
 		if(fallList.size() > 0){
 			fallList.clear();
