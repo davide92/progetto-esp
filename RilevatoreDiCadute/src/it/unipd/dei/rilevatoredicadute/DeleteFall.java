@@ -54,16 +54,16 @@ public class DeleteFall extends ActionBarActivity {
         if(c.moveToFirst()){
         	do{
             String strData = c.getString(c.getColumnIndex("DataCaduta"));
-            String[] dataf=strData.split("/");
-            int giorno =Integer.parseInt(dataf[0]);  
-            int mese=Integer.parseInt(dataf[1]);  
-            int anno=Integer.parseInt(dataf[2]);
+            String[] dataCaduta=strData.split("/");
+            int giorno =Integer.parseInt(dataCaduta[0]);  
+            int mese=Integer.parseInt(dataCaduta[1]);  
+            int anno=Integer.parseInt(dataCaduta[2]);
 
             String strTime = c.getString(c.getColumnIndex("OraCaduta"));
-            String[] oraf=strTime.split(":");
-            int ora=Integer.parseInt(oraf[0]);  
-            int minuti=Integer.parseInt(oraf[1]);  
-            int secondi=Integer.parseInt(oraf[2]);
+            String[] oraCaduta=strTime.split(":");
+            int ora=Integer.parseInt(oraCaduta[0]);  
+            int minuti=Integer.parseInt(oraCaduta[1]);  
+            int secondi=Integer.parseInt(oraCaduta[2]);
             
             FallList.add(new DatiCadute(giorno , mese, anno,ora, minuti, secondi, c.getString(2), c.getString(3), nS));           
         	}while(c.moveToNext());//fine while

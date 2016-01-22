@@ -27,8 +27,8 @@ public class CustomAdapter extends ArrayAdapter<Dati>{
 		if(d.getStato() == 0){//caduta stoppata ha scritte nere
 			convertView = inflater.inflate(R.layout.list_items, null);
 			ImageView thumbnail = (ImageView)convertView.findViewById(R.id.picture);
-			int cl = list.get(position).getColore();
-			ColorFilter filter = new LightingColorFilter(Color.WHITE, cl);
+			int colore = list.get(position).getColore();
+			ColorFilter filter = new LightingColorFilter(Color.WHITE, colore);
 			thumbnail.setColorFilter(filter);
 			TextView nomeSessione = (TextView)convertView.findViewById(R.id.nomeSessione);
 			TextView dataEora = (TextView)convertView.findViewById(R.id.dataEora);
@@ -41,8 +41,8 @@ public class CustomAdapter extends ArrayAdapter<Dati>{
 		}else{//caduta in esecuzione o in pausa, colore delle scritte blu 
 			convertView = inflater.inflate(R.layout.list_items_2, null);
 			ImageView thumbnail = (ImageView)convertView.findViewById(R.id.picture);
-			int cl = list.get(position).getColore();
-			ColorFilter filter = new LightingColorFilter(Color.WHITE, cl);
+			int colore = list.get(position).getColore();
+			ColorFilter filter = new LightingColorFilter(Color.WHITE, colore);
 			thumbnail.setColorFilter(filter);
 			TextView nomeSessione = (TextView)convertView.findViewById(R.id.nomeSessione);
 			TextView dataEora = (TextView)convertView.findViewById(R.id.dataEora);

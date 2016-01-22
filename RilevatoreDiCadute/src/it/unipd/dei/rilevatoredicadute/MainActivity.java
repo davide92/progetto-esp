@@ -60,17 +60,17 @@ public class MainActivity extends ActionBarActivity {
             if(crs.moveToFirst()){
             	do{
                 String strData = crs.getString(crs.getColumnIndex("DataInizio"));
-                String[] dataf = strData.split("/");
-                int day = Integer.parseInt(dataf[0]);  
-                int month = Integer.parseInt(dataf[1]);  
-                int year = Integer.parseInt(dataf[2]);           
+                String[] dataCaduta = strData.split("/");
+                int giorno = Integer.parseInt(dataCaduta[0]);  
+                int mese = Integer.parseInt(dataCaduta[1]);  
+                int anno = Integer.parseInt(dataCaduta[2]);           
 
                 String strTime = crs.getString(crs.getColumnIndex("OraInizio"));
-                String[] oraf = strTime.split(":");
-                int hour = Integer.parseInt(oraf[0]);  
-                int minutes = Integer.parseInt(oraf[1]);  
-                int seconds = Integer.parseInt(oraf[2]);
-                int falls = db.contaCadute(crs.getString(1));
+                String[] oraCaduta = strTime.split(":");
+                int ora = Integer.parseInt(oraf[0]);  
+                int minuto = Integer.parseInt(oraf[1]);  
+                int secondo = Integer.parseInt(oraf[2]);
+                int cadute = db.contaCadute(crs.getString(1));
                 durataSessione = crs.getString(crs.getColumnIndex("Durata"));
                 if(durataSessione.equals("XX:XX:XX")){
                 	NSC = crs.getString(1);
@@ -81,8 +81,8 @@ public class MainActivity extends ActionBarActivity {
                 	noSessioneInCorso = true;            	
                 }            
                 stato = Integer.parseInt(crs.getString(crs.getColumnIndex("Stato")));
-                int cl = crs.getInt(crs.getColumnIndex("Colore"));
-                list.add(new Dati(crs.getString(1),day, month, year,hour, minutes, seconds, durataSessione, falls, cl, stato));           
+                int colore = crs.getInt(crs.getColumnIndex("Colore"));
+                list.add(new Dati(crs.getString(1),giorno, mese, anno, ora, minuto, secondo, durataSessione, cadute, colore, stato));           
             	}while(crs.moveToNext());//fine while
             }
             crs.close();        
@@ -94,8 +94,8 @@ public class MainActivity extends ActionBarActivity {
         	public void onItemClick(AdapterView<?> adapter, View v, int position, long id){      		
         		
         		Log.v("MA-SELEZIONE-SESSIONE",""+(((Dati)adapter.getItemAtPosition(position)).getNomeSessione())+"");
-        		Intent UI2;    		
-        		Intent ST;
+        		Intent UI2;    //intent activity nella second.class 		
+        		Intent ST;   //intent activity nella newThird
         		UI2 = new Intent(getApplicationContext(), Second.class);    		
         		ST = new Intent(getApplicationContext(),NewThird.class);
         		
@@ -168,7 +168,7 @@ public class MainActivity extends ActionBarActivity {
 		case R.id.nuovaSessione:{
 			if(!(noSessioneInCorso)){
 				Intent NS = new Intent(getApplicationContext(),NewThird.class);
-				String par = "Sessione "/*+(db.MaxIDSessione()+1)+""*/ + trovaNumSess();
+				String par = "Sessione " + trovaNumSess();
 				NS.putExtra(PACKAGE_NAME+".nomeSessione", par);
 				startActivity(NS);
 			}

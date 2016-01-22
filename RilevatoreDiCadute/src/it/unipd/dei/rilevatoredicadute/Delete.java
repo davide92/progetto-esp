@@ -1,3 +1,7 @@
+/*CLASSE CHE SI OCCUPA DI ELIMINARE UNA O PIU' SESSIONI.
+ *  APRE UN ALERTDIALOG PER CONFERMARE L'ELIMINAZIONE
+ *  DELLA SESSIONE SCELTA */
+
 package it.unipd.dei.rilevatoredicadute;
 
 import java.util.LinkedList;
@@ -31,22 +35,22 @@ public class Delete extends ActionBarActivity {
         if(crs.moveToFirst()){
         	do{
         		String strData = crs.getString(crs.getColumnIndex("DataInizio"));
-        		String[] dataf = strData.split("/");
-        		int giorno = Integer.parseInt(dataf[0]);  
-        		int mese = Integer.parseInt(dataf[1]);  
-        		int anno = Integer.parseInt(dataf[2]);
+        		String[] dataCaduta = strData.split("/");
+        		int giorno = Integer.parseInt(dataCaduta[0]);  
+        		int mese = Integer.parseInt(dataCaduta[1]);  
+        		int anno = Integer.parseInt(dataCaduta[2]);
 
         		String strTempo = crs.getString(crs.getColumnIndex("OraInizio"));
-        		String[] oraf = strTempo.split(":");
-        		int ora = Integer.parseInt(oraf[0]);  
-        		int minuti = Integer.parseInt(oraf[1]);  
-        		int secondi = Integer.parseInt(oraf[2]); 
-        		int nCadute = db.contaCadute(crs.getString(1));
-        		int cl = crs.getInt(crs.getColumnIndex("Colore"));
+        		String[] oraCaduta = strTempo.split(":");
+        		int ora = Integer.parseInt(oraCaduta[0]);  
+        		int minuti = Integer.parseInt(oraCaduta[1]);  
+        		int secondi = Integer.parseInt(oraCaduta[2]); 
+        		int numeroCadute = db.contaCadute(crs.getString(1));
+        		int colore = crs.getInt(crs.getColumnIndex("Colore"));
         		int stato = crs.getInt(crs.getColumnIndex("Stato"));
         		durataSessione = crs.getString(crs.getColumnIndex("Durata")); 
         		if(stato == 0){
-        			list.add(new Dati(crs.getString(1),giorno, mese, anno,ora, minuti, secondi, durataSessione, nCadute, cl, stato));
+        			list.add(new Dati(crs.getString(1),giorno, mese, anno,ora, minuti, secondi, durataSessione, numeroCadute, colore, stato));
         		}
             }while(crs.moveToNext());//fine while
         }
@@ -64,11 +68,11 @@ public class Delete extends ActionBarActivity {
 					
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						String session = ((Dati)a.getItemAtPosition(pos)).getNomeSessione();
-						db.cancSessione(session);
-						db.cancCadute(session);
+						String sessione = ((Dati)a.getItemAtPosition(pos)).getNomeSessione();
+						db.cancSessione(sessione);
+						db.cancCadute(sessione);
 						db.close();
-						getApplicationContext().deleteFile(session);
+						getApplicationContext().deleteFile(sessione);
 						Intent UI2 = new Intent(getApplicationContext(), MainActivity.class);
 			         	startActivity(UI2);
 					}

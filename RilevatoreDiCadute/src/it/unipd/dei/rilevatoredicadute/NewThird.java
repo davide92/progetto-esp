@@ -61,10 +61,7 @@ public class NewThird extends ActionBarActivity{
 	  3 -> cambio rotazione schermo
 	 */
 	int s;
-	int SNT; //stato sessione activity newthird per gestione parametri
-	int year;
-	int month;
-	int day;
+	int SNT; //stato sessione activity newthird per gestione parametri	
 	int cStart = 0; // contatore metodo start()
 	ImageButton playBtn;
 	ImageButton pauseBtn;
@@ -77,10 +74,10 @@ public class NewThird extends ActionBarActivity{
 	Intent T;	
 	Intent intent;
 	Intent TextIntent;
-	MyReceiver myReceiver;
+	MyReceiver myReceiver;   //Receiver per aggiornare la durata della sessione
 	CustomAdapterFalls adapter;	
-	Receiver receiver;		
-	TextReceiver textReceiver;
+	Receiver receiver; //Receiver per l'aggiornamento delle informazioni su una caduta durante una sessione
+	TextReceiver textReceiver; //Receiver per l'aggiornamento dei dati dell'accelerometro
 	float [] arrayRicevuto = new float[3];
 	boolean VarSavedInstance = false; //variabile per sapere se è stata salvata l'istanza dell'activity
 	boolean permesso;
@@ -153,7 +150,7 @@ public class NewThird extends ActionBarActivity{
 					}					
 					@Override
 					public void onFinish() {
-						if(arrayRicevuto[0] != 0.0f){
+						if(arrayRicevuto[0] != 0.0f && arrayRicevuto[1] != 0.0f && arrayRicevuto[2] != 0.0f){
 							xAccViewS.setText(""+arrayRicevuto[0]);
 							yAccViewS.setText(""+arrayRicevuto[1]);
 							zAccViewS.setText(""+arrayRicevuto[2]);
@@ -240,15 +237,15 @@ public class NewThird extends ActionBarActivity{
 				cStart++;
 				String data = ""+cal.get(GregorianCalendar.YEAR)+ "/" + (cal.get(GregorianCalendar.MONTH)+1)+ "/" +cal.get(GregorianCalendar.DATE);
 																
-				long milliseconds = System.currentTimeMillis();
-				int seconds = (int) (milliseconds / 1000) % 60 ;
-				int minutes = (int) ((milliseconds / (1000*60)) % 60);
-				int hours   = (int) ((milliseconds / (1000*60*60)) % 24);
-				String ora = ""+hours+ ":" + minutes+ ":" +seconds+"";	
+				long millisecondi = System.currentTimeMillis();
+				int secondo = (int) (milliseconds / 1000) % 60 ;
+				int minuto = (int) ((milliseconds / (1000*60)) % 60);
+				int ora   = (int) ((milliseconds / (1000*60*60)) % 24);
+				String tempo = ""+ora+ ":" + minuto+ ":" +secondo+"";	
 				Random rm = new Random();
 				int cl = Color.argb(255, rm.nextInt(254), rm.nextInt(254), rm.nextInt(254));
 				if(db.noSessStessoNome(NS)){
-						db.aggSessione(NS, data, ora, "XX:XX:XX", 0, cl, 1, 0);
+						db.aggSessione(NS, data, tempo, "XX:XX:XX", 0, cl, 1, 0);
 				}
 				if ( stopTime != 0 ){
 					long intervalloPausa = (SystemClock.elapsedRealtime() - stopTime);

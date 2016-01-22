@@ -1,5 +1,5 @@
 /*service per la rilevazione delle cadute, il salvataggio dei datiaccelerometro su file, 
-  la lettura dei dati da accelerometro e dati della posizione via GPS
+  la lettura dei dati da accelerometroerometro e dati della posizione via GPS
  */
 package it.unipd.dei.rilevatoredicadute;
 
@@ -47,30 +47,27 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 	public static final String BROADCAST = "it.unipd.dei.rilevatoredicadute.android.action.broadcast";
 	public static final String TEXTVIEW = "Gestione Textview";
 	MyDBManager dbF;
-	GregorianCalendar calendar;
+	GregorianCalendar calendario;
 	IBinder mBinder = new MyBinderText();
-	private SensorManager mysm = null;
-	private LocationManager locMg = null;
-	private Sensor accel = null;
-	private ArrayList<AccelData> acData = new ArrayList<AccelData>(15000);	//lista temporanea dati accelerometro
+	private SensorManager mioGestoreSensore = null;
+	private LocationManager gestoreLocazione = null;
+	private Sensor accelerometro = null;
+	private ArrayList<accelerometroData> acData = new ArrayList<accelerometroData>(15000);	//lista temporanea dati accelerometroerometro
 	DataOutputStream f = null;
 	FileOutputStream fo = null;		
-	File file; //file per il salvataggio di tutti i dati dell'accelerometro
+	File file; //file per il salvataggio di tutti i dati dell'accelerometroerometro
 	String lastFileName = "null";
-	CountDownTimer cdSaveSC = null; //conto alla rovescia lettura/salvataggio nella lista temporanea dati accelerometro
-	CountDownTimer cdViewSC = null; //conto alla rovescia visualizzazione dati accelerometro
-	boolean rec, vis = true; //variabili per la visualizzazione e salvataggio dei dati da accelerometro
-	private double latitude, longitude;
-	float[] DatiAccelerometro = new float[3];
-	int year;
-	int month;
-	int day;
+	CountDownTimer cdSaveSC = null; //conto alla rovescia lettura/salvataggio nella lista temporanea dati accelerometroerometro
+	CountDownTimer cdViewSC = null; //conto alla rovescia visualizzazione dati accelerometroerometro
+	boolean rec, vis = true; //variabili per la visualizzazione e salvataggio dei dati da accelerometroerometro
+	private double latitudine, longitudine;
+	float[] Datiaccelerometroerometro = new float[3];
 	String date;
 	int k, i, j;
 	int permesso;
 	PackageManager packMan;
 	Location l;	
-	final int DUE_SECONDI = 2 * 1000; 
+	final int UN_SECONDO = 1000; 
 	
 	public FindFall() {
 		super();
@@ -79,7 +76,7 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 	@Override
 	public void onCreate(){
 		super.onCreate();
-		//conto alla rovescia per salvataggio dei dati dell'accelerometro nella lista
+		//conto alla rovescia per salvataggio dei dati dell'accelerometroerometro nella lista
 		cdSaveSC = new CountDownTimer(2000L, 500L) {					
 			@Override
 			public void onTick(long millisUntilFinished) {
@@ -90,7 +87,7 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 				rec = true;									
 			}
 		};
-		//conto alla rovescia per visualizzazione dei dati dell'accelerometro
+		//conto alla rovescia per visualizzazione dei dati dell'accelerometroerometro
 		cdViewSC = new CountDownTimer(5000L, 500L) {					
 			@Override
 			public void onTick(long millisUntilFinished) {
@@ -112,17 +109,18 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 		sessione = intent.getStringExtra("nome sessione");
 		Log.v("nomesessione service", ""+sessione);
 		mReceiver = new Intent(this, MyReceiver.class);	
+		/*
 		//avvio delle impostazioni per attivare il GPS
-		if (!locMg.isProviderEnabled( LocationManager.NETWORK_PROVIDER) ) {			
+		if (!gestoreLocazione.isProviderEnabled( LocationManager.NETWORK_PROVIDER) ) {			
 			Intent ISetting = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);			
 			ISetting.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);			
 			ISetting.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);			
 			ISetting.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 			startActivity(ISetting);
-			while(!locMg.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+			while(!gestoreLocazione.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
 				settaGPS();
 			}
-		}
+		}*/
 		
 		//avvio conto alla rovescia
 		cdSaveSC.start();
@@ -133,7 +131,7 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		synchronized (this) {
-			if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){				
+			if(event.sensor.getType() == Sensor.TYPE_accelerometroEROMETER){				
 				if(rec){					
 					float x = event.values[0];
  					float y = event.values[1];
@@ -150,17 +148,17 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
  						k++;
 					} 
  					
- 					acData.add(new AccelData(time, x, y, z));
+ 					acData.add(new accelerometroData(time, x, y, z));
 					cdSaveSC.start();
 				}
-				//invio dati per la visualizzazione dei valori dell'accelerometro
+				//invio dati per la visualizzazione dei valori dell'accelerometroerometro
 				if(vis && !acData.isEmpty() && j < acData.size()){
-					DatiAccelerometro[0] = acData.get(j).getX();
-					DatiAccelerometro[1] = acData.get(j).getY();
-					DatiAccelerometro[2] = acData.get(j).getZ();
+					Datiaccelerometroerometro[0] = acData.get(j).getX();
+					Datiaccelerometroerometro[1] = acData.get(j).getY();
+					Datiaccelerometroerometro[2] = acData.get(j).getZ();
 					thActivity = new Intent();
 					thActivity.setAction(TEXTVIEW);
-					thActivity.putExtra("textview", DatiAccelerometro);
+					thActivity.putExtra("textview", Datiaccelerometroerometro);
 					sendBroadcast(thActivity);
 					j += 4;
 					vis = false;
@@ -178,8 +176,8 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 	@Override
 	public void onLocationChanged(Location location) {
 			// TODO Auto-generated method stub
-		latitude = location.getLatitude();
-		longitude = location.getLongitude();
+		latitudine = location.getlatitudine();
+		longitudine = location.getlongitudine();
 	}
 	
 	@Override
@@ -206,17 +204,17 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 				
 		if(((java.lang.Math.abs(x)) >= alpha) || ((java.lang.Math.abs(y)) >= alpha) || ((java.lang.Math.abs(z)) >= alpha)){		
 			mReceiver.putExtra("fall", true);			
-			mReceiver.putExtra("lat", latitude);
-			mReceiver.putExtra("long", longitude);		
-			calendar=new GregorianCalendar();
+			mReceiver.putExtra("lat", latitudine);
+			mReceiver.putExtra("long", longitudine);		
+			calendario=new GregorianCalendar();
 			
 			thActivity.setAction(BROADCAST);
 			thActivity.putExtra("fall", true);
-			String data = ""+calendar.get(GregorianCalendar.YEAR)+ "/" + (calendar.get(GregorianCalendar.MONTH)+1)+ "/" +calendar.get(GregorianCalendar.DATE);
-			String ora = ""+calendar.get(GregorianCalendar.HOUR_OF_DAY)+ ":" + calendar.get(GregorianCalendar.MINUTE)+ ":" +calendar.get(GregorianCalendar.SECOND);
+			String data = ""+calendario.get(GregorianCalendar.YEAR)+ "/" + (calendario.get(GregorianCalendar.MONTH)+1)+ "/" +calendario.get(GregorianCalendar.data);
+			String ora = ""+calendario.get(GregorianCalendar.HOUR_OF_DAY)+ ":" + calendario.get(GregorianCalendar.MINUTE)+ ":" +calendario.get(GregorianCalendar.SECOND);
 			if(dbF.noCaduteStessaOra(sessione, ora)){
 				Log.v("FIND FALL", "NESSUNA CADUTA CON LA STESSA DATA");
-				dbF.aggCaduta(data,ora,Double.toString(latitude),Double.toString(longitude),sessione);				
+				dbF.aggCaduta(data,ora,Double.toString(latitudine),Double.toString(longitudine),sessione);				
 				Log.v("sessione in cui e' avvenuta la caduta",""+sessione);	
 				sendBroadcast(mReceiver);
 				sendBroadcast(thActivity);
@@ -229,45 +227,47 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 	private void start(){			
 			Log.v("GESTIONE FILE","METODO START");
 			it = System.currentTimeMillis();				
-			locMg = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-			Log.i("valore locationManager", ""+locMg);
-			//locMg.requestLocationUpdates(LocationManager./*NETWORK_PROVIDER*/GPS_PROVIDER, 20000, 10, this);
-			locMg.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 5, this);			
-			l = locMg.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+			gestoreLocazione = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+			Log.i("valore locationManager", ""+gestoreLocazione);			
+			//gestoreLocazione.requestLocationUpdatas(LocationManager.NETWORK_PROVIDER, 5000, 5, this);			
+			//l = gestoreLocazione.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+			
 			//avvio delle impostazioni per attivare il GPS
-			if ( !locMg.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ){			
+			if ( !gestoreLocazione.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ){			
 				Intent ISetting = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);			
 				ISetting.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);			
 				ISetting.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);			
 				ISetting.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-				startActivity(ISetting);				    
+				startActivity(ISetting);		
+				while(!gestoreLocazione.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+					settaGPS();
+				}
 			}
-			while(!locMg.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
-			    settaGPS();
-		    }
-			mysm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);					
-			accel = mysm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-			if(mysm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null){
-				mysm.registerListener((SensorEventListener) this, accel,  SensorManager.SENSOR_DELAY_NORMAL);			
-				Log.v("SENSORE ACCELEROMETRO----->","ACCELEROMETRO REGISTRATO");			
+			else
+				settaGPS();
+			mioGestoreSensore = (SensorManager) getSystemService(Context.SENSOR_SERVICE);					
+			accelerometro = mioGestoreSensore.getDefaultSensor(Sensor.TYPE_accelerometroEROMETER);
+			if(mioGestoreSensore.getDefaultSensor(Sensor.TYPE_accelerometroEROMETER) != null){
+				mioGestoreSensore.registerListener((SensorEventListener) this, accelerometro,  SensorManager.SENSOR_DELAY_NORMAL);			
+				Log.v("SENSORE accelerometroEROMETRO----->","accelerometroEROMETRO REGISTRATO");			
 			}
 	}
 	
 	private void settaGPS(){
-		locMg.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 5, this);		
-		l = locMg.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);		
+		gestoreLocazione.requestLocationUpdatas(LocationManager.NETWORK_PROVIDER, 1000, 5, this);		
+		l = gestoreLocazione.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);		
 	}
 	
 	private void stop(){
 		Log.v("GESTIONE FILE","METODO STOP");
-		if(mysm != null){
-			mysm.unregisterListener(this);
-			Log.v("SENSORE ACCELEROMETRO----->","ACCELEROMETRO STOPPATO");
+		if(mioGestoreSensore != null){
+			mioGestoreSensore.unregisterListener(this);
+			Log.v("SENSORE accelerometroEROMETRO----->","ACCELEROMETRO STOPPATO");
 		}
-		if(locMg != null){
-			locMg.removeUpdates(this);
+		if(gestoreLocazione != null){
+			gestoreLocazione.removeUpdatas(this);
 		}
-		//scrittura nel file dei dati dell'accelerometro salvati nella lista 
+		//scrittura nel file dei dati dell'accelerometroerometro salvati nella lista 
 		if(!(lastFileName.equals(sessione))){
 			lastFileName = sessione;				
 			}
@@ -307,7 +307,7 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 		acData.clear();
 		i = j = 0;	
 		
-		accel = null;	
+		accelerometro = null;	
 	}
 	@Override
 	public IBinder onBind(Intent intent){

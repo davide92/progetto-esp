@@ -23,6 +23,7 @@
         android:layout_toEndOf="@+id/nomeSessioneTx"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:textSize="20sp" 
         android:textStyle="bold"        
         />
@@ -66,14 +67,25 @@
         android:background="@android:color/transparent"
         android:src="@drawable/stopbutton" />
     
+    <TextView 
+        android:id="@+id/durata"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/start"
+        android:textSize="25sp" 
+        android:text="@string/textDurata" />"
+    
         <TextView
         android:id="@+id/timestamp_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/start"
+        android:layout_toRightOf="@+id/durata"
+        android:layout_toEndOf="@+id/durata"
         android:layout_centerHorizontal="true"
-        android:textSize="30sp"        
-        android:text=""/>
+        android:textSize="25sp"        
+        android:text=""
+        android:textStyle="bold"/>
         
         <TextView 
         android:id="@+id/xTextS"
