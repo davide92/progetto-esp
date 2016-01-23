@@ -80,7 +80,7 @@ public class NewThird extends ActionBarActivity{
 	TextReceiver textReceiver; //Receiver per l'aggiornamento dei dati dell'accelerometro
 	float [] arrayRicevuto = new float[3];
 	boolean VarSavedInstance = false; //variabile per sapere se è stata salvata l'istanza dell'activity
-	boolean permesso;
+	boolean nRS;//rileva se lo schermo non è stato ruotato
 	
 	@Override
 	protected void onCreate(Bundle savedInstance) {		
@@ -107,6 +107,7 @@ public class NewThird extends ActionBarActivity{
 			stopTime = savedInstance.getLong("TempoPausa");
 			NS = savedInstance.getString("nomeSessione");
 			cStart = savedInstance.getInt("cMs");
+			//nRS = savedInstance.getBoolean("nRS", true);
 			Log.v("null","" +NS);
 		}				
 	}
@@ -119,6 +120,7 @@ public class NewThird extends ActionBarActivity{
 	    savedInstance.putLong("TempoPausa", stopTime);
 	    savedInstance.putString("nomeSessione", NS);
 	    savedInstance.putInt("cMs", cStart);
+	    //savedInstance.putBoolean("nRS", false);
 	    Log.v("<<ATTENZIONE>>","CAMBIO ORIENTAZIONE TELEFONO");
 	    super.onSaveInstanceState(savedInstance);	    
 	}
@@ -346,76 +348,66 @@ public class NewThird extends ActionBarActivity{
 	
 	@Override
 	protected void onPause(){
-		super.onPause();
-		SNT = 2;
-		Log.v("ACT-THIRD","PAUSED");
-		String ora=StampaDurataService;
-		db.aggiornaDurataSessione(ora,NS);
-		db.aggiornaStatoSessione(SNT, NS);
-						
-		Log.v("stopSessione------->",""+NS+"");
-		//chiusura della "connessione" al service
-		if (mServiceBound) {
-			 unbindService(mServiceConnection);
-			 mServiceBound = false;
-			 }
-		//chiusura della "connessione" al service
-		if(mServiceBoundText){
-			unbindService(mServiceConnectionText);
-			mServiceBoundText = false;
-		}
-		
-		stopService(intent);
-		if(cStart >0)
-			stopService(TextIntent);
-		
-		cdCrono.cancel();
-		cdText.cancel();
+		super.onPause();		
 	}	
 
 	@Override
 	protected void onStop(){
 		super.onStop();
-		SNT = 0;
-		db.aggiornaStatoSessione(SNT, NS);
-		Log.v("ACTIVITY NEWTHIRD","NEWTHIRD STOPPED");
-		Log.v("sessione stop",""+SNT+"");
-		try{
-			unregisterReceiver(receiver);
-			}catch(IllegalArgumentException e){						
-			}
-		try{
-			unregisterReceiver(myReceiver);
-		}catch(Exception exc){			
-		}
-		try{
-			unregisterReceiver(textReceiver);
-		}catch(Exception exc){
-			
-		}
-		//chiusura della "connessione" al service
-		if (mServiceBound) {
-			unbindService(mServiceConnection);
-			mServiceBound = false;
-	    }
-		//chiusura della "connessione" al service
-		if(mServiceBoundText){
-			unbindService(mServiceConnectionText);
-			mServiceBoundText = false;
-		}
 		cdCrono.cancel();
-		cdText.cancel();					
+		cdText.cancel();
 	}
 	
 	@Override
 	protected void onRestart(){
 		super.onRestart();	
 		Log.v("NEW THIRD", "ACTIVITY NEWTHIRD RESTART  "+NS);
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(ServiceCronometro.MY_ACTION);
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(FindFall.BROADCAST);
+		IntentFilter TextFilt = new IntentFilter();
+		TextFilt.addAction(FindFall.TEXTVIEW);
+		registerReceiver(myReceiver,intentFilter);
+		registerReceiver(receiver, filter);
+		registerReceiver(textReceiver, TextFilt);
 	}
 	
 	@Override
 	protected void onDestroy(){
-		super.onDestroy();	
+		super.onDestroy();
+		unregisterReceiver(myReceiver);
+		unregisterReceiver(receiver);
+		unregisterReceiver(textReceiver);
+		/*if(SNT == 1 && nRS){
+			SNT = 0;
+			String ora=StampaDurataService;				
+			db.aggiornaDurataSessione(ora,NS);
+			db.aggiornaStatoSessione(SNT, NS);
+			try{
+				unregisterReceiver(receiver);
+				}catch(IllegalArgumentException e){						
+				}
+			try{
+				unregisterReceiver(myReceiver);
+			}catch(Exception exc){			
+			}
+			try{
+				unregisterReceiver(textReceiver);
+			}catch(Exception exc){
+				
+			}
+			//chiusura della "connessione" al service
+			if (mServiceBound) {
+				unbindService(mServiceConnection);
+				mServiceBound = false;
+		    }
+			//chiusura della "connessione" al service
+			if(mServiceBoundText){
+				unbindService(mServiceConnectionText);
+				mServiceBoundText = false;
+			}
+		}*/
 		if (db != null) 
 	    {
 	        db.close();
