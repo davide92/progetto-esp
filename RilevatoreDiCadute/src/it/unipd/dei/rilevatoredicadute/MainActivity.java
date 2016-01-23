@@ -67,9 +67,9 @@ public class MainActivity extends ActionBarActivity {
 
                 String strTime = crs.getString(crs.getColumnIndex("OraInizio"));
                 String[] oraCaduta = strTime.split(":");
-                int ora = Integer.parseInt(oraf[0]);  
-                int minuto = Integer.parseInt(oraf[1]);  
-                int secondo = Integer.parseInt(oraf[2]);
+                int ora = Integer.parseInt(oraCaduta[0]);  
+                int minuto = Integer.parseInt(oraCaduta[1]);  
+                int secondo = Integer.parseInt(oraCaduta[2]);
                 int cadute = db.contaCadute(crs.getString(1));
                 durataSessione = crs.getString(crs.getColumnIndex("Durata"));
                 if(durataSessione.equals("XX:XX:XX")){

@@ -52,7 +52,7 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 	private SensorManager mioGestoreSensore = null;
 	private LocationManager gestoreLocazione = null;
 	private Sensor accelerometro = null;
-	private ArrayList<accelerometroData> acData = new ArrayList<accelerometroData>(15000);	//lista temporanea dati accelerometroerometro
+	private ArrayList<AccelerometroData> acData = new ArrayList<AccelerometroData>(15000);	//lista temporanea dati accelerometroerometro
 	DataOutputStream f = null;
 	FileOutputStream fo = null;		
 	File file; //file per il salvataggio di tutti i dati dell'accelerometroerometro
@@ -131,7 +131,7 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		synchronized (this) {
-			if(event.sensor.getType() == Sensor.TYPE_accelerometroEROMETER){				
+			if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){				
 				if(rec){					
 					float x = event.values[0];
  					float y = event.values[1];
@@ -148,7 +148,7 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
  						k++;
 					} 
  					
- 					acData.add(new accelerometroData(time, x, y, z));
+ 					acData.add(new AccelerometroData(time, x, y, z));
 					cdSaveSC.start();
 				}
 				//invio dati per la visualizzazione dei valori dell'accelerometroerometro
@@ -176,8 +176,8 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 	@Override
 	public void onLocationChanged(Location location) {
 			// TODO Auto-generated method stub
-		latitudine = location.getlatitudine();
-		longitudine = location.getlongitudine();
+		latitudine = location.getLatitude();
+		longitudine = location.getLongitude();
 	}
 	
 	@Override
@@ -210,7 +210,7 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 			
 			thActivity.setAction(BROADCAST);
 			thActivity.putExtra("fall", true);
-			String data = ""+calendario.get(GregorianCalendar.YEAR)+ "/" + (calendario.get(GregorianCalendar.MONTH)+1)+ "/" +calendario.get(GregorianCalendar.data);
+			String data = ""+calendario.get(GregorianCalendar.YEAR)+ "/" + (calendario.get(GregorianCalendar.MONTH)+1)+ "/" +calendario.get(GregorianCalendar.DATE);
 			String ora = ""+calendario.get(GregorianCalendar.HOUR_OF_DAY)+ ":" + calendario.get(GregorianCalendar.MINUTE)+ ":" +calendario.get(GregorianCalendar.SECOND);
 			if(dbF.noCaduteStessaOra(sessione, ora)){
 				Log.v("FIND FALL", "NESSUNA CADUTA CON LA STESSA DATA");
@@ -246,15 +246,15 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 			else
 				settaGPS();
 			mioGestoreSensore = (SensorManager) getSystemService(Context.SENSOR_SERVICE);					
-			accelerometro = mioGestoreSensore.getDefaultSensor(Sensor.TYPE_accelerometroEROMETER);
-			if(mioGestoreSensore.getDefaultSensor(Sensor.TYPE_accelerometroEROMETER) != null){
+			accelerometro = mioGestoreSensore.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+			if(mioGestoreSensore.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null){
 				mioGestoreSensore.registerListener((SensorEventListener) this, accelerometro,  SensorManager.SENSOR_DELAY_NORMAL);			
 				Log.v("SENSORE accelerometroEROMETRO----->","accelerometroEROMETRO REGISTRATO");			
 			}
 	}
 	
 	private void settaGPS(){
-		gestoreLocazione.requestLocationUpdatas(LocationManager.NETWORK_PROVIDER, 1000, 5, this);		
+		gestoreLocazione.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 5, this);		
 		l = gestoreLocazione.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);		
 	}
 	
@@ -265,7 +265,7 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 			Log.v("SENSORE accelerometroEROMETRO----->","ACCELEROMETRO STOPPATO");
 		}
 		if(gestoreLocazione != null){
-			gestoreLocazione.removeUpdatas(this);
+			gestoreLocazione.removeUpdates(this);
 		}
 		//scrittura nel file dei dati dell'accelerometroerometro salvati nella lista 
 		if(!(lastFileName.equals(sessione))){

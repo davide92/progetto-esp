@@ -238,9 +238,9 @@ public class NewThird extends ActionBarActivity{
 				String data = ""+cal.get(GregorianCalendar.YEAR)+ "/" + (cal.get(GregorianCalendar.MONTH)+1)+ "/" +cal.get(GregorianCalendar.DATE);
 																
 				long millisecondi = System.currentTimeMillis();
-				int secondo = (int) (milliseconds / 1000) % 60 ;
-				int minuto = (int) ((milliseconds / (1000*60)) % 60);
-				int ora   = (int) ((milliseconds / (1000*60*60)) % 24);
+				int secondo = (int) (millisecondi / 1000) % 60 ;
+				int minuto = (int) ((millisecondi / (1000*60)) % 60);
+				int ora   = (int) ((millisecondi / (1000*60*60)) % 24);
 				String tempo = ""+ora+ ":" + minuto+ ":" +secondo+"";	
 				Random rm = new Random();
 				int cl = Color.argb(255, rm.nextInt(254), rm.nextInt(254), rm.nextInt(254));
