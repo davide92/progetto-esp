@@ -257,9 +257,6 @@ public class NewThird extends ActionBarActivity{
 				startService(TextIntent);
 				bindService(TextIntent, mServiceConnectionText, Context.BIND_AUTO_CREATE);
 				cdText.start();
-				if(!permesso){
-					
-				}
 				Log.v("List-1","--HO PREMUTO IL TASTO PLAY---");				
 			}						
 		});
@@ -335,12 +332,37 @@ public class NewThird extends ActionBarActivity{
 	@Override
 	protected void onPause(){
 		super.onPause();
+		SNT = 2;
 		Log.v("ACT-THIRD","PAUSED");
+		String ora=StampaDurataService;
+		db.aggiornaDurataSessione(ora,NS);
+		db.aggiornaStatoSessione(SNT, NS);
+						
+		Log.v("stopSessione------->",""+NS+"");
+		//chiusura della "connessione" al service
+		if (mServiceBound) {
+			 unbindService(mServiceConnection);
+			 mServiceBound = false;
+			 }
+		//chiusura della "connessione" al service
+		if(mServiceBoundText){
+			unbindService(mServiceConnectionText);
+			mServiceBoundText = false;
+		}
+		
+		stopService(intent);
+		if(cStart >0)
+			stopService(TextIntent);
+		
+		cdCrono.cancel();
+		cdText.cancel();
 	}	
 
 	@Override
 	protected void onStop(){
-		super.onStop();	
+		super.onStop();
+		SNT = 0;
+		db.aggiornaStatoSessione(SNT, NS);
 		Log.v("ACTIVITY NEWTHIRD","NEWTHIRD STOPPED");
 		Log.v("sessione stop",""+SNT+"");
 		try{

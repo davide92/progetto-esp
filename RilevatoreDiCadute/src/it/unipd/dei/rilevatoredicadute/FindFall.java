@@ -42,7 +42,7 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 	private float zValLast;
 	Intent mReceiver = null;
 	Intent thActivity = null;
-	private float alpha = (float)9; //differenza tra valore immediato e precedente per cui si ha una caduta
+	private float alpha = (float)10; //differenza tra valore immediato e precedente per cui si ha una caduta
 	String sessione;
 	public static final String BROADCAST = "it.unipd.dei.rilevatoredicadute.android.action.broadcast";
 	public static final String TEXTVIEW = "Gestione Textview";
