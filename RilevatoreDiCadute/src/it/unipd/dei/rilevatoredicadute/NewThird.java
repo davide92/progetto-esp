@@ -191,32 +191,47 @@ public class NewThird extends ActionBarActivity{
 		yAccViewS = (TextView) findViewById(R.id.yDataS);
 		zAccViewS = (TextView) findViewById(R.id.zDataS);
 		tx = (TextView)findViewById(R.id.TestoSessCurr);        
-        tx.setText(NS);     
-		if(s == 3){//GESTIONE ORIENTAMENTO TELEFONO
-			if(SNT == 1){				
-				playBtn.setVisibility(View.INVISIBLE);
+        tx.setText(NS);    
+        
+        if(s == 1 && SNT ==2 ){
+        	playBtn.setVisibility(View.VISIBLE);
+			pauseBtn.setVisibility(View.INVISIBLE);
+			//stopTime = T.getLongExtra(MainActivity.PACKAGE_NAME+".PausaTempo", 0);
+        }else{
+        	if(s == 2 && SNT == 1){
+        		playBtn.setVisibility(View.INVISIBLE);
 				pauseBtn.setVisibility(View.VISIBLE);
 				cStart++;
-				cdText.start();						
-			}
-			else{				
-				playBtn.setVisibility(View.VISIBLE);
-				pauseBtn.setVisibility(View.INVISIBLE);				
-			}
-		}else{
-			SNT = s;
-			if(s == 1){
-				playBtn.setVisibility(View.INVISIBLE);
-				pauseBtn.setVisibility(View.VISIBLE);
-				cStart++;
-				cdText.start();								
-			}
-			else{
-				playBtn.setVisibility(View.VISIBLE);
-				pauseBtn.setVisibility(View.INVISIBLE);
-				stopTime = T.getLongExtra(MainActivity.PACKAGE_NAME+".PausaTempo", 0);
-			}
-		}		
+				cdText.start();
+        	}else{
+        		if(s == 3){//GESTIONE ORIENTAZIONE TELEFONO
+        			if(SNT == 1){				
+        				playBtn.setVisibility(View.INVISIBLE);
+        				pauseBtn.setVisibility(View.VISIBLE);
+        				cStart++;
+        				cdText.start();						
+        			}
+        			else{				
+        				playBtn.setVisibility(View.VISIBLE);
+        				pauseBtn.setVisibility(View.INVISIBLE);				
+        			}
+        		}else{
+        			SNT = s;
+        			if(s == 1){
+        				playBtn.setVisibility(View.INVISIBLE);
+        				pauseBtn.setVisibility(View.VISIBLE);
+        				cStart++;
+        				cdText.start();
+        			}
+        			else{			
+        				playBtn.setVisibility(View.VISIBLE);
+        				pauseBtn.setVisibility(View.INVISIBLE);
+        				stopTime = T.getLongExtra(MainActivity.PACKAGE_NAME+".PausaTempo", 0);
+        			}
+        		}	
+        	}
+        }
+        
 		intent = new Intent(getApplicationContext(), ServiceCronometro.class);		
 		TextIntent = new Intent(getApplicationContext(), FindFall.class);
 		TextIntent.putExtra("nome sessione", NS);
