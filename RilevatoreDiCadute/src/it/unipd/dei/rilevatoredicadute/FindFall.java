@@ -61,7 +61,7 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 	CountDownTimer cdViewSC = null; //conto alla rovescia visualizzazione dati accelerometroerometro
 	boolean rec, vis = true; //variabili per la visualizzazione e salvataggio dei dati da accelerometroerometro
 	private double latitudine, longitudine;
-	float[] Datiaccelerometroerometro = new float[3];
+	float[] DatiAccelerometro = new float[3];
 	String date;
 	int k, i, j;
 	int permesso;
@@ -153,12 +153,12 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 				}
 				//invio dati per la visualizzazione dei valori dell'accelerometroerometro
 				if(vis && !acData.isEmpty() && j < acData.size()){
-					Datiaccelerometroerometro[0] = acData.get(j).getX();
-					Datiaccelerometroerometro[1] = acData.get(j).getY();
-					Datiaccelerometroerometro[2] = acData.get(j).getZ();
+					DatiAccelerometro[0] = acData.get(j).getX();
+					DatiAccelerometro[1] = acData.get(j).getY();
+					DatiAccelerometro[2] = acData.get(j).getZ();
 					thActivity = new Intent();
 					thActivity.setAction(TEXTVIEW);
-					thActivity.putExtra("textview", Datiaccelerometroerometro);
+					thActivity.putExtra("textview", DatiAccelerometro);
 					sendBroadcast(thActivity);
 					j += 4;
 					vis = false;
