@@ -38,7 +38,7 @@ public class NewThird extends ActionBarActivity{
 	
 	GregorianCalendar cal;
 	MyDBManager db;
-	public long stopTime=0;		
+	public long stopTime, pauseTime =0;		
 	private  ListView listView;
 	private List<DatiCadute> fallList;//lista delle cadute temporanea 
 	long it = 0;	
@@ -106,13 +106,14 @@ public class NewThird extends ActionBarActivity{
 			SNT = savedInstance.getInt("statesession");			
 			data = savedInstance.getString("data");
 			stopTime = savedInstance.getLong("TempoPausa");
+			pauseTime = savedInstance.getLong("tempoRotazione");
 			NS = savedInstance.getString("nomeSessione");
 			Log.v("Valore variabile NS","" +NS);
 			cStart = savedInstance.getInt("cMs");
 			nRS = savedInstance.getBoolean("nRS");
 			nRS = true;			
 		}
-		Log.v("Valore variabile nRS","" +nRS);
+		Log.v("Valore variabile nRS","" + nRS);
 	}
 	//salvataggio dello stato della sessione in corso
 	@Override
@@ -121,6 +122,8 @@ public class NewThird extends ActionBarActivity{
 	    savedInstance.putString("data", date);
 	    savedInstance.putString("durataCrono", StampaDurataService);	    
 	    savedInstance.putLong("TempoPausa", stopTime);
+	    pauseTime = SystemClock.elapsedRealtime();
+	    savedInstance.putLong("tempoRotazione", pauseTime);
 	    savedInstance.putString("nomeSessione", NS);
 	    Log.v("Valore variabile NS", NS);
 	    savedInstance.putInt("cMs", cStart);
@@ -219,7 +222,10 @@ public class NewThird extends ActionBarActivity{
         				cStart++;
         				cdText.start();	
         				intent = new Intent(getApplicationContext(), ServiceCronometro.class);
-        				intent.putExtra("pause", stopTime);
+        				if ( pauseTime != 0 ){
+        					long intervalloPausa = (SystemClock.elapsedRealtime() - pauseTime);
+        					intent.putExtra("pausa",intervalloPausa);
+        				}	
         				TextIntent = new Intent(getApplicationContext(), FindFall.class);
         				TextIntent.putExtra("nome sessione", NS);
         				startService(intent);
