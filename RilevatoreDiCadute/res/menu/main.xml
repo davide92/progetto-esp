@@ -9,7 +9,7 @@
     android:onClick="methodName"/>
 
 <item android:id="@+id/delete"
-     android:title="@string/delete"
-      android:onClick="methodName"/>
+    android:title="@string/delete"
+    android:onClick="methodName"/>
 
 </menu>

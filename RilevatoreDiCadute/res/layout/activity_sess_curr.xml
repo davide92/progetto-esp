@@ -75,7 +75,7 @@
         android:layout_below="@+id/start"
         android:textSize="25sp" 
         android:text="@string/textDurata" 
-        />"
+        />
     
     <TextView
         android:id="@+id/timestamp_text"
