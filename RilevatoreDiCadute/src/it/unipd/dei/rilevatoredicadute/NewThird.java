@@ -80,7 +80,7 @@ public class NewThird extends ActionBarActivity{
 	TextReceiver textReceiver; //Receiver per l'aggiornamento dei dati dell'accelerometro
 	float [] arrayRicevuto = new float[3];
 	boolean VarSavedInstance = false; //variabile per sapere se è stata salvata l'istanza dell'activity
-	boolean nRS;//rileva se lo schermo non è stato ruotato
+	boolean nRS = true;//rileva se lo schermo non è stato ruotato
 	
 	@Override
 	protected void onCreate(Bundle savedInstance) {		
@@ -107,9 +107,11 @@ public class NewThird extends ActionBarActivity{
 			stopTime = savedInstance.getLong("TempoPausa");
 			NS = savedInstance.getString("nomeSessione");
 			cStart = savedInstance.getInt("cMs");
-			//nRS = savedInstance.getBoolean("nRS", true);
+			nRS = savedInstance.getBoolean("nRS");
+			nRS = true;
 			Log.v("null","" +NS);
-		}				
+		}
+		Log.v("Valore variabile nRS","" +nRS);
 	}
 	//salvataggio dello stato della sessione in corso
 	@Override
@@ -120,7 +122,10 @@ public class NewThird extends ActionBarActivity{
 	    savedInstance.putLong("TempoPausa", stopTime);
 	    savedInstance.putString("nomeSessione", NS);
 	    savedInstance.putInt("cMs", cStart);
-	    //savedInstance.putBoolean("nRS", false);
+	    Log.v("Valore variabile nRS","" +nRS);
+	    nRS = false;
+	    savedInstance.putBoolean("nRS", nRS);
+	    Log.v("Valore variabile nRS","" +nRS);
 	    Log.v("<<ATTENZIONE>>","CAMBIO ORIENTAZIONE TELEFONO");
 	    super.onSaveInstanceState(savedInstance);	    
 	}
@@ -204,6 +209,13 @@ public class NewThird extends ActionBarActivity{
         		playBtn.setVisibility(View.INVISIBLE);
 				pauseBtn.setVisibility(View.VISIBLE);
 				cStart++;
+				intent = new Intent(getApplicationContext(), ServiceCronometro.class);		
+				TextIntent = new Intent(getApplicationContext(), FindFall.class);
+				TextIntent.putExtra("nome sessione", NS);
+				startService(intent);
+				bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);				
+				startService(TextIntent);
+				bindService(TextIntent, mServiceConnectionText, Context.BIND_AUTO_CREATE);
 				cdText.start();
         	}else{
         		if(s == 3){//GESTIONE ORIENTAZIONE TELEFONO
@@ -376,10 +388,15 @@ public class NewThird extends ActionBarActivity{
 	@Override
 	protected void onDestroy(){
 		super.onDestroy();
+		Log.v("NEW THIRD", "ACTIVITY NEWTHIRD DESTROY  "+ NS);
+		Log.v("Valore variabile nRS","" +nRS);
 		unregisterReceiver(myReceiver);
 		unregisterReceiver(receiver);
 		unregisterReceiver(textReceiver);
+		unbindService(mServiceConnection);
+		unbindService(mServiceConnectionText);
 		/*if(SNT == 1 && nRS){
+			Log.v("ACTIVITY THIRD DESTROY","avviato if");
 			SNT = 0;
 			String ora=StampaDurataService;				
 			db.aggiornaDurataSessione(ora,NS);
