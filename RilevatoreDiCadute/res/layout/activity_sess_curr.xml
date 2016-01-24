@@ -65,7 +65,8 @@
         android:layout_marginStart="34dp"
         android:contentDescription="@string/stopTx"
         android:background="@android:color/transparent"
-        android:src="@drawable/stopbutton" />
+        android:src="@drawable/stopbutton" 
+        />
     
     <TextView 
         android:id="@+id/durata"
@@ -73,9 +74,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/start"
         android:textSize="25sp" 
-        android:text="@string/textDurata" />"
+        android:text="@string/textDurata" 
+        />"
     
-        <TextView
+    <TextView
         android:id="@+id/timestamp_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -85,9 +87,10 @@
         android:layout_centerHorizontal="true"
         android:textSize="25sp"        
         android:text=""
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        />
         
-        <TextView 
+    <TextView 
         android:id="@+id/xTextS"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -99,7 +102,7 @@
         android:textColor="#DF0101"
         />
     
-	   <TextView 
+    <TextView 
 	       android:id="@+id/xDataS"
 	       android:layout_width="wrap_content"
 	       android:layout_height="wrap_content"
@@ -112,7 +115,7 @@
 	       android:textColor="#DF0101"
 	       />
 	   
-	   <TextView 
+	<TextView 
 	       android:id="@+id/yTextS"
 	       android:layout_width="wrap_content"
 	       android:layout_height="wrap_content"
@@ -124,7 +127,7 @@
 	       android:textColor="#01DF01"
 	       />
 	   
-	   <TextView 
+	<TextView 
 	       android:id="@+id/yDataS"
 	       android:layout_width="wrap_content"
 	       android:layout_height="wrap_content"
@@ -137,7 +140,7 @@
 	       android:textColor="#01DF01"
 	       />
 	   
-	   <TextView 
+	<TextView 
 	       android:id="@+id/zTextS"
 	       android:layout_width="wrap_content"
 	       android:layout_height="wrap_content"
@@ -149,7 +152,7 @@
 	       android:textColor="#013ADF"
 	       />
 	   
-	    <TextView 
+    <TextView 
 	       android:id="@+id/zDataS"
 	       android:layout_width="wrap_content"
 	       android:layout_height="wrap_content"
@@ -160,23 +163,24 @@
 	       android:textColor="#013ADF"
 	       />
 		       
-		<LinearLayout android:id="@+id/linearLayout1" 
+	<LinearLayout android:id="@+id/linearLayout1" 
 		    android:orientation="vertical" 
 		    android:layout_width="match_parent" 
 		    android:layout_height="match_parent" 
 		    android:layout_alignTop ="@+id/zTextS" 
 		    android:layout_marginTop="24sp"
-		    tools:context="it.unipd.dei.rilevatoredicadute.NewThird">
+		    tools:context="it.unipd.dei.rilevatoredicadute.NewThird"
+		    >
 		    
-			<ListView android:id="@+id/listViewCadute" 
-			    android:layout_width="fill_parent" 
-			    android:layout_height="wrap_content" 
-			    android:layout_marginTop="10dp" 
-			    android:layout_marginLeft="5dp" 
-			    android:layout_marginRight="5dp" 
-			    android:layout_marginBottom="5dp" 
-			    android:divider="#ff888888" 
-			    android:dividerHeight="1dp">   
+	<ListView android:id="@+id/listViewCadute" 
+		    android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content" 
+		    android:layout_marginTop="10dp" 
+		    android:layout_marginLeft="5dp" 
+		    android:layout_marginRight="5dp" 
+		    android:layout_marginBottom="5dp" 
+		    android:divider="#ff888888" 
+		    android:dividerHeight="1dp">   
 			</ListView>
 			
 			</LinearLayout>

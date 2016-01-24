@@ -105,8 +105,7 @@
 	       android:layout_height="wrap_content"	       
 	       android:layout_toRightOf="@+id/xTextS"
 	       android:layout_toEndOf="@+id/xTextS"
-	       android:layout_below="@+id/TestoSessCurr"
-	       
+	       android:layout_below="@+id/TestoSessCurr"	       
 	       android:layout_marginRight="5dp"
 	       android:layout_marginEnd="5dp"
 	       android:textSize="21sp"
@@ -134,8 +133,7 @@
 	       android:layout_height="wrap_content"
 	       android:layout_below="@+id/xTextS"
 	       android:layout_toRightOf="@+id/yTextS"
-	       android:layout_toEndOf="@+id/yTextS"
-	       
+	       android:layout_toEndOf="@+id/yTextS"	       
 	       android:layout_marginRight="15dp"
 	       android:layout_marginEnd="15dp"
 	       android:textSize="21sp"
@@ -163,8 +161,7 @@
 	       android:layout_height="wrap_content"
 	       android:layout_below="@+id/yTextS"
 	       android:layout_toRightOf="@+id/zTextS"
-	       android:layout_toEndOf="@+id/zTextS"
-	       
+	       android:layout_toEndOf="@+id/zTextS"	       
 	       android:textSize="21sp"
 	       android:textColor="#013ADF"
 	       />

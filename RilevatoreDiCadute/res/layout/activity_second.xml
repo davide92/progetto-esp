@@ -2,113 +2,139 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
      xmlns:tools="http://schemas.android.com/tools" 
      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-       android:paddingBottom="@dimen/activity_vertical_margin" 
-       android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-         android:paddingTop="@dimen/activity_vertical_margin">
+     android:layout_height="match_parent"
+     android:paddingBottom="@dimen/activity_vertical_margin" 
+     android:paddingLeft="@dimen/activity_horizontal_margin"
+     android:paddingRight="@dimen/activity_horizontal_margin"
+     android:paddingTop="@dimen/activity_vertical_margin"
+     >
          
-<ImageView android:id="@+id/picture2" 
+<ImageView 
+    android:id="@+id/picture2" 
     android:contentDescription="@string/thumbnail"
     android:layout_width="50dp"
-     android:layout_height="50dp" 
-      android:layout_marginRight="7dp"
-      android:layout_marginEnd="7dp"/>
+    android:layout_height="50dp" 
+    android:layout_marginRight="7dp"
+    android:layout_marginEnd="7dp"
+    />
 
-<TextView android:id="@+id/nomeSessione"
+<TextView
+     android:id="@+id/nomeSessione"
      android:layout_width="wrap_content" 
      android:layout_height="wrap_content" 
      android:layout_alignParentTop="true" 
-      android:layout_toRightOf="@+id/picture2"
+     android:layout_toRightOf="@+id/picture2"
      android:layout_toEndOf="@+id/picture2" 
      android:layout_marginRight="5dp"
      android:layout_marginEnd="5dp" 
      android:layout_marginBottom="5dp"      
      android:textSize="20sp"
-      android:textStyle="bold"/>
+     android:textStyle="bold"
+     />
 
-<TextView android:id="@+id/inizio" 
+<TextView 
+    android:id="@+id/inizio" 
     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-      android:layout_below="@+id/picture2"
-        android:textSize="20sp" 
-        android:text="@string/inizio"/>
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/picture2"
+    android:textSize="20sp" 
+    android:text="@string/inizio"
+    />
 
 
-<TextView android:id="@+id/txDataInizio" 
+<TextView
+    android:id="@+id/txDataInizio" 
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content"
-     android:layout_below="@+id/inizio"      
-     android:text="@string/txDataInizio"
-      android:textSize="20sp"/>
+    android:layout_below="@+id/inizio"      
+    android:text="@string/txDataInizio"
+    android:textSize="20sp"
+    />
 
 
-<TextView android:id="@+id/txOraInizio" 
+<TextView 
+    android:id="@+id/txOraInizio" 
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content"
-     android:layout_below="@+id/txDataInizio"
-     android:text="@string/txOraInizio"    
-     android:textSize="20sp"/>
+    android:layout_below="@+id/txDataInizio"
+    android:text="@string/txOraInizio"    
+    android:textSize="20sp"
+    />
 
-<TextView android:id="@+id/data" 
+<TextView 
+    android:id="@+id/data" 
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content"
-     android:layout_below="@+id/inizio" 
-     android:layout_toRightOf="@+id/txDataInizio"
-     android:layout_toEndOf="@+id/txDataInizio"
-      android:textSize="20sp"/>
+    android:layout_below="@+id/inizio" 
+    android:layout_toRightOf="@+id/txDataInizio"
+    android:layout_toEndOf="@+id/txDataInizio"
+    android:textSize="20sp"
+    />
 
-<TextView android:id="@+id/ora" 
+<TextView 
+    android:id="@+id/ora" 
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content"
-     android:layout_below="@+id/txDataInizio" 
-     android:layout_toRightOf="@+id/txOraInizio"
-     android:layout_toEndOf="@+id/txOraInizio"
-      android:textSize="20sp"/>
+    android:layout_below="@+id/txDataInizio" 
+    android:layout_toRightOf="@+id/txOraInizio"
+    android:layout_toEndOf="@+id/txOraInizio"
+    android:textSize="20sp"
+    />
 
-<TextView android:id="@+id/textDurata"
-     android:layout_width="wrap_content"
-      android:layout_height="wrap_content" 
-      android:layout_below="@+id/txOraInizio"       
-      android:textSize="20sp" 
-      android:text="@string/textDurata"/>
-
-<TextView android:id="@+id/durataSessione" 
+<TextView 
+    android:id="@+id/textDurata"
     android:layout_width="wrap_content"
-     android:layout_height="wrap_content" 
-     android:layout_below="@+id/txOraInizio"      
-     android:textSize="20sp"
-	 android:layout_toRightOf="@id/textDurata"
-	 android:layout_toEndOf="@+id/textDurata"/>
+    android:layout_height="wrap_content" 
+    android:layout_below="@+id/txOraInizio"       
+    android:textSize="20sp" 
+    android:text="@string/textDurata"
+    />
 
-<TextView android:id="@+id/txLista" 
+<TextView 
+    android:id="@+id/durataSessione" 
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" 
+    android:layout_below="@+id/txOraInizio"      
+    android:textSize="20sp"
+	android:layout_toRightOf="@id/textDurata"
+	android:layout_toEndOf="@+id/textDurata"
+	/>
+
+<TextView 
+    android:id="@+id/txLista" 
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content" 
     android:layout_below="@+id/textDurata" 
     android:layout_centerInParent="true" 
     android:text="@string/txLista" 
     android:textSize="20sp" 
-    android:textStyle="bold"/>
+    android:textStyle="bold"
+    />
 
-<TextView android:id="@+id/spazio"
-      android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-      android:layout_alignParentLeft="true"
-      android:layout_alignParentStart="true"
-       android:layout_alignParentTop="true"
-        android:layout_marginRight="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_below="@+id/txLista" 
-         android:text="@string/spazio"/> 
+<TextView 
+    android:id="@+id/spazio"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentTop="true"
+    android:layout_marginRight="5dp"
+    android:layout_marginEnd="5dp"
+    android:layout_below="@+id/txLista" 
+    android:text="@string/spazio"
+    /> 
 
-<LinearLayout android:id="@+id/linearLayout1" 
+<LinearLayout 
+    android:id="@+id/linearLayout1" 
     android:orientation="vertical" 
     android:layout_width="match_parent" 
     android:layout_height="match_parent" 
     android:layout_alignTop="@+id/txLista" 
-    tools:context="it.unipd.dei.rilevatoredicadute.Second">
+    tools:context="it.unipd.dei.rilevatoredicadute.Second"
+    >
     
-<ListView android:id="@+id/listViewCadute" 
+<ListView 
+    android:id="@+id/listViewCadute" 
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content" 
     android:layout_marginTop="15dp" 
@@ -116,58 +142,9 @@
     android:layout_marginRight="5dp" 
     android:layout_marginBottom="5dp"     
     android:divider="#ff888888" 
-    android:dividerHeight="1dp">
+    android:dividerHeight="1dp"
+    >
        
 </ListView>
 </LinearLayout>
 </RelativeLayout>
-
-
-<!-- <TextView android:id="@+id/dataCaduta" 
-    android:layout_width="wrap_content" 
-    android:layout_height="wrap_content"
-     android:layout_below="@+id/txLista"     
-      android:textSize="15sp"/>
-
-<TextView android:id="@+id/oraCaduta" 
-    android:layout_width="wrap_content" 
-    android:layout_height="wrap_content"
-     android:layout_below="@+id/txLista" 
-     android:layout_toRightOf="@+id/dataCaduta"
-      android:textSize="15sp"/>
-
-<TextView 
-        android:id="@+id/latitudeTx"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/dataCaduta"
-        android:text="@string/latitude"
-        android:textSize="15sp"
-        />
-    
-    <TextView 
-        android:id="@+id/latitude"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/latitudeTx"
-        android:layout_below="@+id/dataCaduta"
-        android:textSize="15sp"
-        />
-    
-    <TextView 
-        android:id="@+id/longitudeTx"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/latitudeTx"
-        android:text="@string/longitude"
-        android:textSize="15sp"
-        />
-    
-    <TextView 
-        android:id="@+id/longitude"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/longitudeTx"
-        android:layout_below="@+id/latitudeTx"
-        android:textSize="15sp"
-        /> -->

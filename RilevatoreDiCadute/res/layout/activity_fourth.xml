@@ -16,20 +16,21 @@
      	android:layout_height="50dp" 
       	android:layout_marginRight="7dp"
       	android:layout_marginEnd="7dp"
-
        	/>
          
-    <TextView android:id="@+id/nomeSessione"
-     android:layout_width="wrap_content" 
-     android:layout_height="wrap_content" 
-     android:layout_alignParentTop="true" 
-     android:layout_toRightOf="@+id/picture4" 
-     android:layout_toEndOf="@+id/picture4"
-	 android:layout_marginRight="5dp"
-     android:layout_marginEnd="5dp"  
-     android:layout_marginBottom="5dp"      
-     android:textSize="20sp"
-      android:textStyle="bold"/>
+    <TextView 
+        android:id="@+id/nomeSessione"
+     	android:layout_width="wrap_content" 
+     	android:layout_height="wrap_content" 
+     	android:layout_alignParentTop="true" 
+     	android:layout_toRightOf="@+id/picture4" 
+     	android:layout_toEndOf="@+id/picture4"
+	 	android:layout_marginRight="5dp"
+     	android:layout_marginEnd="5dp"  
+     	android:layout_marginBottom="5dp"      
+     	android:textSize="20sp"
+      	android:textStyle="bold"
+      	/>
     
     <TextView
         android:id="@+id/DataAvvenutaTx"
@@ -49,6 +50,7 @@
        	android:layout_below="@+id/picture4"
         android:textSize="20sp"
         />
+    
      <TextView
         android:id="@+id/OraAvvenutaTx"
         android:layout_width="wrap_content"
@@ -104,7 +106,6 @@
         android:layout_toEndOf="@+id/longitudeTx"
         android:layout_below="@+id/latitudeTx"
         android:textSize="20sp"
-        />  
-   
+        />     
 
 </RelativeLayout>

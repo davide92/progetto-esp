@@ -20,7 +20,7 @@
     <string name="OraAvvenuta">Ora Avvenuta:</string>    
     <string name="title_activity_third">Nuova Sessione</string>
     <string name="sessioneInCorso">Sessione in corso</string>
-    <string name="textSessione">Nome sessione:</string>
+    <string name="textSessione">Nome sessione:\t</string>
     <string name="startTx">Start</string>
     <string name="pauseTx">Pause</string>
     <string name="stopTx">Stop</string>

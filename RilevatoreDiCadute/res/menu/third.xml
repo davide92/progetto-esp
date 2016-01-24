@@ -5,7 +5,8 @@
 
     <item
         android:id="@+id/mostra"
-         android:title="@string/mostra"
-         android:onClick="methodName"/>
+        android:title="@string/mostra"
+        android:onClick="methodName"
+        />
 
 </menu>

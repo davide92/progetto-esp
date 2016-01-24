@@ -2,71 +2,84 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
     android:id="@+id/list_items"
-     android:layout_width="match_parent"
-      android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
       
 <ImageView android:id="@+id/picture"
     android:contentDescription="@string/thumbnail"
-     android:layout_width="60dp" 
-     android:layout_height="60dp"
-      android:layout_alignParentLeft="true"
-      android:layout_alignParentStart="true"
-       android:layout_marginRight="7dp"
-       android:layout_marginEnd="7dp"
-       android:layout_marginTop="30dp"
-        android:src="@drawable/thumbnail"/>
+    android:layout_width="60dp" 
+    android:layout_height="60dp"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    android:layout_marginRight="7dp"
+    android:layout_marginEnd="7dp"
+    android:layout_marginTop="30dp"
+    android:src="@drawable/thumbnail"
+    />
 
 <TextView android:id="@+id/nomeSessione"
      android:layout_width="wrap_content" 
      android:layout_height="wrap_content" 
      android:layout_alignParentTop="true"
-      android:layout_toRightOf="@+id/picture"
-      android:layout_toEndOf="@+id/picture"
-       android:layout_marginRight="5dp" 
-       android:layout_marginEnd="5dp"
-       android:layout_marginBottom="5dp" 
-       android:textSize="20sp"
-        android:textStyle="bold"/>
+     android:layout_toRightOf="@+id/picture"
+     android:layout_toEndOf="@+id/picture"
+     android:layout_marginRight="5dp" 
+     android:layout_marginEnd="5dp"
+     android:layout_marginBottom="5dp" 
+     android:textSize="20sp"
+     android:textStyle="bold"
+     />
 
-<TextView android:id="@+id/dataEora"
-     android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-       android:layout_below="@+id/nomeSessione"
-        android:layout_toRightOf="@+id/picture"
-        android:layout_toEndOf="@+id/picture" 
-        android:textSize="20sp"/>
+<TextView 
+    android:id="@+id/dataEora"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/nomeSessione"
+    android:layout_toRightOf="@+id/picture"
+    android:layout_toEndOf="@+id/picture" 
+    android:textSize="20sp"
+    />
 
 <TextView android:id="@+id/textDurata" 
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content"     
     android:layout_below="@+id/dataEora"
-     android:layout_toRightOf="@+id/picture"
-     android:layout_toEndOf="@+id/picture"
-      android:textSize="20sp" 
-      android:text="@string/textDurata"/>
+    android:layout_toRightOf="@+id/picture"
+    android:layout_toEndOf="@+id/picture"
+    android:textSize="20sp" 
+    android:text="@string/textDurata"
+    />
 
-<TextView android:id="@+id/durataSessione" 
+<TextView 
+    android:id="@+id/durataSessione" 
     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-      android:layout_below="@+id/dataEora"
-       android:layout_toRightOf="@+id/textDurata"
-       android:layout_toEndOf="@+id/textDurata"
-        android:textSize="20sp"/>
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/dataEora"
+    android:layout_toRightOf="@+id/textDurata"
+    android:layout_toEndOf="@+id/textDurata"
+    android:textSize="20sp"
+    />
 
-<TextView android:id="@+id/textCadute" 
+<TextView 
+    android:id="@+id/textCadute" 
     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-      android:layout_below="@+id/textDurata"
-      android:layout_toRightOf="@+id/picture"
-      android:layout_toEndOf="@+id/picture"        
-        android:textSize="20sp"
-         android:text="@string/textCadute"/>
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/textDurata"
+    android:layout_toRightOf="@+id/picture"
+    android:layout_toEndOf="@+id/picture"        
+    android:textSize="20sp"
+    android:text="@string/textCadute"
+    />
 
-<TextView android:id="@+id/numeroCadute" 
+<TextView 
+    android:id="@+id/numeroCadute" 
     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-      android:layout_toRightOf="@+id/textCadute"
-      android:layout_toEndOf="@+id/textCadute"
-      android:layout_below="@+id/textDurata"
-       android:textSize="20sp"/>
+    android:layout_height="wrap_content"
+    android:layout_toRightOf="@+id/textCadute"
+    android:layout_toEndOf="@+id/textCadute"
+    android:layout_below="@+id/textDurata"
+    android:textSize="20sp"
+    />
+
 </RelativeLayout>
