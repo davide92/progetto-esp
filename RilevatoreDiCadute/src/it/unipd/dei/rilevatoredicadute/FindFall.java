@@ -1,5 +1,5 @@
-/*service per la rilevazione delle cadute, il salvataggio dei datiaccelerometro su file, 
-  la lettura dei dati da accelerometroerometro e dati della posizione via GPS
+/*service per la rilevazione delle cadute, il salvataggio dei dati dell'accelerometro su file, 
+  la lettura di tali dati e quelli relativi alla posizione via GPS
  */
 package it.unipd.dei.rilevatoredicadute;
 
@@ -20,7 +20,6 @@ import android.os.IBinder;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -40,6 +39,7 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 	private float xValLast;
 	private float yValLast;
 	private float zValLast;
+	
 	Intent mReceiver = null;
 	Intent thActivity = null;
 	private float alpha = (float)10; //differenza tra valore immediato e precedente per cui si ha una caduta
@@ -108,20 +108,7 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 		Log.v("findFall", "inizio onStartCommand");	
 		sessione = intent.getStringExtra("nome sessione");
 		Log.v("nomesessione service", ""+sessione);
-		mReceiver = new Intent(this, MyReceiver.class);	
-		/*
-		//avvio delle impostazioni per attivare il GPS
-		if (!gestoreLocazione.isProviderEnabled( LocationManager.NETWORK_PROVIDER) ) {			
-			Intent ISetting = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);			
-			ISetting.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);			
-			ISetting.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);			
-			ISetting.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-			startActivity(ISetting);
-			while(!gestoreLocazione.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
-				settaGPS();
-			}
-		}*/
-		
+		mReceiver = new Intent(this, MyReceiver.class);			
 		//avvio conto alla rovescia
 		cdSaveSC.start();
 		cdViewSC.start();
@@ -187,15 +174,14 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 	
 	@Override
 	public void onProviderEnabled(String provider) {
-			// TODO Auto-generated method stub	
-		Log.v("FindFall->onProviderEnabled","NETWORK_PROVIDER ABILITATO");
+			// TODO Auto-generated method stub		
 	}
 	
 	@Override
 	public void onProviderDisabled(String provider) {
-			// TODO Auto-generated method stub	
-		Log.v("FindFall->onProviderDisabled","NETWORK_PROVIDER NON ABILITATO");
+			// TODO Auto-generated method stub			
 	}
+	
 	//metodo per rilevare una caduta
 	private void caduta(){
 		float x = java.lang.Math.abs(xVal)- java.lang.Math.abs(xValLast);
@@ -229,9 +215,6 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 			it = System.currentTimeMillis();				
 			gestoreLocazione = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 			Log.i("valore locationManager", ""+gestoreLocazione);			
-			//gestoreLocazione.requestLocationUpdatas(LocationManager.NETWORK_PROVIDER, 5000, 5, this);			
-			//l = gestoreLocazione.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-			
 			//avvio delle impostazioni per attivare il GPS
 			if ( !gestoreLocazione.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ){			
 				Intent ISetting = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);			
@@ -245,6 +228,7 @@ public class FindFall extends Service implements SensorEventListener, LocationLi
 			}
 			else
 				settaGPS();
+			
 			mioGestoreSensore = (SensorManager) getSystemService(Context.SENSOR_SERVICE);					
 			accelerometro = mioGestoreSensore.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 			if(mioGestoreSensore.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null){

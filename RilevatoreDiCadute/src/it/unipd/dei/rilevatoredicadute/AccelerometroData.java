@@ -10,8 +10,7 @@ public class AccelerometroData{
 		this.t = t;
 		this.x = x;
 		this.y = y;
-		this.z = z;
-		
+		this.z = z;		
 	}
 	
 	public float getX(){
@@ -29,6 +28,5 @@ public class AccelerometroData{
 	public long getT(){
 		return t;
 	}
-
 
 }

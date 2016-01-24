@@ -29,10 +29,8 @@ public class Dati {
 		stato=sta;
 	}
 	
-	public Dati(){
-		//durataSessione = 0 + ":" + 0 + ":" + 0;
-		this("nessuna sessione", 0, 0, 0, 0, 0, 0, 0 + ":" + 0 + ":" + 0, 0, 0, 0);
-		 
+	public Dati(){		
+		this("nessuna sessione", 0, 0, 0, 0, 0, 0, 0 + ":" + 0 + ":" + 0, 0, 0, 0);		 
 	}
 
 	public void setNomeSessione( String nS){

@@ -2,7 +2,6 @@ package it.unipd.dei.rilevatoredicadute;
 
 import java.util.LinkedList;
 import java.util.List;
-
 import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,20 +12,19 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-
 import android.widget.Toast;
 import android.database.Cursor;
-
 import android.widget.ImageView;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 
 public class MainActivity extends ActionBarActivity {	
-	
+		
 	//IL VALORE VARIAIBILE s:
-	//s=0, una sessione puo' iniziare
-	//s=1, una sessione e' in esecuzione
-	//s=2, una sessione e' in pausa		
+	//s==0, una sessione puo' iniziare
+	//s==1, una sessione e' in esecuzione
+	//s==2, una sessione e' in pausa	
+	//s==3, valore passato quadno la sessione deve ancora iniziare
 	
 	public static String PACKAGE_NAME; 	
 	MyDBManager db;	          
@@ -71,6 +69,7 @@ public class MainActivity extends ActionBarActivity {
                 int minuto = Integer.parseInt(oraCaduta[1]);  
                 int secondo = Integer.parseInt(oraCaduta[2]);
                 int cadute = db.contaCadute(crs.getString(1));
+                
                 durataSessione = crs.getString(crs.getColumnIndex("Durata"));
                 if(durataSessione.equals("XX:XX:XX")){
                 	NSC = crs.getString(1);
@@ -83,7 +82,7 @@ public class MainActivity extends ActionBarActivity {
                 stato = Integer.parseInt(crs.getString(crs.getColumnIndex("Stato")));
                 int colore = crs.getInt(crs.getColumnIndex("Colore"));
                 list.add(new Dati(crs.getString(1),giorno, mese, anno, ora, minuto, secondo, durataSessione, cadute, colore, stato));           
-            	}while(crs.moveToNext());//fine while
+            	}while(crs.moveToNext());//fine do while
             }
             crs.close();        
             Log.v("NOME SESSIONE IN CORSO MA",""+NSC+"");
@@ -94,8 +93,8 @@ public class MainActivity extends ActionBarActivity {
         	public void onItemClick(AdapterView<?> adapter, View v, int position, long id){      		
         		
         		Log.v("MA-SELEZIONE-SESSIONE",""+(((Dati)adapter.getItemAtPosition(position)).getNomeSessione())+"");
-        		Intent UI2;    //intent activity nella second.class 		
-        		Intent ST;   //intent activity nella newThird
+        		Intent UI2;    //intent activity second.class 		
+        		Intent ST;   //intent activity newThird.class
         		UI2 = new Intent(getApplicationContext(), Second.class);    		
         		ST = new Intent(getApplicationContext(),NewThird.class);
         		

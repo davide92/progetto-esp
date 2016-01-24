@@ -10,15 +10,14 @@ public class MyDBManager{
 	
 	private MyDBHelper dbhelper;
 	
-	public MyDBManager(Context ctx){
-		
-		dbhelper=new MyDBHelper(ctx);
-		
+	public MyDBManager(Context ctx){		
+		dbhelper=new MyDBHelper(ctx);		
 	}
 	
 	public void close(){	
 		dbhelper.close();	
 	}	
+	
 	//aggiunta di una nuova sessione nel database
 	public void aggSessione(String nome, String data, String ora, String durata ,int ncadute, int col, int stato, long tempoPausa){
 			
@@ -207,13 +206,14 @@ public class MyDBManager{
 	 	     return crs;     
 	 	 }
 	 	//cancellare una caduta di una determinata sessione e ora
-	 	public void cancCaduta(String nameSession, String hour){
-	 		SQLiteDatabase db = dbhelper.getWritableDatabase();
+     public void cancCaduta(String nameSession, String hour){
+	    	SQLiteDatabase db = dbhelper.getWritableDatabase();
 	 		String delete = "DELETE FROM "+MyDBHelper.TABLE_CADUTA+ " WHERE " +MyDBHelper.COL_SESS+ " = '" +nameSession+ "' AND " + MyDBHelper.COL_ORAC + " = '"+ hour + "';";
 	 		db.execSQL(delete);	
 	 	}
+     
 	 	//cazncella tute le cadute di una sessione
-	 	public void cancCadute(String nameSession){
+     public void cancCadute(String nameSession){
 	 		SQLiteDatabase db = dbhelper.getWritableDatabase();
 	 		String delete = "DELETE FROM "+MyDBHelper.TABLE_CADUTA+ " WHERE " +MyDBHelper.COL_SESS+ " = '" +nameSession+ "';";
 	 		db.execSQL(delete);	

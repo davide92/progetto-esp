@@ -1,6 +1,6 @@
 //  CLASSE PER LA GESTIONE DELLA SESSIONE: QUI SI PUO' COMINCIARE UNA NUOVA SESSIONE, METTERLA IN PAUSA, STOPPARLA,
 //  SONO VISUALIZZATI I DATI PROVENIENTI DALL'ACCELEROMETRO E LE CADUTE IN TEMPO REALE
-
+//  variabile s, stato sessione passato dalla mainActivity, variabile SNT gestita da questa classe 
 package it.unipd.dei.rilevatoredicadute;
 
 import android.support.v7.app.ActionBarActivity;
@@ -89,11 +89,7 @@ public class NewThird extends ActionBarActivity{
 		adapter = new CustomAdapterFalls(this, R.id.listViewCadute, fallList);       
 		listView.setAdapter(adapter);
 		cal= new GregorianCalendar();
-		
-		/*T = getIntent();
-		s = T.getIntExtra(MainActivity.PACKAGE_NAME+".statoSessione", 3);
-		Log.v("TAG_MA","VALORE VARIABILE s: "+ s);*/
-		
+				
 		timestampText = (TextView) findViewById(R.id.timestamp_text);
 		playBtn = (ImageButton)findViewById(R.id.start);
 		pauseBtn = (ImageButton)findViewById(R.id.pause);
@@ -107,15 +103,13 @@ public class NewThird extends ActionBarActivity{
 			data = savedInstance.getString("data");
 			stopTime = savedInstance.getLong("TempoPausa");
 			NS = savedInstance.getString("nomeSessione");
-			cStart = savedInstance.getInt("cMs");
-			//s = savedInstance.getInt("statoSessioneControllo");
+			cStart = savedInstance.getInt("cMs");			
 			Log.v("TAG_NT_ONSAVEINSTANCE","valore statoSessione dopo:"+SNT);
 		}				
 	}
 	//salvataggio dello stato della sessione in corso
 	@Override
-	protected void onSaveInstanceState(Bundle savedInstance) {	
-		//savedInstance.putInt("statoSessioneControllo",s);
+	protected void onSaveInstanceState(Bundle savedInstance) {			
 	    savedInstance.putInt("statesession", SNT);	    
 	    savedInstance.putString("data", date);
 	    savedInstance.putString("durataCrono", StampaDurataService);	    
@@ -192,10 +186,7 @@ public class NewThird extends ActionBarActivity{
 		if(!(VarSavedInstance)){
 			NS = T.getStringExtra(MainActivity.PACKAGE_NAME+".nomeSessione");			
 		}
-		s = T.getIntExtra(MainActivity.PACKAGE_NAME+".statoSessione", 3);
-		Log.v("TAG_MA","VALORE VARIABILE s: "+ s);
-		Log.v("TAG_MA","VALORE VARIABILE SNT: "+ SNT);
-		Log.v("TAG_MA","VALORE VARIABILE stopTime: "+stopTime);
+		s = T.getIntExtra(MainActivity.PACKAGE_NAME+".statoSessione", 3);		
 		
 		xAccViewS = (TextView) findViewById(R.id.xDataS);
 		yAccViewS = (TextView) findViewById(R.id.yDataS);
@@ -247,26 +238,7 @@ public class NewThird extends ActionBarActivity{
         	}
         }
         }
-        //}
-        /*if(SNT == 3){
-        	playBtn.setVisibility(View.VISIBLE);
-			pauseBtn.setVisibility(View.INVISIBLE);	
-        }
-        else{
-        	if(SNT == 1){
-        		playBtn.setVisibility(View.INVISIBLE);
-				pauseBtn.setVisibility(View.VISIBLE);
-				cStart++;
-				cdText.start();
-        	}
-        	else{
-        		if(SNT == 2){
-        			playBtn.setVisibility(View.VISIBLE);
-    				pauseBtn.setVisibility(View.INVISIBLE);
-    				stopTime = T.getLongExtra(MainActivity.PACKAGE_NAME+".PausaTempo", 0);
-        		}
-        	}
-        }*/
+        
 		intent = new Intent(getApplicationContext(), ServiceCronometro.class);		
 		TextIntent = new Intent(getApplicationContext(), FindFall.class);
 		TextIntent.putExtra("nome sessione", NS);
@@ -280,8 +252,7 @@ public class NewThird extends ActionBarActivity{
 			public void onClick(View v) {				
 				if(SNT == 2)
 					cdCrono.start();
-				SNT = 1;
-				//s = 1;
+				SNT = 1;			
 				playBtn.setVisibility(View.INVISIBLE);
 				pauseBtn.setVisibility(View.VISIBLE);				
 				
@@ -308,16 +279,14 @@ public class NewThird extends ActionBarActivity{
 				startService(TextIntent);
 				bindService(TextIntent, mServiceConnectionText, Context.BIND_AUTO_CREATE);
 				cdText.start();
-				db.close();
-				
+				db.close();				
 				Log.v("Tag_NT","--HO PREMUTO IL TASTO PLAY---");				
 			}						
 		});
 		
 		pauseBtn.setOnClickListener(new View.OnClickListener(){			
 			@Override
-			public void onClick(View v){				
-				//s = 2;
+			public void onClick(View v){		
 				SNT = 2;
 				cStart--;
 				cdCrono.cancel();				
@@ -383,35 +352,12 @@ public class NewThird extends ActionBarActivity{
 	@Override
 	protected void onPause(){
 		super.onPause();
-		Log.v("TAG_NT","NT_ON_PAUSE()");
-		/*SNT = 2;
-		String ora=StampaDurataService;
-		db.aggiornaDurataSessione(ora,NS);
-		db.aggiornaStatoSessione(SNT, NS);
-		Log.v("stopSessione------->",""+NS+"");
-		//chiusura della "connessione" al service
-		if (mServiceBound) {
-			 unbindService(mServiceConnection);
-			 mServiceBound = false;
-		}
-		//chiusura della "connessione" al service
-		if(mServiceBoundText){
-			unbindService(mServiceConnectionText);
-			mServiceBoundText = false;
-		}
-		stopService(intent);
-		if(cStart >0)
-			stopService(TextIntent);
-		cdCrono.cancel();
-		cdText.cancel();
-		*/		
+		Log.v("TAG_NT","NT_ON_PAUSE()");		
 	}	
 
 	@Override
 	protected void onStop(){
-		super.onStop();	
-		//SNT = 0;
-		//db.aggiornaStatoSessione(SNT, NS);
+		super.onStop();			
 		Log.v("TAG_NT","NEWTHIRD STOPPED");		
 		try{
 			unregisterReceiver(RVUUI);
@@ -445,16 +391,7 @@ public class NewThird extends ActionBarActivity{
 	protected void onRestart(){
 		super.onRestart();
 		Log.v("TAG_NT","NT_ON_RESTART()");
-		Log.v("NEW THIRD", "ACTIVITY NEWTHIRD RESTART  "+NS);
-		/*IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(ServiceCronometro.MY_ACTION);
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(FindFall.BROADCAST);
-		IntentFilter TextFilt = new IntentFilter();
-		TextFilt.addAction(FindFall.TEXTVIEW);
-		registerReceiver(RTVDS,intentFilter);
-		registerReceiver(RVUUI, filter);
-		registerReceiver(RTVA, TextFilt);*/
+		Log.v("NEW THIRD", "ACTIVITY NEWTHIRD RESTART  "+NS);		
 	}
 	
 	@Override
@@ -590,8 +527,7 @@ public class NewThird extends ActionBarActivity{
 		        int seconds=Integer.parseInt(oraf[2]);
 		        String lat = crs.getString(crs.getColumnIndex("Latitudine"));
 		        String longi = crs.getString(crs.getColumnIndex("Longitudine"));
-		        fallList.add(new DatiCadute(day, month, year, hour, minutes, seconds, lat, longi, NS));
-			    //adapter.add(new DatiCadute(day, month, year, hour, minutes, seconds, lat, longi, NS));
+		        fallList.add(new DatiCadute(day, month, year, hour, minutes, seconds, lat, longi, NS));			   
 			}while(crs.moveToNext());
 			//avviso della presenza di una nuova caduta
 			adapter.notifyDataSetChanged();								       				

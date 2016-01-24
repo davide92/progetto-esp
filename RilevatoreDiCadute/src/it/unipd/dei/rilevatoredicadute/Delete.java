@@ -6,7 +6,6 @@ package it.unipd.dei.rilevatoredicadute;
 
 import java.util.LinkedList;
 import java.util.List;
-
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -52,7 +51,7 @@ public class Delete extends ActionBarActivity {
         		if(stato == 0){
         			list.add(new Dati(crs.getString(1),giorno, mese, anno,ora, minuti, secondi, durataSessione, numeroCadute, colore, stato));
         		}
-            }while(crs.moveToNext());//fine while
+            }while(crs.moveToNext());//fine do while
         }
    
         CustomAdapter adapter = new CustomAdapter(this, R.layout.list_items, list);
@@ -81,8 +80,7 @@ public class Delete extends ActionBarActivity {
 					
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						return;
-						
+						return;						
 					}
 				});
 		    	AlertDialog dialog = alert.create();

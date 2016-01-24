@@ -108,8 +108,7 @@ public class DeleteFall extends ActionBarActivity {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					return;
-					
+					return;					
 				}
 			});
 	    	AlertDialog dialog = alert.create(); //creazione del dialogo di allerta

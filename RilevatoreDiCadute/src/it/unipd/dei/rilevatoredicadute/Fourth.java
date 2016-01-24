@@ -1,4 +1,4 @@
-//CLASSE GESTIONE LISTA CADUTE
+//CLASSE GESTIONE LISTA CADUTE: DEFINISCE LE INFORMAZIONI RELATIVE ALLA CADUTA
 
 package it.unipd.dei.rilevatoredicadute;
 import android.support.v7.app.ActionBarActivity;
@@ -12,9 +12,7 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
 
-
-public class Fourth extends ActionBarActivity {
-	
+public class Fourth extends ActionBarActivity {	
 	
     MyDBManager db;
     Intent intent;
@@ -46,8 +44,7 @@ public class Fourth extends ActionBarActivity {
 		Ora.setText("    "+intent.getStringExtra(MainActivity.PACKAGE_NAME+".oraCaduta"));		
 		latitudine.setText("  "+intent.getStringExtra(MainActivity.PACKAGE_NAME+".latitudine"));
 		longitudine.setText("  "+intent.getStringExtra(MainActivity.PACKAGE_NAME+".longitudine"));		
-	}
-	
+	}	
 
  	@Override
  	protected void onStop() { 		
