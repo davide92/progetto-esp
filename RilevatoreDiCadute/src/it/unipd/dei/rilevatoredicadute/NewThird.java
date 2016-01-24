@@ -96,20 +96,21 @@ public class NewThird extends ActionBarActivity{
 		timestampText = (TextView) findViewById(R.id.timestamp_text);
 		playBtn = (ImageButton)findViewById(R.id.start);
 		pauseBtn = (ImageButton)findViewById(R.id.pause);
-		stopBtn = (ImageButton)findViewById(R.id.stop);		
+		stopBtn = (ImageButton)findViewById(R.id.stop);
 		//inizializzazione dello stato della sessione
-		if((savedInstance !=null)){	
+		if((savedInstance != null)){	
 			VarSavedInstance = true;
+			Log.v("Valore variabile VarSavedInstance","" + VarSavedInstance);
 			Log.v("<<SAVED INSTANCE ON>>", "---SAVED INSTANCE ON---");			
 			StampaDurataService = savedInstance.getString("durataCrono");			
 			SNT = savedInstance.getInt("statesession");			
 			data = savedInstance.getString("data");
 			stopTime = savedInstance.getLong("TempoPausa");
 			NS = savedInstance.getString("nomeSessione");
+			Log.v("Valore variabile NS","" +NS);
 			cStart = savedInstance.getInt("cMs");
 			nRS = savedInstance.getBoolean("nRS");
-			nRS = true;
-			Log.v("null","" +NS);
+			nRS = true;			
 		}
 		Log.v("Valore variabile nRS","" +nRS);
 	}
@@ -121,6 +122,7 @@ public class NewThird extends ActionBarActivity{
 	    savedInstance.putString("durataCrono", StampaDurataService);	    
 	    savedInstance.putLong("TempoPausa", stopTime);
 	    savedInstance.putString("nomeSessione", NS);
+	    Log.v("Valore variabile NS", NS);
 	    savedInstance.putInt("cMs", cStart);
 	    Log.v("Valore variabile nRS","" +nRS);
 	    nRS = false;
@@ -187,10 +189,10 @@ public class NewThird extends ActionBarActivity{
 		db = new MyDBManager(this);	
 		PACKAGE_NAME = getApplicationContext().getPackageName();
 		T = getIntent(); 
-		if(!(VarSavedInstance)){
+		
+		if((!VarSavedInstance) && SNT != 1){
 			NS = T.getStringExtra(MainActivity.PACKAGE_NAME+".nomeSessione");
-			Log.v("null","" +NS);
-			        
+			Log.v("null","" +NS);			        
 		}
 		s = T.getIntExtra(MainActivity.PACKAGE_NAME+".statoSessione", 3);
 		
@@ -209,21 +211,22 @@ public class NewThird extends ActionBarActivity{
         		playBtn.setVisibility(View.INVISIBLE);
 				pauseBtn.setVisibility(View.VISIBLE);
 				cStart++;
-				intent = new Intent(getApplicationContext(), ServiceCronometro.class);		
-				TextIntent = new Intent(getApplicationContext(), FindFall.class);
-				TextIntent.putExtra("nome sessione", NS);
-				startService(intent);
-				bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);				
-				startService(TextIntent);
-				bindService(TextIntent, mServiceConnectionText, Context.BIND_AUTO_CREATE);
-				cdText.start();
         	}else{
         		if(s == 3){//GESTIONE ORIENTAZIONE TELEFONO
         			if(SNT == 1){				
         				playBtn.setVisibility(View.INVISIBLE);
         				pauseBtn.setVisibility(View.VISIBLE);
         				cStart++;
-        				cdText.start();						
+        				cdText.start();	
+        				intent = new Intent(getApplicationContext(), ServiceCronometro.class);
+        				intent.putExtra("pause", stopTime);
+        				TextIntent = new Intent(getApplicationContext(), FindFall.class);
+        				TextIntent.putExtra("nome sessione", NS);
+        				startService(intent);
+        				bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);				
+        				startService(TextIntent);
+        				bindService(TextIntent, mServiceConnectionText, Context.BIND_AUTO_CREATE);
+        				cdText.start();
         			}
         			else{				
         				playBtn.setVisibility(View.VISIBLE);
